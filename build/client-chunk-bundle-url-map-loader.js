@@ -1,0 +1,36 @@
+/* eslint-env node */
+
+// TODO: use loader config instead of singleton
+// Probably have to do this via a loader configuration webpack plugin
+const clientChunkBundleUrlMap = require('./client-chunk-bundle-url-map');
+
+module.exports = function(/* content */) {
+  // TODO: Can we do some caching?
+  // Maybe split this loader in two and cache one of them.
+  // Additionally, it'd be nice to cache the whole thing if our manifest has not changed at all
+  this.cacheable(false);
+
+  const done = this.async();
+  clientChunkBundleUrlMap.get().then(data => {
+    done(null, generateSource(data.manifest));
+  });
+};
+
+function generateSource(manifest) {
+  return `module.exports = new Map(
+    ${JSON.stringify(
+      Array.from(manifest.entries()).map(entry => {
+        entry[1] = Array.from(entry[1].entries());
+        return entry;
+      })
+    )}.map(entry => { //[number, Map<string,string>]
+      entry[1] = new Map(
+        entry[1].map(group => {
+          group[1] = __webpack_public_path__ + group[1];
+          return group;
+        })
+      );
+      return entry;
+    })
+  );`;
+}

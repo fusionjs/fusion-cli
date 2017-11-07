@@ -1,0 +1,37 @@
+// @flow
+/* eslint-env node */
+const createNamedModuleVisitor = require('../babel-plugin-utils/visit-named-module');
+
+module.exports = chunkPathsPlugin;
+
+function chunkPathsPlugin(babel /*: Object */) {
+  const t = babel.types;
+  // TODO: use config instead of hardcoded constants
+  const visitor = createNamedModuleVisitor(
+    t,
+    'syncChunkPaths',
+    'fusion-core',
+    refsHandler
+  );
+  return {visitor};
+}
+
+function refsHandler(t, context, refs = []) {
+  refs.forEach(refPath => {
+    const parentPath = refPath.parentPath;
+    if (!t.isCallExpression(parentPath)) {
+      return;
+    }
+    const args = parentPath.get('arguments');
+    if (args.length !== 0) {
+      throw parentPath.buildCodeFrameError('syncChunkPaths takes no arguments');
+    }
+    // eslint-disable-next-line no-console
+    parentPath.set('arguments', [
+      t.callExpression(t.identifier('require'), [
+        // TODO: use config instead of hardcoded constants
+        t.stringLiteral('__SECRET_SYNC_CHUNK_PATHS_LOADER__!'),
+      ]),
+    ]);
+  });
+}
