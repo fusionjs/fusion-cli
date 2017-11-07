@@ -1,6 +1,6 @@
 # fusion-cli
 
-# Installation
+### Installation
 
 ```sh
 yarn add fusion-cli
@@ -8,7 +8,7 @@ yarn add fusion-cli
 
 ---
 
-# CLI API
+### CLI API
 
 - `fusion build [dir] [--test] [--cover] [--production] [--log-level]`: Build your appplication
   - `--test`: Build tests as well as application
