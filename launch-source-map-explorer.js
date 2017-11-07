@@ -268,7 +268,6 @@ function focus(tree) {
   // Unhide (raise) and maximize us and our ancestors.
   for (var t = tree; t.parent; t = t.parent) {
     // Shift off by border so we don't get nested borders.
-    // TODO: actually make nested borders work (need to adjust width/height).
     position(t.dom, -kBorderWidth, -kBorderWidth, width, height);
     t.dom.style.zIndex = 1;
   }

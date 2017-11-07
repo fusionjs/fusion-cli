@@ -46,7 +46,7 @@ function createNamedModuleVisitor(
           }
         } else if (t.isImportNamespaceSpecifier(specifier)) {
           // import * as pkg from 'packageName';
-          // TODO: Handle this case, or issue a warning because this may not be 100% robust
+          // TODO(#5): Handle this case, or issue a warning because this may not be 100% robust
         }
       });
     },

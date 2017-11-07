@@ -14,8 +14,7 @@ const prefix = load('ROUTE_PREFIX', '');
 const assetPath = load('FRAMEWORK_STATIC_ASSET_PATH', '/_static');
 assert(!prefix.endsWith('/'), 'ROUTE_PREFIX must not end with /');
 
-// TODO inject logger
-module.exports = function(/*{console}*/) {
+module.exports = function() {
   /*::
   rootDir: String
   env: 'development'|'production'

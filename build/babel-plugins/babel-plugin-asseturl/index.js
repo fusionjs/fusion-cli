@@ -6,7 +6,6 @@ module.exports = assetURLPlugin;
 
 function assetURLPlugin(babel /*: Object */) {
   const t = babel.types;
-  // TODO: use config instead of hardcoded constants
   const visitor = createNamedModuleVisitor(
     t,
     'assetUrl',
@@ -35,7 +34,6 @@ function refsHandler(t, context, refs = []) {
     }
     args[0].replaceWith(
       t.callExpression(t.identifier('require'), [
-        // TODO: use config instead of hardcoded constants
         t.stringLiteral(
           `__SECRET_FILE_LOADER__?storeFile=true&storeFileTarget=node!${args[0]
             .node.value}`

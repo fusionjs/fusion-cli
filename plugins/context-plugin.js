@@ -27,7 +27,6 @@ module.exports = function() {
 
     // fusion-specific things
     ctx.nonce = uuidv4();
-    // TODO: cached UA parsing?
     ctx.useragent = new UAParser(ctx.headers['user-agent']).getResult();
     ctx.element = null;
     ctx.rendered = null;

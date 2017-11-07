@@ -23,7 +23,7 @@ const chunkImportTemplate = template(
 
 const fileChunkIdTemplate = template(`const CHUNKIDS_ID = LOCAL_ID(FILENAME);`);
 
-// TODO: There might be some issues related to npm module tree resolution here.
+// TODO(#4): There might be some issues related to npm module tree resolution here.
 // How can we ensure that the fusion-experimentation instance imported here and elsewhere are the same?
 const singletonImport = template(
   `

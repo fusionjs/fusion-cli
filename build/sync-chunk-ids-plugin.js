@@ -1,6 +1,5 @@
 /* eslint-env node */
 
-// TODO: use loader config instead of singleton
 // Probably have to do this via a loader configuration webpack plugin
 const syncChunkIds = require('./sync-chunk-ids');
 const syncChunkPaths = require('./sync-chunk-paths');

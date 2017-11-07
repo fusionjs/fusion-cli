@@ -31,7 +31,7 @@ class InstrumentedImportDependencyTemplate extends ImportDependencyTemplate {
     }
   }
   /**
-   * TODO: Possibly figure out cleaner implemenetation by extending `super` to avoid duplicating code
+   * TODO(#15): Possibly figure out cleaner implemenetation by extending `super` to avoid duplicating code
    * For now, we'll just override this method entirely with a modified version
    * Based on https://github.com/webpack/webpack/blob/5e38646f589b5b6325556f3127e7b61df33d3cb9/lib/dependencies/ImportDependency.js
    */
@@ -59,12 +59,12 @@ class InstrumentedImportDependencyTemplate extends ImportDependencyTemplate {
         : `__webpack_require__(${stringifiedId});`;
 
       const preloadSrc = `/* PRE-REQUIRE DYNAMIC IMPORTS */${request}`;
-      // TODO: investigate sourcemap implications of this
+      // TODO(#16): investigate sourcemap implications of this
       source.insert(0, preloadSrc);
     }
 
     const content = this.getContent(promise, dep, comment);
-    // TODO: throw with nice error message here if not in manifest
+    // TODO(#17): throw with nice error message here if not in manifest
     const chunkIds = this.clientChunkMap
       ? // server-side, use values from client bundle
         Array.from(this.clientChunkMap.get(dep.module.resource))

@@ -7,7 +7,6 @@ const EventEmitter = require('events');
 const getPort = require('get-port');
 const {spawn} = require('child_process');
 const {promisify} = require('util');
-// TODO: maybe make this a separate module
 const openUrl = require('react-dev-utils/openBrowser');
 
 function getChildUrl(originalUrl, replacement) {
@@ -86,7 +85,6 @@ module.exports.DevelopmentRuntime = function({
         }
       }
       else {
-        // TODO: Should this case ever be hit? I think we should not try and start the process on build failure
         logAndSend(new Error(\`No entry found at \${entry}\`));
       }
     `;

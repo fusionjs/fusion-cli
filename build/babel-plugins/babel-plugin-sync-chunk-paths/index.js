@@ -6,7 +6,6 @@ module.exports = chunkPathsPlugin;
 
 function chunkPathsPlugin(babel /*: Object */) {
   const t = babel.types;
-  // TODO: use config instead of hardcoded constants
   const visitor = createNamedModuleVisitor(
     t,
     'syncChunkPaths',
@@ -29,7 +28,6 @@ function refsHandler(t, context, refs = []) {
     // eslint-disable-next-line no-console
     parentPath.set('arguments', [
       t.callExpression(t.identifier('require'), [
-        // TODO: use config instead of hardcoded constants
         t.stringLiteral('__SECRET_SYNC_CHUNK_PATHS_LOADER__!'),
       ]),
     ]);

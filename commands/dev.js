@@ -32,13 +32,13 @@ exports.builder = {
     default: false,
     describe: 'Run tests as well as your application',
   },
-  // TODO: https://github.com/uber-web/framework/issues/884
+  // TODO(#18): support watch-mode `dev --profile`
   // profile: {
   //   type: 'boolean',
   //   default: false,
   //   describe: 'Run profiling as well as your application',
   // },
-  // TODO: https://github.com/uber-web/framework/issues/885
+  // TODO(#19): support dev with production assets
   // production: {
   //   type: 'boolean',
   //   default: false,

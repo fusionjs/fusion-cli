@@ -31,6 +31,5 @@ function reload() {
 reload();
 
 if (module.hot) {
-  // TODO: not sure this is correct for hotreloading here
   module.hot.accept('__FRAMEWORK_SHARED_ENTRY__', reload);
 }

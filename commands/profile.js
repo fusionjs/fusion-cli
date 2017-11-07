@@ -7,7 +7,7 @@ const launchSourceMapExplorer = require('../launch-source-map-explorer.js');
 exports.command = 'profile [dir]';
 exports.desc = 'Profile your application';
 exports.builder = {
-  // TODO: https://github.com/uber-web/framework/issues/884
+  // TODO(#18): support fusion profile --watch
   // 'skip-build': {
   //   type: 'boolean',
   //   default: false,

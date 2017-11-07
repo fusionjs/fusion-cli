@@ -6,7 +6,6 @@ module.exports = chunkIdPlugin;
 
 function chunkIdPlugin(babel /*: Object */) {
   const t = babel.types;
-  // TODO: use config instead of hardcoded constants
   const visitor = createNamedModuleVisitor(
     t,
     'syncChunkIds',
@@ -28,7 +27,6 @@ function refsHandler(t, context, refs = []) {
     }
     parentPath.set('arguments', [
       t.callExpression(t.identifier('require'), [
-        // TODO: use config instead of hardcoded constants
         t.stringLiteral('__SECRET_SYNC_CHUNK_IDS_LOADER__!'),
       ]),
     ]);

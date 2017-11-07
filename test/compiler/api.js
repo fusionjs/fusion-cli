@@ -174,7 +174,7 @@ test('production works', async t => {
   }
 });
 
-// TODO: Is this how testing should work?
+// TODO(#24): Is this how testing should work?
 test('test works', async t => {
   const envs = ['test'];
   const dir = './test/fixtures/noop-test';

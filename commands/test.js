@@ -10,7 +10,7 @@ exports.builder = {
     default: false,
     describe: 'Run tests with coverage',
   },
-  // TODO: https://github.com/uber-web/framework/issues/882
+  // TODO(#20): support --debug flag
   // debug: {
   //   type: 'boolean',
   //   default: false,

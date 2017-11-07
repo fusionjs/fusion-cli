@@ -94,7 +94,6 @@ function getConfig({target, env, dir, watch, cover}) {
           watch &&
           clientHotLoaderEntry &&
           resolveFrom(appBase, clientHotLoaderEntry),
-        // TODO: replace webpack-hot-middleware with our own version
         env === 'development' &&
           watch &&
           target !== 'node' &&
@@ -119,7 +118,7 @@ function getConfig({target, env, dir, watch, cover}) {
      * Chrome DevTools support doesn't matter in these case.
      * We only use it for generating nice stack traces
      */
-    // TODO: what about node v8 inspector?
+    // TODO(#6): what about node v8 inspector?
     devtool: target !== 'node' && env === 'production'
       ? 'hidden-source-map'
       : 'cheap-module-source-map',
@@ -132,7 +131,6 @@ function getConfig({target, env, dir, watch, cover}) {
       filename: env === 'production' && target === 'web'
         ? `${name}-[name]-[chunkhash].js`
         : `${name}-[name].js`,
-      // TODO: should the libraryTarget by `var` for browser test entries?
       libraryTarget: target === 'node' ? 'commonjs2' : 'var',
       // This is the recommended default.
       // See https://webpack.js.org/configuration/output/#output-sourcemapfilename
@@ -142,7 +140,7 @@ function getConfig({target, env, dir, watch, cover}) {
         : evergreen ? 'evergreen-[id].js' : '[id].js',
       // We will set __webpack_public_path__ at runtime, so this should be set to undefined
       publicPath: void 0,
-      // TODO: Do we really need this? See lite config
+      // TODO(#7): Do we really need this? See lite config
       crossOriginLoading: 'anonymous',
       devtoolModuleFilenameTemplate: info => {
         // always return absolute paths in order to get sensible source map explorer visualization
@@ -156,7 +154,6 @@ function getConfig({target, env, dir, watch, cover}) {
       hot: true,
     },
     performance: {
-      // TODO: Come up with sane defaults for these.
       // For now, using webpack defaults
       hints: name === 'client' && env === 'production' && 'warning',
       // Warn on entrypoint larger than 250kb (webpack default)
@@ -172,10 +169,6 @@ function getConfig({target, env, dir, watch, cover}) {
       {
         // Polyfilling process involves lots of cruft. Better to explicitly inline env value statically
         process: false,
-        // Use case for global is dubious. Better to just statically check environment and reference global or window accordingly
-        // TODO: We need this now for url.parse, but in the future we need this to default to false and lint
-        // user and node_module code for references to this (and other node things like path, buffer, etc)
-        // global: false,
         // We definitely don't want automatic Buffer polyfills. This should be explicit and in userland code
         Buffer: false,
         // We definitely don't want automatic setImmediate polyfills. This should be explicit and in userland code
@@ -221,7 +214,7 @@ function getConfig({target, env, dir, watch, cover}) {
                     './babel-plugins/babel-plugin-sync-chunk-paths'
                   ),
                   require.resolve('./babel-plugins/babel-plugin-chunkid'),
-                  // TODO: sw implementation is totally busted.
+                  // TODO(#8): sw implementation is totally busted.
                   // require.resolve('./babel-plugins/babel-plugin-sw'),
                   pragma && [
                     require.resolve('babel-plugin-transform-react-jsx'),
@@ -232,20 +225,12 @@ function getConfig({target, env, dir, watch, cover}) {
                     target === 'web' &&
                     require.resolve('react-hot-loader/babel'),
                   cover && require.resolve('babel-plugin-istanbul'),
-                  target === 'node' && [
+                  target === 'node' &&
                     require.resolve('./babel-plugins/babel-plugin-i18n'),
-                    {
-                      // TODO: do config
-                    },
-                  ],
-                  target === 'node' && [
+                  target === 'node' &&
                     require.resolve(
                       './babel-plugins/babel-plugin-experimentation'
                     ),
-                    {
-                      // TODO: do config
-                    },
-                  ],
                 ].filter(Boolean),
                 presets: [
                   [
@@ -344,14 +329,14 @@ function getConfig({target, env, dir, watch, cover}) {
     },
     plugins: [
       progress,
-      // TODO: relying only on timestamp will invalidate service worker after every build
+      // TODO(#9): relying only on timestamp will invalidate service worker after every build
       // optimize by importing all chunk names to sw and then remove timestamp in non-dev.
       target === 'webworker' && new ServiceWorkerTimestampPlugin(),
       // generate compressed files
       //target === 'web' && env === 'production' && zopfliWebpackPlugin, // gzip
       target === 'web' && env === 'production' && brotliWebpackPlugin, // brotli
-      // target === 'web' && env === 'production' && pngquantWebpackPlugin, // png TODO: production server requires libpng-dev installed to use this
-      // target === 'web' && env === 'production' && guetzliWebpackPlugin, // jpg TODO: guetzli also depends on libpng-dev for some reason
+      // target === 'web' && env === 'production' && pngquantWebpackPlugin, // png TODO(#10): production server requires libpng-dev installed to use this
+      // target === 'web' && env === 'production' && guetzliWebpackPlugin, // jpg TODO(#10): guetzli also depends on libpng-dev for some reason
       target === 'web' && env === 'production' && svgoWebpackPlugin, // svg
       // In development, skip the emitting phase on errors to ensure there are
       // no assets emitted that include errors. This fixes an issue with hot reloading
@@ -403,7 +388,7 @@ function getConfig({target, env, dir, watch, cover}) {
           manifestVariable: '__MANIFEST__',
         }),
       target === 'web' && env !== 'test' && new ChunkPreloadPlugin(),
-      // TODO: What do we do for client-side error reporting in the service worker?
+      // TODO(#11): What do we do for client-side error reporting in the service worker?
       // Do we add in reporting code to the sw? Should we map stack traces on the server?
       target === 'web' && new ClientSourceMapPlugin(),
       target === 'web' && new SyncChunkIdsPlugin(),
@@ -453,7 +438,7 @@ function getConfig({target, env, dir, watch, cover}) {
       target !== 'node' &&
         env === 'production' &&
         new UglifyJSPlugin({
-          // TODO: Investigate if these options are still required - they are causing production builds to fail
+          // TODO(#12): Investigate if these options are still required - they are causing production builds to fail
           // compress: {warnings: false},
           // mangle: true,
           // output: {comments: false},
@@ -500,7 +485,7 @@ function getStatsLogger({dir, logger, envs}) {
     if (stats.hasErrors()) {
       dedupeErrors(info.errors).forEach(e => logger.error(e));
     }
-    // TODO: These logs seem to be kinda noisy for dev.
+    // TODO(#13): These logs seem to be kinda noisy for dev.
     if (isProd) {
       info.children.forEach(child => {
         child.assets
@@ -575,7 +560,7 @@ function Compiler({
       },
       reporter: null,
       serverSideRender: true,
-      // TODO: handle route prefix here??
+      // TODO(#14): handle route prefix here??
       publicPath: '/_static/',
     });
     const hot = webpackHotMiddleware(compiler, {log: false});
