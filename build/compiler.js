@@ -44,16 +44,20 @@ function getConfig({target, env, dir, watch, cover}) {
 
   const serverTestGlobs = [
     `${dir}/src/**/__tests__/__node__/*.js`,
-    universalTestGlob
+    universalTestGlob,
   ];
 
   const browserTestGlobs = [
     `${dir}/src/**/__tests__/__browser__/*.js`,
-    universalTestGlob
+    universalTestGlob,
   ];
 
-  const serverTestEntry = `__SECRET_MULTI_ENTRY_LOADER__?${serverTestGlobs.map(glob => `include[]=${glob}`).join(',')}!`;
-  const browserTestEntry = `__SECRET_MULTI_ENTRY_LOADER__?${browserTestGlobs.map(glob => `include[]=${glob}`).join(',')}!`;
+  const serverTestEntry = `__SECRET_MULTI_ENTRY_LOADER__?${serverTestGlobs
+    .map(glob => `include[]=${glob}`)
+    .join(',')}!`;
+  const browserTestEntry = `__SECRET_MULTI_ENTRY_LOADER__?${browserTestGlobs
+    .map(glob => `include[]=${glob}`)
+    .join(',')}!`;
 
   if (target !== 'node' && target !== 'web' && target !== 'webworker') {
     throw new Error('Invalid target: must be `node`, `web`, or `webworker`');
@@ -65,10 +69,14 @@ function getConfig({target, env, dir, watch, cover}) {
     throw new Error(`Project directory must contain a ${main} file`);
   }
   if (env === 'test' && !globby.sync(serverTestGlobs).length) {
-    throw new Error(`Testing requires server tests in __tests__ or __tests__/__browser__`);
+    throw new Error(
+      `Testing requires server tests in __tests__ or __tests__/__browser__`
+    );
   }
   if (env === 'test' && !globby.sync(browserTestGlobs).length) {
-    throw new Error(`Testing requires browser tests in __tests__ or __tests__/__browser__`);
+    throw new Error(
+      `Testing requires browser tests in __tests__ or __tests__/__browser__`
+    );
   }
 
   const configPath = path.join(dir, 'package.json');
@@ -82,8 +90,12 @@ function getConfig({target, env, dir, watch, cover}) {
   const destination = path.resolve(dir, `.fusion/dist/${env}/${side}`);
   const evergreen = false;
   const possibleESVersions = ['es5'];
-  const serverEntry = env === 'test' ? serverTestEntry : path.join(__dirname, `../entries/server-entry.js`);
-  const clientEntry = env === 'test' ? browserTestEntry : path.join(__dirname, `../entries/client-entry.js`);
+  const serverEntry = env === 'test'
+    ? serverTestEntry
+    : path.join(__dirname, `../entries/server-entry.js`);
+  const clientEntry = env === 'test'
+    ? browserTestEntry
+    : path.join(__dirname, `../entries/client-entry.js`);
   const entry = {
     node: serverEntry,
     web: clientEntry,
@@ -339,9 +351,7 @@ function getConfig({target, env, dir, watch, cover}) {
         __SECRET_CLIENT_SOURCE_MAP_LOADER__: require.resolve(
           './client-source-map-loader'
         ),
-        __SECRET_MULTI_ENTRY_LOADER__: require.resolve(
-          'multi-entry-loader'
-        ),
+        __SECRET_MULTI_ENTRY_LOADER__: require.resolve('multi-entry-loader'),
       },
     },
     plugins: [
