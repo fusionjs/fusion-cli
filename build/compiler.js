@@ -33,13 +33,27 @@ const browserSupport = require('./browser-support');
 const ServiceWorkerTimestampPlugin = require('./service-worker-timestamp-plugin.js');
 const chalk = require('chalk');
 const webpackHotMiddleware = require('webpack-hot-middleware');
+const globby = require('globby');
 
 const rimraf = require('rimraf');
 
 function getConfig({target, env, dir, watch, cover}) {
   const main = 'src/main.js';
-  const serverTestEntry = `__SECRET_MULTI_ENTRY_LOADER__?include[]=${dir}/src/**/__tests__/__node__/*.js,include[]=${dir}/src/**/__tests__/*.js!`;
-  const browserTestEntry = `__SECRET_MULTI_ENTRY_LOADER__?include[]=${dir}/src/**/__tests__/__browser__/*.js,include[]=${dir}/src/**/__tests__/*.js!`;
+
+  const universalTestGlob = `${dir}/src/**/__tests__/*.js`;
+
+  const serverTestGlobs = [
+    `${dir}/src/**/__tests__/__node__/*.js`,
+    universalTestGlob
+  ];
+
+  const browserTestGlobs = [
+    `${dir}/src/**/__tests__/__browser__/*.js`,
+    universalTestGlob
+  ];
+
+  const serverTestEntry = `__SECRET_MULTI_ENTRY_LOADER__?${serverTestGlobs.map(glob => `include[]=${glob}`).join(',')}!`;
+  const browserTestEntry = `__SECRET_MULTI_ENTRY_LOADER__?${browserTestGlobs.map(glob => `include[]=${glob}`).join(',')}!`;
 
   if (target !== 'node' && target !== 'web' && target !== 'webworker') {
     throw new Error('Invalid target: must be `node`, `web`, or `webworker`');
@@ -50,12 +64,12 @@ function getConfig({target, env, dir, watch, cover}) {
   if (!fs.existsSync(path.resolve(dir))) {
     throw new Error(`Project directory must contain a ${main} file`);
   }
-  // if (env === 'test' && !fs.existsSync(path.resolve(dir, serverTestEntry))) {
-  //   throw new Error(`Testing requires a ${serverTestEntry} directory`);
-  // }
-  // if (env === 'test' && !fs.existsSync(path.resolve(dir, browserTestEntry))) {
-  //   throw new Error(`Testing requires a ${browserTestEntry} directory`);
-  // }
+  if (env === 'test' && !globby.sync(serverTestGlobs).length) {
+    throw new Error(`Testing requires server tests in __tests__ or __tests__/__browser__`);
+  }
+  if (env === 'test' && !globby.sync(browserTestGlobs).length) {
+    throw new Error(`Testing requires browser tests in __tests__ or __tests__/__browser__`);
+  }
 
   const configPath = path.join(dir, 'package.json');
   const configData = fs.existsSync(configPath) ? require(configPath) : {};

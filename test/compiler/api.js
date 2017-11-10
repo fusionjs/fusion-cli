@@ -18,14 +18,14 @@ test('throws if missing src/main.js', t => {
   t.end();
 });
 
-// test('tests throw if missing src/test/node or src/test/browser', t => {
-//   const envs = ['test'];
-//   const dir = './test/fixtures/noop';
-//   t.throws(() => {
-//     new Compiler({envs: envs, dir});
-//   });
-//   t.end();
-// });
+test('tests throw if no test files exist', t => {
+  const envs = ['test'];
+  const dir = './test/fixtures/noop';
+  t.throws(() => {
+    new Compiler({envs: envs, dir});
+  });
+  t.end();
+});
 
 test('generates error if missing default export', async t => {
   const envs = ['development'];
