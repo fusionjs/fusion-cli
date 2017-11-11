@@ -40,24 +40,12 @@ const rimraf = require('rimraf');
 function getConfig({target, env, dir, watch, cover}) {
   const main = 'src/main.js';
 
+  const serverOnlyTestGlob = `${dir}/src/**/__tests__/*.node.js`;
+  const browserOnlyTestGlob = `${dir}/src/**/__tests__/*.browser.js`;
   const universalTestGlob = `${dir}/src/**/__tests__/*.js`;
 
-  const serverTestGlobs = [
-    `${dir}/src/**/__tests__/__node__/*.js`,
-    universalTestGlob,
-  ];
-
-  const browserTestGlobs = [
-    `${dir}/src/**/__tests__/__browser__/*.js`,
-    universalTestGlob,
-  ];
-
-  const serverTestEntry = `__SECRET_MULTI_ENTRY_LOADER__?${serverTestGlobs
-    .map(glob => `include[]=${glob}`)
-    .join(',')}!`;
-  const browserTestEntry = `__SECRET_MULTI_ENTRY_LOADER__?${browserTestGlobs
-    .map(glob => `include[]=${glob}`)
-    .join(',')}!`;
+  const serverTestEntry = `__SECRET_MULTI_ENTRY_LOADER__?include[]=${universalTestGlob},exclude[]=${browserOnlyTestGlob}!`;
+  const browserTestEntry = `__SECRET_MULTI_ENTRY_LOADER__?include[]=${universalTestGlob},exclude[]=${serverOnlyTestGlob}!`;
 
   if (target !== 'node' && target !== 'web' && target !== 'webworker') {
     throw new Error('Invalid target: must be `node`, `web`, or `webworker`');
@@ -68,12 +56,18 @@ function getConfig({target, env, dir, watch, cover}) {
   if (!fs.existsSync(path.resolve(dir))) {
     throw new Error(`Project directory must contain a ${main} file`);
   }
-  if (env === 'test' && !globby.sync(serverTestGlobs).length) {
+  if (
+    env === 'test' &&
+    !globby.sync([universalTestGlob, `!${browserOnlyTestGlob}`]).length
+  ) {
     throw new Error(
       `Testing requires server tests in __tests__ or __tests__/__browser__`
     );
   }
-  if (env === 'test' && !globby.sync(browserTestGlobs).length) {
+  if (
+    env === 'test' &&
+    !globby.sync([universalTestGlob, `!${serverOnlyTestGlob}`]).length
+  ) {
     throw new Error(
       `Testing requires browser tests in __tests__ or __tests__/__browser__`
     );
