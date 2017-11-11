@@ -61,7 +61,7 @@ function getConfig({target, env, dir, watch, cover}) {
     !globby.sync([universalTestGlob, `!${browserOnlyTestGlob}`]).length
   ) {
     throw new Error(
-      `Testing requires server tests in __tests__ or __tests__/__browser__`
+      `Testing requires server tests in __tests__ with *.js or *.node.js extension`
     );
   }
   if (
@@ -69,7 +69,7 @@ function getConfig({target, env, dir, watch, cover}) {
     !globby.sync([universalTestGlob, `!${serverOnlyTestGlob}`]).length
   ) {
     throw new Error(
-      `Testing requires browser tests in __tests__ or __tests__/__browser__`
+      `Testing requires browser tests in __tests__ with *.js or *.browser.js extension`
     );
   }
 
