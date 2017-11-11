@@ -222,6 +222,10 @@ test('test works', async t => {
       !stdout.includes('client test runs'),
       'client test not included in server test bundle'
     );
+    t.ok(
+      stdout.includes('universal test runs'),
+      'universal test included in browser test bundle'
+    );
   } catch (e) {
     t.ifError(e);
   }
@@ -243,6 +247,10 @@ test('test works', async t => {
     t.ok(
       stdout.includes('client test runs'),
       'client test included in browser test bundle'
+    );
+    t.ok(
+      stdout.includes('universal test runs'),
+      'universal test included in browser test bundle'
     );
   } catch (e) {
     t.ifError(e);
