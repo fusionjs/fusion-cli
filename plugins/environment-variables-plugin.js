@@ -20,10 +20,12 @@ assert(!prefix.endsWith('/'), 'ROUTE_PREFIX must not end with /');
 module.exports = function() {
   return new SingletonPlugin({
     Service: class EnvVarPlugin {
-      rootDir: string;
-      env: 'development' | 'production';
-      prefix: string;
-      assetPath: string;
+      /*::
+        rootDir: string;
+        env: 'development' | 'production';
+        prefix: string;
+        assetPath: string;
+      */
 
       constructor() {
         this.rootDir = rootDir;
