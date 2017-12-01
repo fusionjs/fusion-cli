@@ -53,7 +53,7 @@ function getConfig({target, env, dir, watch, cover}) {
   if (env !== 'production' && env !== 'development' && env !== 'test') {
     throw new Error('Invalid name: must be `production`, `dev`, or `test`');
   }
-  if (!fs.existsSync(path.resolve(dir))) {
+  if (!fs.existsSync(path.resolve(dir, main))) {
     throw new Error(`Project directory must contain a ${main} file`);
   }
   if (
