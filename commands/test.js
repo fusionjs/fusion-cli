@@ -2,9 +2,13 @@
 const {Compiler} = require('../build/compiler');
 const {TestRuntime} = require('../build/test-runtime');
 
-exports.command = 'test [dir]';
 exports.desc = 'Run tests';
 exports.builder = {
+  dir: {
+    type: 'string',
+    default: '.',
+    describe: 'Root path for the application relative to CLI CWD',
+  },
   cover: {
     type: 'boolean',
     default: false,
