@@ -13,7 +13,7 @@ test('`fusion dev` works', async t => {
   const entry = path.resolve(dir, entryPath);
 
   const {stop} = await run(
-    `dev --dir=${dir} --no-open=true --port=${await getPort()}`
+    `dev --dir=${dir} --no-open --port=${await getPort()}`
   );
   stop();
   t.ok(fs.existsSync(entry), 'Entry file gets compiled');
