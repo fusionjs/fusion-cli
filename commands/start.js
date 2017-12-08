@@ -5,7 +5,7 @@ const path = require('path');
 exports.command = 'start [--dir] [--environment]';
 exports.desc = 'Run your app';
 exports.builder = {
-  // TODO: https://github.com/uber-web/framework/issues/882
+  // TODO(#20) ensure --debug works with start and test commands
   // debug: {
   //   type: 'boolean',
   //   default: false,

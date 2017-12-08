@@ -14,7 +14,7 @@ exports.builder = {
     default: false,
     describe: 'Run tests with coverage',
   },
-  // TODO(#20): support --debug flag
+  // TODO(#20): ensure --debug works with start and test commands
   // debug: {
   //   type: 'boolean',
   //   default: false,
