@@ -9,11 +9,7 @@ module.exports.TestAppRuntime = function({dir = '.', watch = false, match}) {
     this.stop();
 
     let command = require.resolve('jest-cli/bin/jest.js');
-    let args = [
-      // '--no-cache',
-      '--config',
-      './node_modules/fusion-cli/build/jest-config.js',
-    ];
+    let args = ['--config', './node_modules/fusion-cli/build/jest-config.js'];
 
     if (watch) {
       args.push('--watch');

@@ -1,11 +1,7 @@
 /* eslint-env node */
 
 const transformer = require('babel-jest').createTransformer({
-  presets: [
-    'babel-preset-flow',
-    'babel-preset-es2015',
-    'babel-preset-react',
-  ].map(require.resolve),
+  presets: ['babel-preset-flow', 'babel-preset-react'].map(require.resolve),
 });
 
 const originalProcessFn = transformer.process;
