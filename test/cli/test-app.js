@@ -9,7 +9,7 @@ const exec = promisify(require('child_process').exec);
 const runnerPath = require.resolve('../../bin/cli-runner');
 
 test('`fusion test-app` passes', async t => {
-  const dir = path.resolve(__dirname, '../fixtures/test-app-valid');
+  const dir = path.resolve(__dirname, '../fixtures/test-jest-app');
   const args = `test-app --dir=${dir} --configPath=../../../build/jest-config.js --match=passes`;
 
   const cmd = `require('${runnerPath}').run('${args}')`;
@@ -19,7 +19,7 @@ test('`fusion test-app` passes', async t => {
 });
 
 test('`fusion test-app` failure', async t => {
-  const dir = path.resolve(__dirname, '../fixtures/test-app-valid');
+  const dir = path.resolve(__dirname, '../fixtures/test-jest-app');
   const args = `test-app --dir=${dir} --configPath=../../../build/jest-config.js --match=fails`;
 
   const cmd = `require('${runnerPath}').run('${args}')`;
