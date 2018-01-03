@@ -9,7 +9,7 @@
   "scripts": {
     "lint": "eslint .",
     "test": "node test/index.js && node test/cli/test.js",
-    "_TODO_": "Something weird is going on with nyc and unitest. This is a hack to fix it",
+    "TODO(#102)": "Something weird is going on with nyc and unitest. This is a hack to fix it",
     "cover": "node test/cli/test.js && nyc node test/index.js"
   },
   "dependencies": {
