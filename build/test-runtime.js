@@ -17,11 +17,8 @@ module.exports.TestRuntime = function({
     const base = '.fusion/dist/test';
     const server = path.resolve(dir, base, 'server/server-main.js');
     const client = path.resolve(dir, base, 'client/client-main.js');
-    // let command = require.resolve('unitest/bin/cli.js');
-    let command = 'unitest';
-    // let command = 'node';
+    let command = require.resolve('unitest/bin/cli.js');
     let args = [`--browser=${client}`, `--node=${server}`];
-    // let args = [server];
     if (cover) {
       const unitest = command;
       command = require.resolve('nyc/bin/nyc.js');
