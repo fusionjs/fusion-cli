@@ -3,6 +3,7 @@ require('./compiler/api');
 require('./compiler/errors');
 require('./cli/dev');
 require('./cli/test-app');
+require('./cli/test');
 require('./cli/build');
 
 /*

@@ -2,8 +2,7 @@
 const fs = require('fs');
 const path = require('path');
 const test = require('tape');
-
-const {run} = require('../../bin/cli-runner');
+const {cmd, start} = require('../run-command');
 
 test('`fusion build` works', async t => {
   const dir = path.resolve(__dirname, '../fixtures/noop');
@@ -27,12 +26,11 @@ test('`fusion build` works', async t => {
     dir,
     `.fusion/dist/development/client/client-vendor.js`
   );
-  // TODO(#112): Enable failing test
-  // const clientMainVendorMap = path.resolve(
-  //   dir,
-  //   `.fusion/dist/development/client/client-vendor.js.map`
-  // );
-  await run(`build --dir=${dir}`);
+  const clientMainVendorMap = path.resolve(
+    dir,
+    `.fusion/dist/development/client/client-vendor.js.map`
+  );
+  await cmd(`build --dir=${dir}`);
   t.ok(fs.existsSync(serverEntryPath), 'Server Entry file gets compiled');
   t.ok(
     fs.existsSync(serverMapPath),
@@ -44,11 +42,52 @@ test('`fusion build` works', async t => {
     'Client Entry file sourcemap gets compiled'
   );
   t.ok(fs.existsSync(clientMainVendor), 'Client vendor file gets compiled');
-  // TODO(#112): Enable failing test
-  // t.ok(
-  //   fs.existsSync(clientMainVendorMap),
-  //   'Client vendor file sourcemap gets compiled'
-  // );
+  t.ok(
+    fs.existsSync(clientMainVendorMap),
+    'Client vendor file sourcemap gets compiled'
+  );
+  t.end();
+});
+
+test('`fusion build` works in production with a CDN_URL', async t => {
+  const dir = path.resolve(__dirname, '../fixtures/noop');
+  const serverEntryPath = path.resolve(
+    dir,
+    `.fusion/dist/production/server/server-main.js`
+  );
+  const serverMapPath = path.resolve(
+    dir,
+    `.fusion/dist/production/server/server-main.js.map`
+  );
+  await cmd(`build --dir=${dir} --production`);
+  const clientFiles = fs.readdirSync(
+    path.resolve(dir, '.fusion/dist/production/client')
+  );
+  t.ok(
+    clientFiles.some(f => /client-main-(.*?).js$/.test(f)),
+    'includes a versioned client-main.js file'
+  );
+  t.ok(
+    clientFiles.some(f => /client-vendor-(.*?).js$/.test(f)),
+    'includes a versioned client-vendor.js file'
+  );
+  t.ok(fs.existsSync(serverEntryPath), 'Server Entry file gets compiled');
+  t.ok(
+    fs.existsSync(serverMapPath),
+    'Server Entry file sourcemap gets compiled'
+  );
+  const {res, proc} = await start(`--dir=${dir}`, {
+    env: Object.assign({}, process.env, {CDN_URL: 'https://cdn.com/test'}),
+  });
+  t.ok(
+    res.includes('src="https://cdn.com/test/client-main'),
+    'includes a script reference to client-main'
+  );
+  t.ok(
+    res.includes('src="https://cdn.com/test/client-vendor'),
+    'includes a script reference to client-vendor'
+  );
+  proc.kill();
   t.end();
 });
 
@@ -62,40 +101,32 @@ test('`fusion build` works in production', async t => {
     dir,
     `.fusion/dist/production/server/server-main.js.map`
   );
-  const clientMain = path.resolve(
-    dir,
-    `.fusion/dist/production/client/client-main-b146db6e5d21f0eee531.js`
+  await cmd(`build --dir=${dir} --production`);
+  const clientFiles = fs.readdirSync(
+    path.resolve(dir, '.fusion/dist/production/client')
   );
-  const clientMainMap = path.resolve(
-    dir,
-    `.fusion/dist/production/client/client-main-b146db6e5d21f0eee531.js.map`
+  t.ok(
+    clientFiles.some(f => /client-main-(.*?).js$/.test(f)),
+    'includes a versioned client-main.js file'
   );
-  // TODO(#112): Enable failing test
-  // const clientMainVendor = path.resolve(
-  //   dir,
-  //   `.fusion/dist/production/client/client-vendor-75c3b5ea4d2e744ae2ad.js`
-  // );
-  // const clientMainVendorMap = path.resolve(
-  //   dir,
-  //   `.fusion/dist/production/client/client-vendor-75c3b5ea4d2e744ae2ad.js.map`
-  // );
-  // const port = await getPort();
-  await run(`build --dir=${dir} --production`);
+  t.ok(
+    clientFiles.some(f => /client-vendor-(.*?).js$/.test(f)),
+    'includes a versioned client-vendor.js file'
+  );
   t.ok(fs.existsSync(serverEntryPath), 'Server Entry file gets compiled');
   t.ok(
     fs.existsSync(serverMapPath),
     'Server Entry file sourcemap gets compiled'
   );
-  t.ok(fs.existsSync(clientMain), 'Client Entry file gets compiled');
+  const {res, proc} = await start(`--dir=${dir}`);
   t.ok(
-    fs.existsSync(clientMainMap),
-    'Client Entry file sourcemap gets compiled'
+    res.includes('src="/_static/client-main'),
+    'includes a script reference to client-main'
   );
-  // TODO(#112): Enable failing test
-  // t.ok(fs.existsSync(clientMainVendor), 'Client vendor file gets compiled');
-  // t.ok(
-  //   fs.existsSync(clientMainVendorMap),
-  //   'Client vendor file sourcemap gets compiled'
-  // );
+  t.ok(
+    res.includes('src="/_static/client-vendor'),
+    'includes a script reference to client-vendor'
+  );
+  proc.kill();
   t.end();
 });

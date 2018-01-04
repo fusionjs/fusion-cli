@@ -8,9 +8,8 @@
   },
   "scripts": {
     "lint": "eslint .",
-    "test": "node test/index.js && node test/cli/test.js",
-    "TODO(#102)": "Something weird is going on with nyc and unitest. This is a hack to fix it",
-    "cover": "node test/cli/test.js && nyc node test/index.js"
+    "test": "node test/index.js",
+    "cover": "nyc node test/index.js"
   },
   "dependencies": {
     "@nadiia/file-loader": "^1.0.0-beta.5",

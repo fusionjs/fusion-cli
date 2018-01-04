@@ -3,7 +3,7 @@
 const fs = require('fs');
 const path = require('path');
 const test = require('tape');
-const run = require('../run-command');
+const {run} = require('../run-command');
 const getPort = require('get-port');
 
 const {Compiler} = require('../../build/compiler');
@@ -83,7 +83,7 @@ test('development/production env globals', async t => {
           });
         });
       `;
-    const {stdout} = await run(command);
+    const {stdout} = await run(command, {stdio: 'pipe'});
     t.ok(
       stdout.includes('main __BROWSER__ is false'),
       'the global, __BROWSER__, is false'
@@ -136,6 +136,7 @@ test('test env globals', async t => {
     env: Object.assign({}, process.env, {
       NODE_ENV: 'production',
     }),
+    stdio: 'pipe',
   });
   t.ok(
     stdout.includes('universal __BROWSER__ is false'),
@@ -158,6 +159,7 @@ test('test env globals', async t => {
     env: Object.assign({}, process.env, {
       NODE_ENV: 'production',
     }),
+    stdio: 'pipe',
   });
   t.ok(
     browserStdout.includes('browser __BROWSER__ is true'),
@@ -264,6 +266,7 @@ test('dev works', async t => {
     env: Object.assign({}, process.env, {
       NODE_ENV: 'development',
     }),
+    stdio: 'pipe',
   });
   t.end();
 });
@@ -365,6 +368,7 @@ test('production works', async t => {
     env: Object.assign({}, process.env, {
       NODE_ENV: 'production',
     }),
+    stdio: 'pipe',
   });
   t.end();
 });
@@ -407,6 +411,7 @@ test('test works', async t => {
     env: Object.assign({}, process.env, {
       NODE_ENV: 'production',
     }),
+    stdio: 'pipe',
   });
   t.ok(
     stdout.includes('server test runs'),
@@ -429,6 +434,7 @@ test('test works', async t => {
     env: Object.assign({}, process.env, {
       NODE_ENV: 'production',
     }),
+    stdio: 'pipe',
   });
   t.ok(
     !browserStdout.includes('server test runs'),
