@@ -112,11 +112,5 @@
   "engines": {
     "node": ">= 8.9.0"
   },
-  "nyc": {
-    "exclude": [
-      "test/**/*.js",
-      "build/test-runtime.js"
-    ]
-  },
   "license": "MIT"
 }
