@@ -5,7 +5,7 @@ const ReactDOMServer = require('react-dom/server');
 
 function renderError(res, error) {
   res.write(
-    '<!DOCTYPE html><html><head><title>Server render error</title></head><body>'
+    '<!DOCTYPE html><html><head><title>Server error</title></head><body>'
   );
 
   const displayError = typeof error === 'string' ? new Error(error) : error;
