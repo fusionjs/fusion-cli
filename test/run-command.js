@@ -3,6 +3,7 @@ const binPath = require.resolve('../bin/cli-runner.js');
 const {spawn} = require('child_process');
 const getPort = require('get-port');
 const request = require('request-promise');
+
 function run(command, options) {
   const opts = {
     stdio: 'inherit',

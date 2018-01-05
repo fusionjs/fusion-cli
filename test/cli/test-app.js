@@ -8,6 +8,7 @@ const {promisify} = require('util');
 const exec = promisify(require('child_process').exec);
 
 const countTests = require('../fixtures/test-jest-app/count-tests');
+
 const runnerPath = require.resolve('../../bin/cli-runner');
 
 test('`fusion test-app` passes', async t => {
