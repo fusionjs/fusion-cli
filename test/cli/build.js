@@ -3,6 +3,10 @@ const fs = require('fs');
 const path = require('path');
 const test = require('tape');
 const {cmd, start} = require('../run-command');
+const {promisify} = require('util');
+
+const exists = promisify(fs.exists);
+const readdir = promisify(fs.readdir);
 
 test('`fusion build` works', async t => {
   const dir = path.resolve(__dirname, '../fixtures/noop');
@@ -31,19 +35,19 @@ test('`fusion build` works', async t => {
     `.fusion/dist/development/client/client-vendor.js.map`
   );
   await cmd(`build --dir=${dir}`);
-  t.ok(fs.existsSync(serverEntryPath), 'Server Entry file gets compiled');
+  t.ok(await exists(serverEntryPath), 'Server Entry file gets compiled');
   t.ok(
-    fs.existsSync(serverMapPath),
+    await exists(serverMapPath),
     'Server Entry file sourcemap gets compiled'
   );
-  t.ok(fs.existsSync(clientMain), 'Client Entry file gets compiled');
+  t.ok(await exists(clientMain), 'Client Entry file gets compiled');
   t.ok(
-    fs.existsSync(clientMainMap),
+    await exists(clientMainMap),
     'Client Entry file sourcemap gets compiled'
   );
-  t.ok(fs.existsSync(clientMainVendor), 'Client vendor file gets compiled');
+  t.ok(await exists(clientMainVendor), 'Client vendor file gets compiled');
   t.ok(
-    fs.existsSync(clientMainVendorMap),
+    await exists(clientMainVendorMap),
     'Client vendor file sourcemap gets compiled'
   );
   t.end();
@@ -60,7 +64,7 @@ test('`fusion build` works in production with a CDN_URL', async t => {
     `.fusion/dist/production/server/server-main.js.map`
   );
   await cmd(`build --dir=${dir} --production`);
-  const clientFiles = fs.readdirSync(
+  const clientFiles = await readdir(
     path.resolve(dir, '.fusion/dist/production/client')
   );
   t.ok(
@@ -71,9 +75,9 @@ test('`fusion build` works in production with a CDN_URL', async t => {
     clientFiles.some(f => /client-vendor-(.*?).js$/.test(f)),
     'includes a versioned client-vendor.js file'
   );
-  t.ok(fs.existsSync(serverEntryPath), 'Server Entry file gets compiled');
+  t.ok(await exists(serverEntryPath), 'Server Entry file gets compiled');
   t.ok(
-    fs.existsSync(serverMapPath),
+    await exists(serverMapPath),
     'Server Entry file sourcemap gets compiled'
   );
   const {res, proc} = await start(`--dir=${dir}`, {
@@ -102,7 +106,7 @@ test('`fusion build` works in production', async t => {
     `.fusion/dist/production/server/server-main.js.map`
   );
   await cmd(`build --dir=${dir} --production`);
-  const clientFiles = fs.readdirSync(
+  const clientFiles = await readdir(
     path.resolve(dir, '.fusion/dist/production/client')
   );
   t.ok(
@@ -113,9 +117,9 @@ test('`fusion build` works in production', async t => {
     clientFiles.some(f => /client-vendor-(.*?).js$/.test(f)),
     'includes a versioned client-vendor.js file'
   );
-  t.ok(fs.existsSync(serverEntryPath), 'Server Entry file gets compiled');
+  t.ok(await exists(serverEntryPath), 'Server Entry file gets compiled');
   t.ok(
-    fs.existsSync(serverMapPath),
+    await exists(serverMapPath),
     'Server Entry file sourcemap gets compiled'
   );
   const {res, proc} = await start(`--dir=${dir}`);

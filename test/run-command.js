@@ -65,12 +65,13 @@ async function waitForServer(port) {
   let numTries = 0;
   let res;
   while (!started && numTries < 20) {
-    await new Promise(resolve => setTimeout(resolve, 200));
+    await new Promise(resolve => setTimeout(resolve, 500));
     try {
       res = await request(`http://localhost:${port}/`, {
         headers: {
           accept: 'text/html',
         },
+        timeout: 1000,
       });
       started = true;
     } catch (e) {
