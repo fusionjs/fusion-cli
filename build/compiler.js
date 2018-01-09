@@ -88,14 +88,12 @@ function getConfig({target, env, dir, watch, cover}) {
   const destination = path.resolve(dir, `.fusion/dist/${env}/${side}`);
   const evergreen = false;
   const possibleESVersions = ['es5'];
-  const serverEntry =
-    env === 'test'
-      ? serverTestEntry
-      : path.join(__dirname, `../entries/server-entry.js`);
-  const clientEntry =
-    env === 'test'
-      ? browserTestEntry
-      : path.join(__dirname, `../entries/client-entry.js`);
+  const serverEntry = env === 'test'
+    ? serverTestEntry
+    : path.join(__dirname, `../entries/server-entry.js`);
+  const clientEntry = env === 'test'
+    ? browserTestEntry
+    : path.join(__dirname, `../entries/client-entry.js`);
   const entry = {
     node: serverEntry,
     web: clientEntry,
@@ -158,27 +156,25 @@ function getConfig({target, env, dir, watch, cover}) {
      * We only use it for generating nice stack traces
      */
     // TODO(#6): what about node v8 inspector?
-    devtool:
-      target !== 'node' && env === 'production'
-        ? 'hidden-source-map'
-        : 'cheap-module-source-map',
+    devtool: target !== 'node' && env === 'production'
+      ? 'hidden-source-map'
+      : 'cheap-module-source-map',
     output: {
       // For in-memory filesystem in webpack dev middleware, write files to root
       // Otherwise, write to appropriate location on disk
-      path:
-        env === 'development' && watch && target === 'web' ? '/' : destination,
-      filename:
-        env === 'production' && target === 'web'
-          ? `${name}-[name]-[chunkhash].js`
-          : `${name}-[name].js`,
+      path: env === 'development' && watch && target === 'web'
+        ? '/'
+        : destination,
+      filename: env === 'production' && target === 'web'
+        ? `${name}-[name]-[chunkhash].js`
+        : `${name}-[name].js`,
       libraryTarget: target === 'node' ? 'commonjs2' : 'var',
       // This is the recommended default.
       // See https://webpack.js.org/configuration/output/#output-sourcemapfilename
       sourceMapFilename: `[file].map`,
-      chunkFilename:
-        env === 'production' && target === 'web'
-          ? '[id]-[chunkhash].js'
-          : evergreen ? 'evergreen-[id].js' : '[id].js',
+      chunkFilename: env === 'production' && target === 'web'
+        ? '[id]-[chunkhash].js'
+        : evergreen ? 'evergreen-[id].js' : '[id].js',
       // We will set __webpack_public_path__ at runtime, so this should be set to undefined
       publicPath: void 0,
       // TODO(#7): Do we really need this? See lite config
@@ -284,16 +280,15 @@ function getConfig({target, env, dir, watch, cover}) {
                   [
                     require.resolve('./babel-preset.js'),
                     {
-                      targets:
-                        target === 'node'
-                          ? {
-                              node: 'current',
-                            }
-                          : {
-                              browsers: evergreen
-                                ? browserSupport.evergreen
-                                : browserSupport.conservative,
-                            },
+                      targets: target === 'node'
+                        ? {
+                            node: 'current',
+                          }
+                        : {
+                            browsers: evergreen
+                              ? browserSupport.evergreen
+                              : browserSupport.conservative,
+                          },
                     },
                   ],
                   ...(fusionConfig.babel && fusionConfig.babel.presets
@@ -351,13 +346,13 @@ function getConfig({target, env, dir, watch, cover}) {
           __ENV__: env,
         },
         target === 'node' &&
-          env === 'test' && {
-            __NODE_TEST_ENTRY__: serverTestEntry,
-          },
+        env === 'test' && {
+          __NODE_TEST_ENTRY__: serverTestEntry,
+        },
         target === 'web' &&
-          env === 'test' && {
-            __BROWSER_TEST_ENTRY__: browserTestEntry,
-          },
+        env === 'test' && {
+          __BROWSER_TEST_ENTRY__: browserTestEntry,
+        },
         alias
       ),
     },
@@ -608,8 +603,7 @@ function Compiler({
       },
       reporter: null,
       serverSideRender: true,
-      // TODO(#14): handle route prefix here??
-      publicPath: '/_static/',
+      publicPath: '/_static', // keep in sync with defaults in environment-variables-plugin.js
     });
     const hot = webpackHotMiddleware(compiler, {log: false});
     return composeMiddleware([dev, hot]);

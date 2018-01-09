@@ -6,11 +6,13 @@ import CompilationMetaDataFactory from '../plugins/compilation-metadata-plugin';
 import AssetsFactory from '../plugins/assets-plugin';
 import ContextFactory from '../plugins/context-plugin';
 import ServerErrorFactory from '../plugins/server-error-plugin';
+import RoutePrefixFactory from '../plugins/route-prefix-context-plugin';
 
 const CompilationMetaData = CompilationMetaDataFactory();
 const Assets = AssetsFactory();
 const Context = ContextFactory();
 const ServerErrorHandling = ServerErrorFactory();
+const RoutePrefix = RoutePrefixFactory();
 
 /*
 Webpack has a configuration option called `publicPath`, which determines the
@@ -60,7 +62,7 @@ export async function start({port}) {
 
 async function reload() {
   const app = await initialize();
-  app.plugins = [Assets, Context].concat(app.plugins);
+  app.plugins = [Assets, Context, RoutePrefix].concat(app.plugins);
   if (__DEV__) {
     app.plugins.unshift(ServerErrorHandling);
   }
