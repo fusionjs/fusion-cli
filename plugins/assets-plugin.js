@@ -7,5 +7,7 @@ const serve = require('koa-static');
 
 module.exports = function() {
   const {assetPath, env} = envVarsPlugin().of();
-  return mount(assetPath, serve(`.fusion/dist/${env}/client`));
+  // setting defer here tells the `serve` middleware to `await next` first before
+  // setting the response. This allows composition with user middleware
+  return mount(assetPath, serve(`.fusion/dist/${env}/client`, {defer: true}));
 };
