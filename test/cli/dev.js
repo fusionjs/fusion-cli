@@ -8,7 +8,6 @@ const {promisify} = require('util');
 const request = require('request-promise');
 
 const exists = promisify(fs.exists);
-const readFile = promisify(fs.readFile);
 
 test('`fusion dev` works', async t => {
   const dir = path.resolve(__dirname, '../fixtures/noop');
