@@ -31,9 +31,13 @@ test('`fusion dev` works with assets', async t => {
   t.ok(await exists(entryPath), 'Entry file gets compiled');
   const expectedAssetPath = '/_static/c300a7df05c8142598558365dbdaa451.css';
   try {
+    const clientMain = await request(
+      `http://localhost:${port}/_static/client-main.js`
+    );
+    t.ok(clientMain, 'serves client-main from memory correctly');
     t.ok(
-      await request(`http://localhost:${port}/_static/client-main.js`),
-      'serves client-main from memory correctly'
+      clientMain.includes('"src", "src/main.js")'),
+      'transpiles __dirname and __filename'
     );
     t.ok(
       await request(`http://localhost:${port}/_static/client-vendor.js`),
@@ -44,6 +48,8 @@ test('`fusion dev` works with assets', async t => {
       fs.readFileSync(path.resolve(dir, 'src/static/test.css')).toString(),
       'serves css file from memory correctly'
     );
+    t.equal(await request(`http://localhost:${port}/dirname`), 'src');
+    t.equal(await request(`http://localhost:${port}/filename`), 'src/main.js');
   } catch (e) {
     t.iferror(e);
   }

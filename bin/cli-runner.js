@@ -16,10 +16,6 @@ module.exports.run = args => {
     .version()
     .help();
   const cmdPath = path.resolve(cmdsDir, `${instance.argv._}.js`);
-  // we should always have process.cwd() be equal to the dir of the project being run
-  if (instance.argv.dir) {
-    process.chdir(instance.argv.dir);
-  }
   if (!fs.existsSync(cmdPath)) {
     const error = new Error(`'${instance.argv._}' is an invalid command\n`);
     // TODO(#3) ideally, the string from yargs.showHelp() should be part of the error message above

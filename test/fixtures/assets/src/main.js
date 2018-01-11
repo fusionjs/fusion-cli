@@ -7,7 +7,14 @@ export default async function() {
       ctx.set('x-test', 'test');
     } else if (ctx.url === '/test') {
       ctx.body = assetUrl('./static/test.css');
+    } else if (ctx.url === '/dirname') {
+      ctx.body = __dirname;
+    } else if (ctx.url === '/filename') {
+      ctx.body = __filename;
     }
+    
+    __BROWSER__ && console.log('Dirname is', __dirname);
+    __BROWSER__ && console.log('Filename is', __filename);
     return next();
   });
   return app;
