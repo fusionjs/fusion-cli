@@ -9,7 +9,11 @@ function run(command, options) {
     stdio: 'inherit',
     ...options,
   };
-  const child = spawn('node', ['-e', command], opts);
+  const child = spawn(
+    'node',
+    ['-e', command, '--max-old-space-size=4096'],
+    opts
+  );
   const stdoutLines = [];
   const stderrLines = [];
   const promise = new Promise((resolve, reject) => {

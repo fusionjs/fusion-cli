@@ -21,8 +21,10 @@ module.exports.TestRuntime = function({
     let args = [`--browser=${client}`, `--node=${server}`];
     if (cover) {
       const unitest = command;
-      command = require.resolve('nyc/bin/nyc.js');
+      command = 'node';
       args = [
+        require.resolve('nyc/bin/nyc.js'),
+        '--max-old-space-size=4096',
         '--reporter=text',
         '--reporter=html',
         '--reporter=cobertura',
