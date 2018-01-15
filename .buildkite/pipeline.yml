@@ -23,9 +23,9 @@ steps:
       queue: workers
   - name: ':node: - %n'
     command: .buildkite/nodeTests
-    parallelism: 3
+    parallelism: 2
     plugins:
       'docker-compose#v1.7.0':
         run: fusion-cli
     agents:
-      queue: workers
+      queue: beefy
