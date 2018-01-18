@@ -66,7 +66,7 @@
     "@babel/helper-builder-react-jsx" "7.0.0-beta.38"
     "@babel/plugin-syntax-jsx" "7.0.0-beta.38"
 
-"@babel/preset-react@^7.0.0-beta.34":
+"@babel/preset-react@^7.0.0-beta.38":
   version "7.0.0-beta.38"
   resolved "https://registry.yarnpkg.com/@babel/preset-react/-/preset-react-7.0.0-beta.38.tgz#eb42433a72314f14f28be7fe2b092c9a9a3294cb"
   dependencies:
@@ -3212,11 +3212,11 @@ fusion-core@0.2.8:
     koa-compose "^4.0.0"
     node-mocks-http "^1.6.6"
 
-fusion-plugin-react-router@0.2.3:
-  version "0.2.3"
-  resolved "https://registry.yarnpkg.com/fusion-plugin-react-router/-/fusion-plugin-react-router-0.2.3.tgz#be0ee18e3abd025015deafc0c668b98429ebb08e"
+fusion-plugin-react-router@0.4.0:
+  version "0.4.0"
+  resolved "https://registry.yarnpkg.com/fusion-plugin-react-router/-/fusion-plugin-react-router-0.4.0.tgz#ec4c5987821c2ba20b1a5ac2f0007638f0182b58"
   dependencies:
-    "@babel/preset-react" "^7.0.0-beta.34"
+    "@babel/preset-react" "^7.0.0-beta.38"
     history "^4.7.2"
     prop-types "^15.6.0"
     react-router-dom "^4.2.2"
@@ -5356,8 +5356,8 @@ multicast-dns-service-types@^1.1.0:
   resolved "https://registry.yarnpkg.com/multicast-dns-service-types/-/multicast-dns-service-types-1.1.0.tgz#899f11d9686e5e05cb91b35d5f0e63b773cfc901"
 
 multicast-dns@^6.0.1:
-  version "6.2.1"
-  resolved "https://registry.yarnpkg.com/multicast-dns/-/multicast-dns-6.2.1.tgz#c5035defa9219d30640558a49298067352098060"
+  version "6.2.2"
+  resolved "https://registry.yarnpkg.com/multicast-dns/-/multicast-dns-6.2.2.tgz#300b6133361f8aaaf2b8d1248e85c363fe5b95a0"
   dependencies:
     dns-packet "^1.0.1"
     thunky "^0.1.0"
