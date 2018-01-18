@@ -11,7 +11,7 @@ function run(command, options) {
   };
   const child = spawn(
     'node',
-    ['-e', command, '--max-old-space-size=4096'],
+    ['-e', command, '--max-old-space-size=8096'],
     opts
   );
   const stdoutLines = [];
@@ -19,10 +19,12 @@ function run(command, options) {
   const promise = new Promise((resolve, reject) => {
     child.stdout &&
       child.stdout.on('data', data => {
+        console.log('STDOUT: ', data.toString());
         stdoutLines.push(data.toString());
       });
     child.stderr &&
       child.stderr.on('data', data => {
+        console.log('STDERR: ', data.toString());
         stderrLines.push(data.toString());
       });
     child.on('close', code => {
@@ -69,6 +71,7 @@ async function waitForServer(port) {
   let numTries = 0;
   let res;
   while (!started && numTries < 20) {
+    console.log('polling for start?');
     await new Promise(resolve => setTimeout(resolve, 500));
     try {
       res = await request(`http://localhost:${port}/`, {

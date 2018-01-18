@@ -2,6 +2,7 @@ version: '3'
 services:
   fusion-cli:
     build: .
+    network_mode: "host"
     shm_size: '8gb'
     volumes:
       - '.:/fusion-cli'
