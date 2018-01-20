@@ -22,7 +22,7 @@ exports.builder = {
     type: 'string',
     default: 'jsdom,node',
     describe:
-      'Comma-separated list of environments to run tests in. Defaults to running both node and browser tests.',
+      'Comma-separated list of environments to run tests in. Defaults to running both node and browser tests. Valid values are: jsdom, node and integration.',
   },
   updateSnapshot: {
     type: 'boolean',

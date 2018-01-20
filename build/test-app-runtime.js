@@ -65,8 +65,15 @@ module.exports.TestAppRuntime = function({
     const spawnProc = testEnv => {
       return new Promise((resolve, reject) => {
         const args = getArgs();
+
+        // Supply the environment for jest.
+        // We run integration tests in the node environment
+        let jestEnv = testEnv;
+        if (testEnv === 'integration') {
+          jestEnv = 'node';
+        }
         args.push('--env');
-        args.push(testEnv);
+        args.push(jestEnv);
 
         const procEnv = {
           JEST_ENV: testEnv,

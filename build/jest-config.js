@@ -1,5 +1,21 @@
 /* eslint-env node */
 
+// Handle test execution matching for environments.
+// node - Runs all universal .js and .node.js tests.
+// browser - Runs all universal .js and .browser.js tests.
+// integration - Runs only .integration.js tests.
+const jestEnvIgnorePatterns = {
+  node: ['.*\\.browser\\.js', '.*\\.integration\\.js'],
+  jsdom: ['.*\\.node\\.js', '.*\\.integration\\.js'],
+  integration: [],
+};
+
+const jestTestMatchPatterns = {
+  integration: ['/**/__tests__/**/*.integration.js'],
+  node: ['**/__tests__/**/*.js'],
+  jsdom: ['**/__tests__/**/*.js'],
+};
+
 module.exports = {
   cache: true,
   globals: {
@@ -18,9 +34,8 @@ module.exports = {
     require.resolve('./jest-framework-setup.js'),
   ],
   snapshotSerializers: [require.resolve('enzyme-to-json/serializer')],
-  testPathIgnorePatterns: [
-    process.env.JEST_ENV === 'node' ? '.*\\.browser\\.js' : '.*\\.node\\.js',
-  ],
+  testMatch: jestTestMatchPatterns[process.env.JEST_ENV],
+  testPathIgnorePatterns: jestEnvIgnorePatterns[process.env.JEST_ENV],
   transform: {
     '^.+\\.js$': require.resolve('./jest-transformer.js'),
   },
