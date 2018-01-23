@@ -10,6 +10,7 @@ module.exports.TestAppRuntime = function({
   watch = false,
   match,
   env,
+  testFolder,
   updateSnapshot,
   coverage,
   configPath,
@@ -65,18 +66,12 @@ module.exports.TestAppRuntime = function({
     const spawnProc = testEnv => {
       return new Promise((resolve, reject) => {
         const args = getArgs();
-
-        // Supply the environment for jest.
-        // We run integration tests in the node environment
-        let jestEnv = testEnv;
-        if (testEnv === 'integration') {
-          jestEnv = 'node';
-        }
         args.push('--env');
-        args.push(jestEnv);
+        args.push(testEnv);
 
         const procEnv = {
           JEST_ENV: testEnv,
+          TEST_FOLDER: testFolder,
         };
 
         // Pass in the CI flag to prevent console clearing when watching on more than one suite

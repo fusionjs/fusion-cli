@@ -22,7 +22,12 @@ exports.builder = {
     type: 'string',
     default: 'jsdom,node',
     describe:
-      'Comma-separated list of environments to run tests in. Defaults to running both node and browser tests. Valid values are: jsdom, node and integration.',
+      'Comma-separated list of environments to run tests in. Defaults to running both node and browser tests.',
+  },
+  testFolder: {
+    type: 'string',
+    default: '__tests__',
+    describe: 'Which folder to look for tests in.',
   },
   updateSnapshot: {
     type: 'boolean',
@@ -46,6 +51,7 @@ exports.run = async function({
   watch,
   match,
   env,
+  testFolder,
   updateSnapshot,
   coverage,
   configPath,
@@ -55,6 +61,7 @@ exports.run = async function({
     watch,
     match,
     env,
+    testFolder,
     updateSnapshot,
     coverage,
     configPath,
