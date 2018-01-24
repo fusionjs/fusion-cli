@@ -38,7 +38,7 @@ module.exports = function() {
         this.rootDir = rootDir;
         this.env = env;
         this.prefix = prefix;
-        this.assetPath = this.prefix + assetPath;
+        this.assetPath = assetPath;
         this.cdnUrl = cdnUrl;
       }
     },

@@ -73,7 +73,7 @@ test('`fusion dev` works with route prefix', async t => {
   const assetPath = await readFile(testFilePath);
   t.equal(
     assetPath.toString(),
-    '/test-prefix/_static/d41d8cd98f00b204e9800998ecf8427e.js',
+    '/test-prefix/_static/c300a7df05c8142598558365dbdaa451.css',
     'sets correct route prefix in path'
   );
   proc.kill();
