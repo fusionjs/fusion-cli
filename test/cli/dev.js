@@ -57,6 +57,29 @@ test('`fusion dev` works with assets', async t => {
   t.end();
 });
 
+test('`fusion dev` works with route prefix', async t => {
+  const dir = path.resolve(__dirname, '../fixtures/assets');
+  const entryPath = path.resolve(
+    dir,
+    '.fusion/dist/development/server/server-main.js'
+  );
+  const testFilePath = path.resolve(dir, '.fusion/test-asset');
+
+  const {proc} = await dev(`--dir=${dir}`, {
+    env: Object.assign({}, process.env, {ROUTE_PREFIX: '/test-prefix'}),
+  });
+  t.ok(await exists(testFilePath), 'Generates test file');
+  t.ok(await exists(entryPath), 'Entry file gets compiled');
+  const assetPath = await readFile(testFilePath);
+  t.equal(
+    assetPath.toString(),
+    '/test-prefix/_static/d41d8cd98f00b204e9800998ecf8427e.js',
+    'sets correct route prefix in path'
+  );
+  proc.kill();
+  t.end();
+});
+
 test('`fusion dev` works with assets with cdnUrl', async t => {
   const dir = path.resolve(__dirname, '../fixtures/assets');
   const entryPath = path.resolve(

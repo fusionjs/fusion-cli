@@ -16,7 +16,6 @@ module.exports = function() {
     // env vars
     ctx.rootDir = envVars.rootDir;
     ctx.env = envVars.env;
-    ctx.prefix = envVars.prefix;
     ctx.assetPath = envVars.assetPath;
     ctx.cdnUrl = envVars.cdnUrl;
 
