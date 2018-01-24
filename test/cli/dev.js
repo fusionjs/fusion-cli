@@ -22,7 +22,7 @@ test('`fusion dev` works', async t => {
   t.end();
 });
 
-test.only('`fusion dev` works with assets', async t => {
+test('`fusion dev` works with assets', async t => {
   const dir = path.resolve(__dirname, '../fixtures/assets');
   const entryPath = path.resolve(
     dir,
@@ -72,7 +72,7 @@ test('`fusion dev` works with assets with cdnUrl', async t => {
   const assetPath = await readFile(testFilePath);
   t.equal(
     assetPath.toString(),
-    'https://cdn.com/d41d8cd98f00b204e9800998ecf8427e.js',
+    'https://cdn.com/c300a7df05c8142598558365dbdaa451.css',
     'sets correct asset path'
   );
   proc.kill();
