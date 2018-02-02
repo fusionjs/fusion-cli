@@ -192,8 +192,8 @@ acorn-jsx@^3.0.0:
     acorn "^3.0.4"
 
 acorn@>=2.5.2, acorn@^5.0.0, acorn@^5.2.1, acorn@^5.3.0:
-  version "5.3.0"
-  resolved "https://registry.yarnpkg.com/acorn/-/acorn-5.3.0.tgz#7446d39459c54fb49a80e6ee6478149b940ec822"
+  version "5.4.0"
+  resolved "https://registry.yarnpkg.com/acorn/-/acorn-5.4.0.tgz#51c581c9d4b1943dda59a3e73bcf02661ac727ea"
 
 acorn@^3.0.4:
   version "3.3.0"
@@ -2341,8 +2341,8 @@ ee-first@1.1.1:
   resolved "https://registry.yarnpkg.com/ee-first/-/ee-first-1.1.1.tgz#590c61156b0ae2f4f0255732a158b266bc56b21d"
 
 electron-to-chromium@^1.3.30:
-  version "1.3.31"
-  resolved "https://registry.yarnpkg.com/electron-to-chromium/-/electron-to-chromium-1.3.31.tgz#00d832cba9fe2358652b0c48a8816c8e3a037e9f"
+  version "1.3.32"
+  resolved "https://registry.yarnpkg.com/electron-to-chromium/-/electron-to-chromium-1.3.32.tgz#11d0684c0840e003c4be8928f8ac5f35dbc2b4e6"
 
 elliptic@^6.0.0:
   version "6.4.0"
@@ -3269,9 +3269,9 @@ fusion-test-utils@0.4.2:
     koa "^2.4.1"
     node-mocks-http "^1.6.6"
 
-fusion-tokens@^0.0.5:
-  version "0.0.5"
-  resolved "https://registry.yarnpkg.com/fusion-tokens/-/fusion-tokens-0.0.5.tgz#71af057ab696046c43e89ca06dfe47cdbaeac6d8"
+fusion-tokens@^0.0.6:
+  version "0.0.6"
+  resolved "https://registry.yarnpkg.com/fusion-tokens/-/fusion-tokens-0.0.6.tgz#71606a0109918dc098eb43cc0a3b877beb111d4d"
 
 gauge@~2.7.3:
   version "2.7.4"

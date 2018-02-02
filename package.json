@@ -104,7 +104,7 @@
     "fusion-react": "0.4.2",
     "fusion-react-async": "0.1.4",
     "fusion-test-utils": "0.4.2",
-    "fusion-tokens": "^0.0.5",
+    "fusion-tokens": "^0.0.6",
     "globby": "7.1.1",
     "prettier": "1.10.2",
     "react": "16.2.0",
@@ -117,7 +117,7 @@
   "peerDependencies": {
     "enzyme": "^3.3.0",
     "fusion-core": "^0.3.0-5",
-    "fusion-tokens": "^0.0.5"
+    "fusion-tokens": "^0.0.6"
   },
   "engines": {
     "node": ">= 8.9.0"
