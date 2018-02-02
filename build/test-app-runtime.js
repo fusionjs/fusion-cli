@@ -8,6 +8,7 @@ const mergeCoverage = require('./merge-coverage');
 module.exports.TestAppRuntime = function({
   dir = '.',
   watch = false,
+  debug = false,
   match,
   env,
   testFolder,
@@ -22,9 +23,21 @@ module.exports.TestAppRuntime = function({
     this.stop();
     const allTestEnvs = env.split(',');
     let command = require.resolve('jest-cli/bin/jest.js');
+    if (debug) {
+      command = `node`;
+    }
 
     const getArgs = () => {
-      let args = ['--config', configPath];
+      let args = [];
+      if (debug) {
+        args = args.concat([
+          '--inspect-brk',
+          require.resolve('jest/bin/jest.js'),
+          '--runInBand',
+        ]);
+      }
+
+      args = args.concat(['--config', configPath]);
 
       if (watch) {
         args.push('--watch');
@@ -78,7 +91,6 @@ module.exports.TestAppRuntime = function({
         if (allTestEnvs.length > 1 && watch) {
           procEnv.CI = 'true';
         }
-
         const proc = spawn(command, args, {
           cwd: rootDir,
           stdio: 'inherit',
