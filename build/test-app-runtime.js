@@ -87,7 +87,6 @@ module.exports.TestAppRuntime = function({
         if (allTestEnvs.length > 1 && watch) {
           procEnv.CI = 'true';
         }
-        console.log('args are?', args);
         const proc = spawn('node', args, {
           cwd: rootDir,
           stdio: 'inherit',
