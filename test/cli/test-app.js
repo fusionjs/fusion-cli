@@ -287,5 +287,11 @@ test('`fusion test-app --debug --env=jsdom,node`', async t => {
   await checkStartedMessageCount(2);
   await triggerCodeStep();
 
+  t.equal(
+    Object.keys(listenAddresses).length,
+    2,
+    'listened for two remote debug connections'
+  );
+
   child.kill();
 });
