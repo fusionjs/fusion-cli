@@ -51,6 +51,8 @@ module.exports.TestAppRuntime = function({
         args.push('--updateSnapshot');
       }
 
+      args.push('--verbose');
+
       return args;
     };
 
@@ -72,14 +74,12 @@ module.exports.TestAppRuntime = function({
       );
     };
 
-    const spawnProc = testEnv => {
+    const spawnProc = () => {
       return new Promise((resolve, reject) => {
         const args = getArgs();
-        args.push('--env');
-        args.push(testEnv);
 
         const procEnv = {
-          JEST_ENV: testEnv,
+          JEST_ENV: env,
           TEST_FOLDER: testFolder,
         };
 
@@ -120,20 +120,8 @@ module.exports.TestAppRuntime = function({
       });
     };
 
-    const getResolveChain = () => {
-      if (!debug) {
-        return Promise.all(allTestEnvs.map(spawnProc));
-      }
-      // Run environments in serial when debugging so we don't get a port collision.
-      let chain = Promise.resolve();
-      allTestEnvs.forEach(env => {
-        chain = chain.then(() => spawnProc(env));
-      });
-      return chain;
-    };
-
     return setup()
-      .then(getResolveChain())
+      .then(spawnProc())
       .then(finish());
   };
 

@@ -15,7 +15,7 @@ const countTests = require('../fixtures/test-jest-app/count-tests');
 
 const runnerPath = require.resolve('../../bin/cli-runner');
 
-test('`fusion test-app` passes', async t => {
+test.only('`fusion test-app` passes', async t => {
   const dir = path.resolve(__dirname, '../fixtures/test-jest-app');
   const args = `test-app --dir=${dir} --configPath=../../../build/jest-config.js --match=passes`;
 

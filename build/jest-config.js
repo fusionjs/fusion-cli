@@ -1,18 +1,42 @@
 /* eslint-env node */
 
 const testFolder = process.env.TEST_FOLDER || '__tests__';
+const envs = process.env.JEST_ENV.split(',');
+
+const envConfiguration = {
+  jsdom: {
+    displayName: 'browser',
+    browser: true,
+    coverageDirectory: `<rootDir>/coverage-jsdom`,
+    globals: {
+      // Parity with create-universal-package globals.
+      // https://github.com/rtsao/create-universal-package#globals
+      __NODE__: false,
+      __BROWSER__: true,
+      __DEV__: process.env.NODE_ENV !== 'production',
+    },
+    testEnvironment: 'jsdom',
+    testPathIgnorePatterns: ['.*\\.node\\.js'],
+  },
+  node: {
+    displayName: 'node',
+    browser: false,
+    coverageDirectory: `<rootDir>/coverage-node`,
+    globals: {
+      // Parity with create-universal-package globals.
+      // https://github.com/rtsao/create-universal-package#globals
+      __NODE__: true,
+      __BROWSER__: false,
+      __DEV__: process.env.NODE_ENV !== 'production',
+    },
+    testEnvironment: 'node',
+    testPathIgnorePatterns: ['.*\\.browser\\.js'],
+  },
+};
 
 module.exports = {
-  cache: true,
-  globals: {
-    // Parity with create-universal-package globals.
-    // https://github.com/rtsao/create-universal-package#globals
-    __NODE__: process.env.JEST_ENV === 'node',
-    __BROWSER__: process.env.JEST_ENV === 'jsdom',
-    __DEV__: process.env.NODE_ENV !== 'production',
-  },
-  browser: process.env.JEST_ENV === 'jsdom',
-  coverageDirectory: `<rootDir>/coverage-${process.env.JEST_ENV}`,
+  projects: envs.map(env => envConfiguration[env]),
+  cache: false,
   // 'cobertura', 'lcov', 'text' coverage reports are written by the merge-coverage script
   coverageReporters: ['json'],
   rootDir: process.cwd(),
@@ -22,9 +46,6 @@ module.exports = {
   ],
   snapshotSerializers: [require.resolve('enzyme-to-json/serializer')],
   testMatch: [`**/${testFolder}/**/*.js`],
-  testPathIgnorePatterns: [
-    process.env.JEST_ENV === 'node' ? '.*\\.browser\\.js' : '.*\\.node\\.js',
-  ],
   transform: {
     '^.+\\.js$': require.resolve('./jest-transformer.js'),
   },
