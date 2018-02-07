@@ -2,7 +2,6 @@
 const path = require('path');
 const {spawn} = require('child_process');
 const rimraf = require('rimraf');
-const getJestConfig = require('./jest-config');
 
 const mergeCoverage = require('./merge-coverage');
 
@@ -15,6 +14,7 @@ module.exports.TestAppRuntime = function({
   testFolder,
   updateSnapshot,
   coverage,
+  configPath,
 }) {
   const state = {procs: []};
   const rootDir = path.resolve(process.cwd(), dir);
@@ -33,12 +33,7 @@ module.exports.TestAppRuntime = function({
         ];
       }
 
-      args = args.concat([
-        '--projects',
-        ...allTestEnvs,
-        '--config',
-        JSON.stringify(getJestConfig(allTestEnvs)),
-      ]);
+      args = args.concat(['--config', configPath]);
 
       if (watch) {
         args.push('--watch');
