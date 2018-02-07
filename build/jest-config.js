@@ -26,10 +26,6 @@ module.exports = envs => {
       ],
       snapshotSerializers: [require.resolve('enzyme-to-json/serializer')],
       testMatch: [`**/${testFolder}/**/*.js`],
-      transform: {
-        '^.+\\.js$': require.resolve('./jest-transformer.js'),
-      },
-      transformIgnorePatterns: ['/node_modules/(?!(fusion-cli.*build))'],
     },
     node: {
       displayName: 'node',
@@ -53,14 +49,14 @@ module.exports = envs => {
       ],
       snapshotSerializers: [require.resolve('enzyme-to-json/serializer')],
       testMatch: [`**/${testFolder}/**/*.js`],
-      transform: {
-        '^.+\\.js$': require.resolve('./jest-transformer.js'),
-      },
-      transformIgnorePatterns: ['/node_modules/(?!(fusion-cli.*build))'],
     },
   };
   return {
     projects: envs.map(env => envConfiguration[env]),
     rootDir: process.cwd(),
+    transform: {
+      '^.+\\.js$': require.resolve('./jest-transformer.js'),
+    },
+    transformIgnorePatterns: ['/node_modules/(?!(fusion-cli.*build))'],
   };
 };
