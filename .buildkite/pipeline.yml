@@ -28,4 +28,4 @@ steps:
         run: fusion-cli
     agents:
       queue: workers
-    parallelism: 10
+    parallelism: 20
