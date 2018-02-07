@@ -3,7 +3,7 @@
 const testFolder = process.env.TEST_FOLDER || '__tests__';
 
 module.exports = {
-  cache: false,
+  cache: true,
   displayName: 'browser',
   browser: true,
   coverageDirectory: `<rootDir>/coverage-jsdom`,

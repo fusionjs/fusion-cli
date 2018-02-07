@@ -2,9 +2,7 @@
 
 const projects = process.env.JEST_ENV.split(',');
 
-let config = {
-  cache: false,
-};
+let config = {};
 
 // Use projects if we have more than one environment.
 if (projects.length > 1) {

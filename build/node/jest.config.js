@@ -1,10 +1,9 @@
 /* eslint-env node */
 
 const testFolder = process.env.TEST_FOLDER || '__tests__';
-console.log('process.env.TEST_FOLDER is?', process.env.TEST_FOLDER);
-console.log('omfg process.cwd()', process.cwd());
+
 module.exports = {
-  cache: false,
+  cache: true,
   displayName: 'node',
   browser: false,
   coverageDirectory: `<rootDir>/coverage-node`,
