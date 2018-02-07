@@ -4,6 +4,8 @@ const testFolder = process.env.TEST_FOLDER || '__tests__';
 
 module.exports = {
   cache: true,
+  coverageDirectory: `${process.cwd()}/coverage`,
+  coverageReporters: ['json'],
   displayName: 'node',
   browser: false,
   rootDir: process.cwd(),
@@ -13,7 +15,6 @@ module.exports = {
     '^.+\\.js$': require.resolve('../jest-transformer.js'),
   },
   transformIgnorePatterns: ['/node_modules/(?!(fusion-cli.*build))'],
-  coverageReporters: ['json', 'cobertura', 'lcov', 'text'],
   setupFiles: [
     require.resolve('../jest-framework-shims.js'),
     require.resolve('../jest-framework-setup.js'),

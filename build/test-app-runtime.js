@@ -3,6 +3,8 @@ const path = require('path');
 const {spawn} = require('child_process');
 const rimraf = require('rimraf');
 
+const convertCoverage = require('./convert-coverage');
+
 module.exports.TestAppRuntime = function({
   dir = '.',
   watch = false,
@@ -97,7 +99,16 @@ module.exports.TestAppRuntime = function({
       });
     };
 
-    return setup().then(spawnProc());
+    const finish = () => {
+      if (!coverage) {
+        return Promise.resolve();
+      }
+      return convertCoverage(rootDir);
+    };
+
+    return setup()
+      .then(spawnProc())
+      .then(finish());
   };
 
   this.stop = () => {
