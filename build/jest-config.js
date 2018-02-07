@@ -17,15 +17,6 @@ module.exports = envs => {
       },
       testEnvironment: 'jsdom',
       testPathIgnorePatterns: ['.*\\.node\\.js'],
-      cache: false,
-      // 'cobertura', 'lcov', 'text' coverage reports are written by the merge-coverage script
-      coverageReporters: ['json'],
-      setupFiles: [
-        require.resolve('./jest-framework-shims.js'),
-        require.resolve('./jest-framework-setup.js'),
-      ],
-      snapshotSerializers: [require.resolve('enzyme-to-json/serializer')],
-      testMatch: [`**/${testFolder}/**/*.js`],
     },
     node: {
       displayName: 'node',
@@ -40,23 +31,23 @@ module.exports = envs => {
       },
       testEnvironment: 'node',
       testPathIgnorePatterns: ['.*\\.browser\\.js'],
-      cache: false,
-      // 'cobertura', 'lcov', 'text' coverage reports are written by the merge-coverage script
-      coverageReporters: ['json'],
-      setupFiles: [
-        require.resolve('./jest-framework-shims.js'),
-        require.resolve('./jest-framework-setup.js'),
-      ],
-      snapshotSerializers: [require.resolve('enzyme-to-json/serializer')],
-      testMatch: [`**/${testFolder}/**/*.js`],
     },
   };
   return {
+    cache: false,
     projects: envs.map(env => envConfiguration[env]),
     rootDir: process.cwd(),
     transform: {
       '^.+\\.js$': require.resolve('./jest-transformer.js'),
     },
     transformIgnorePatterns: ['/node_modules/(?!(fusion-cli.*build))'],
+    // 'cobertura', 'lcov', 'text' coverage reports are written by the merge-coverage script
+    coverageReporters: ['json'],
+    setupFiles: [
+      require.resolve('./jest-framework-shims.js'),
+      require.resolve('./jest-framework-setup.js'),
+    ],
+    snapshotSerializers: [require.resolve('enzyme-to-json/serializer')],
+    testMatch: [`**/${testFolder}/**/*.js`],
   };
 };
