@@ -6,7 +6,6 @@ module.exports = {
   cache: true,
   displayName: 'browser',
   browser: true,
-  coverageDirectory: `<rootDir>/coverage-jsdom`,
   rootDir: process.cwd(),
   testEnvironment: 'jsdom',
   testPathIgnorePatterns: ['.*\\.node\\.js'],
@@ -14,8 +13,7 @@ module.exports = {
     '^.+\\.js$': require.resolve('../jest-transformer.js'),
   },
   transformIgnorePatterns: ['/node_modules/(?!(fusion-cli.*build))'],
-  // 'cobertura', 'lcov', 'text' coverage reports are written by the merge-coverage script
-  coverageReporters: ['json'],
+  coverageReporters: ['json', 'cobertura', 'lcov', 'text'],
   setupFiles: [
     require.resolve('../jest-framework-shims.js'),
     require.resolve('../jest-framework-setup.js'),

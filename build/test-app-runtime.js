@@ -21,8 +21,6 @@ module.exports.TestAppRuntime = function({
 
   this.run = () => {
     this.stop();
-    const allTestEnvs = env.split(',');
-
     const getArgs = () => {
       let args = [require.resolve('jest/bin/jest.js')];
       if (debug) {
@@ -62,11 +60,7 @@ module.exports.TestAppRuntime = function({
       }
 
       // Remove existing coverage directories
-      const folders = [
-        `${rootDir}/coverage/`,
-        `${rootDir}/coverage-node/`,
-        `${rootDir}/coverage-jsdom/`,
-      ];
+      const folders = [`${rootDir}/coverage/`];
       return Promise.all(
         folders.map(
           folder => new Promise(resolve => rimraf(folder, () => resolve))
@@ -105,19 +99,7 @@ module.exports.TestAppRuntime = function({
       });
     };
 
-    const finish = () => {
-      if (!coverage) {
-        return Promise.resolve();
-      }
-      return mergeCoverage({
-        dir: rootDir,
-        environments: allTestEnvs,
-      });
-    };
-
-    return setup()
-      .then(spawnProc())
-      .then(finish());
+    return setup().then(spawnProc());
   };
 
   this.stop = () => {

@@ -6,7 +6,6 @@ module.exports = {
   cache: true,
   displayName: 'node',
   browser: false,
-  coverageDirectory: `<rootDir>/coverage-node`,
   rootDir: process.cwd(),
   testEnvironment: 'node',
   testPathIgnorePatterns: ['.*\\.browser\\.js'],
