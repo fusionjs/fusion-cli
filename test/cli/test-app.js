@@ -239,11 +239,10 @@ test('`fusion test-app --debug --env=jsdom,node`', async t => {
       if (line.startsWith('Debugger listening on ws')) {
         listenAddresses[line] = true;
       }
-
       // Wait until we have results for both environments before ending the test.
-      if (/Tests:.*1\s+passed,\s+1\s+total/.test(line)) {
+      if (/Tests:.*2\s+passed,\s+2\s+total/.test(line)) {
         numResults += 1;
-        if (numResults == 2) {
+        if (numResults == 1) {
           t.end();
         }
       }
@@ -259,18 +258,14 @@ test('`fusion test-app --debug --env=jsdom,node`', async t => {
     });
   }
 
-  // Step through jsdom environment
+  // Step through the environment
   await checkStartedMessageCount(1);
-  await triggerCodeStep();
-
-  // Step through node environment
-  await checkStartedMessageCount(2);
   await triggerCodeStep();
 
   t.equal(
     Object.keys(listenAddresses).length,
-    2,
-    'listened for two remote debug connections'
+    1,
+    'found a remote debug connection'
   );
 
   child.kill();
