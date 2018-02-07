@@ -3,8 +3,6 @@ const path = require('path');
 const {spawn} = require('child_process');
 const rimraf = require('rimraf');
 
-const mergeCoverage = require('./merge-coverage');
-
 module.exports.TestAppRuntime = function({
   dir = '.',
   watch = false,
