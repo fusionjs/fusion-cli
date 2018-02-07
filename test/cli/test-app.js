@@ -61,7 +61,7 @@ test('`fusion test-app` expected test passes in browser/node', async t => {
   t.end();
 });
 
-test.only('`fusion test-app` expected tests fail when run in browser/node', async t => {
+test('`fusion test-app` expected tests fail when run in browser/node', async t => {
   const dir = path.resolve(__dirname, '../fixtures/test-jest-app');
   const args = `test-app --dir=${dir} --configPath=../../../build/jest-config.js --match=fail-`;
 
