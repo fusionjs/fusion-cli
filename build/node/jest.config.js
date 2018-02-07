@@ -13,8 +13,7 @@ module.exports = {
     '^.+\\.js$': require.resolve('../jest-transformer.js'),
   },
   transformIgnorePatterns: ['/node_modules/(?!(fusion-cli.*build))'],
-  // 'cobertura', 'lcov', 'text' coverage reports are written by the merge-coverage script
-  coverageReporters: ['json'],
+  coverageReporters: ['json', 'cobertura', 'lcov', 'text'],
   setupFiles: [
     require.resolve('../jest-framework-shims.js'),
     require.resolve('../jest-framework-setup.js'),
