@@ -15,7 +15,7 @@ const countTests = require('../fixtures/test-jest-app/count-tests');
 
 const runnerPath = require.resolve('../../bin/cli-runner');
 
-test.only('`fusion test-app` passes', async t => {
+test('`fusion test-app` passes', async t => {
   const dir = path.resolve(__dirname, '../fixtures/test-jest-app');
   const args = `test-app --dir=${dir} --configPath=../../../build/jest-config.js --match=passes`;
 
@@ -93,9 +93,14 @@ test('`fusion test-app` snapshotting', async t => {
 
   const snapshotFile =
     __dirname +
-    '/../fixtures/test-jest-app/__tests__/__snapshots__/snapshot-no-match.js.snap';
+    '/../fixtures/test-jest-app/__tests__/__snapshots__/snapshot-no-match.js.fixture';
   const backupSnapshot =
-    __dirname + '/../fixtures/snapshots/snapshot-no-match.js.snap';
+    __dirname + '/../fixtures/snapshots/snapshot-no-match.js.fixture';
+
+  // Copy fixture to snapshot
+  fs
+    .createReadStream(snapshotFile)
+    .pipe(fs.createWriteStream(snapshotFile.replace(/fixture$/, 'snap')));
 
   const cmd = `require('${runnerPath}').run('${args}')`;
   try {
@@ -113,8 +118,7 @@ test('`fusion test-app` snapshotting', async t => {
   const originalSnapshotCode = await readFile(backupSnapshot);
   t.notEqual(newSnapshotCode, originalSnapshotCode, 'snapshot is updated');
 
-  // Restore the failing snapshot
-  fs.createReadStream(backupSnapshot).pipe(fs.createWriteStream(snapshotFile));
+  fs.unlinkSync(snapshotFile.replace(/fixture$/, 'snap'));
 
   t.end();
 });
@@ -125,9 +129,14 @@ test('`fusion test-app` snapshotting - enzyme serializer', async t => {
 
   const snapshotFile =
     __dirname +
-    '/../fixtures/test-jest-app/__tests__/__snapshots__/snapshot-enzyme-no-match.js.snap';
+    '/../fixtures/test-jest-app/__tests__/__snapshots__/snapshot-enzyme-no-match.js.fixture';
   const backupSnapshot =
-    __dirname + '/../fixtures/snapshots/snapshot-enzyme-no-match.js.snap';
+    __dirname + '/../fixtures/snapshots/snapshot-enzyme-no-match.js.fixture';
+
+  // Copy fixture to snapshot
+  fs
+    .createReadStream(snapshotFile)
+    .pipe(fs.createWriteStream(snapshotFile.replace(/fixture$/, 'snap')));
 
   const cmd = `require('${runnerPath}').run('${args}')`;
   try {
@@ -145,8 +154,7 @@ test('`fusion test-app` snapshotting - enzyme serializer', async t => {
   const originalSnapshotCode = await readFile(backupSnapshot);
   t.notEqual(newSnapshotCode, originalSnapshotCode, 'snapshot is updated');
 
-  // Restore the failing snapshot
-  fs.createReadStream(backupSnapshot).pipe(fs.createWriteStream(snapshotFile));
+  fs.unlinkSync(snapshotFile.replace(/fixture$/, 'snap'));
 
   t.end();
 });

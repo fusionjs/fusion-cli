@@ -87,11 +87,6 @@ module.exports.TestAppRuntime = function({
           JEST_ENV: env,
           TEST_FOLDER: testFolder,
         };
-
-        // Pass in the CI flag to prevent console clearing when watching on more than one suite
-        if (allTestEnvs.length > 1 && watch) {
-          procEnv.CI = 'true';
-        }
         const proc = spawn('node', args, {
           cwd: rootDir,
           stdio: 'inherit',
