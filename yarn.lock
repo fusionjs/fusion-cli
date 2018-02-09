@@ -66,7 +66,7 @@
     "@babel/helper-builder-react-jsx" "7.0.0-beta.39"
     "@babel/plugin-syntax-jsx" "7.0.0-beta.39"
 
-"@babel/preset-react@^7.0.0-beta.38":
+"@babel/preset-react@^7.0.0-beta.39":
   version "7.0.0-beta.39"
   resolved "https://registry.yarnpkg.com/@babel/preset-react/-/preset-react-7.0.0-beta.39.tgz#e2ee52660233016c05fc1f211ab20d1141e848d0"
   dependencies:
@@ -3240,11 +3240,11 @@ fusion-core@0.3.6:
     node-mocks-http "^1.6.6"
     toposort "^1.0.6"
 
-fusion-plugin-react-router@0.4.3:
-  version "0.4.3"
-  resolved "https://registry.yarnpkg.com/fusion-plugin-react-router/-/fusion-plugin-react-router-0.4.3.tgz#d11effe831053989ab94013d7149976d83fd9fc8"
+fusion-plugin-react-router@1.0.0:
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/fusion-plugin-react-router/-/fusion-plugin-react-router-1.0.0.tgz#ea949d2e9658d85b6f39cd312e9ec5a05ae5489d"
   dependencies:
-    "@babel/preset-react" "^7.0.0-beta.38"
+    "@babel/preset-react" "^7.0.0-beta.39"
     history "^4.7.2"
     prop-types "^15.6.0"
     react-router-dom "^4.2.2"
