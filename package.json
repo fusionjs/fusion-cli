@@ -100,7 +100,7 @@
     "eslint-plugin-prettier": "2.6.0",
     "eslint-plugin-react": "7.6.1",
     "flow-bin": "0.64.0",
-    "fusion-core": "0.3.6",
+    "fusion-core": "1.0.0",
     "fusion-plugin-react-router": "0.4.3",
     "fusion-react": "0.4.3",
     "fusion-react-async": "0.2.0",
@@ -117,7 +117,7 @@
   },
   "peerDependencies": {
     "enzyme": "^3.3.0",
-    "fusion-core": "^0.3.0-5",
+    "fusion-core": "^1.0.0",
     "fusion-tokens": "^0.0.6"
   },
   "engines": {
