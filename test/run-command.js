@@ -70,7 +70,7 @@ async function waitForServer(port) {
   let started = false;
   let numTries = 0;
   let res;
-  while (!started && numTries < 20) {
+  while (!started && numTries < 50) {
     console.log('polling for start?');
     await new Promise(resolve => setTimeout(resolve, 500));
     try {
