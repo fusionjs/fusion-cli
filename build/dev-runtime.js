@@ -121,6 +121,7 @@ module.exports.DevelopmentRuntime = function({
       }
       const args = ['-e', command];
       if (debug) args.push('--inspect-brk');
+      args.push('--max-old-space-size=4096');
       state.proc = spawn('node', args, {
         cwd: path.resolve(process.cwd(), dir),
         stdio: ['inherit', 'inherit', 'inherit', 'ipc'],

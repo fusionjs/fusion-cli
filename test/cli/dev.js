@@ -8,7 +8,7 @@ const request = require('request-promise');
 
 const exists = promisify(fs.exists);
 
-test('`fusion dev` works', async t => {
+test.only('`fusion dev` works', async t => {
   const dir = path.resolve(__dirname, '../fixtures/noop');
   const entryPath = `.fusion/dist/development/server/server-main.js`;
   const entry = path.resolve(dir, entryPath);

@@ -1,7 +1,9 @@
-version: '2'
+version: '3'
 services:
   fusion-cli:
     build: .
+    network_mode: "host"
+    shm_size: '8gb'
     volumes:
       - '.:/fusion-cli'
       - /fusion-cli/node_modules/
@@ -15,3 +17,5 @@ services:
       - BUILDKITE_BUILD_URL
       - BUILDKITE_PROJECT_SLUG
       - BUILDKITE_COMMIT
+      - THIS_CHUNK=${BUILDKITE_PARALLEL_JOB}
+      - TOTAL_CHUNKS=${BUILDKITE_PARALLEL_JOB_COUNT}

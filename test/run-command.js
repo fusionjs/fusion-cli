@@ -9,16 +9,22 @@ function run(command, options) {
     stdio: 'inherit',
     ...options,
   };
-  const child = spawn('node', ['-e', command], opts);
+  const child = spawn(
+    'node',
+    ['-e', command, '--max-old-space-size=8096'],
+    opts
+  );
   const stdoutLines = [];
   const stderrLines = [];
   const promise = new Promise((resolve, reject) => {
     child.stdout &&
       child.stdout.on('data', data => {
+        console.log('STDOUT: ', data.toString());
         stdoutLines.push(data.toString());
       });
     child.stderr &&
       child.stderr.on('data', data => {
+        console.log('STDERR: ', data.toString());
         stderrLines.push(data.toString());
       });
     child.on('close', code => {
@@ -64,7 +70,8 @@ async function waitForServer(port) {
   let started = false;
   let numTries = 0;
   let res;
-  while (!started && numTries < 20) {
+  while (!started && numTries < 50) {
+    console.log('polling for start?');
     await new Promise(resolve => setTimeout(resolve, 500));
     try {
       res = await request(`http://localhost:${port}/`, {
