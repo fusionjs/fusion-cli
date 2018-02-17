@@ -12,9 +12,9 @@ module.exports = createPlugin({
       ctx.prefix = prefix;
 
       // enhance ctx.url, sans prefix
-      if (ctx.url.indexOf(prefix) === 0 /*found at index 0*/) {
-        ctx.url = ctx.url.slice(prefix.length);
-      }
+      // if (ctx.url.indexOf(prefix) === 0 #<{(|found at index 0|)}>#) {
+      //   ctx.url = ctx.url.slice(prefix.length);
+      // }
       return next();
     };
   },
