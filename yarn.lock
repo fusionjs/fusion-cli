@@ -5026,9 +5026,9 @@ lighthouse-logger@^1.0.0:
   dependencies:
     debug "^2.6.8"
 
-lighthouse@2.9.0:
-  version "2.9.0"
-  resolved "https://registry.yarnpkg.com/lighthouse/-/lighthouse-2.9.0.tgz#edad87d9d584727a0f925af0684305d2a125600f"
+lighthouse@2.9.1:
+  version "2.9.1"
+  resolved "https://registry.yarnpkg.com/lighthouse/-/lighthouse-2.9.1.tgz#8376f1c63b386c08bc0ce444d15296f36199815f"
   dependencies:
     axe-core "2.6.1"
     chrome-devtools-frontend "1.0.422034"
@@ -5041,6 +5041,7 @@ lighthouse@2.9.0:
     jpeg-js "0.1.2"
     js-library-detector "^4.3.1"
     lighthouse-logger "^1.0.0"
+    lodash.isequal "^4.5.0"
     metaviewport-parser "0.2.0"
     mkdirp "0.5.1"
     opn "4.0.2"
@@ -5100,6 +5101,10 @@ lodash.cond@^4.3.0:
 lodash.flattendeep@^4.4.0:
   version "4.4.0"
   resolved "https://registry.yarnpkg.com/lodash.flattendeep/-/lodash.flattendeep-4.4.0.tgz#fb030917f86a3134e5bc9bec0d69e0013ddfedb2"
+
+lodash.isequal@^4.5.0:
+  version "4.5.0"
+  resolved "https://registry.yarnpkg.com/lodash.isequal/-/lodash.isequal-4.5.0.tgz#415c4478f2bcc30120c22ce10ed3226f7d3e18e0"
 
 lodash.isnull@^3.0.0:
   version "3.0.0"
