@@ -144,13 +144,13 @@ test('`fusion build/start with ROUTE_PREFIX and custom routes`', async t => {
   const {proc, port} = await start(`--dir=${dir}`, {
     env: Object.assign({}, process.env, {ROUTE_PREFIX: '/test-prefix'}),
   });
-  const rootRes = await request(`http://localhost:${port}/`);
+  const rootRes = await request(`http://localhost:${port}/test-prefix`);
   t.equal(
     rootRes,
     'ROOT REQUEST',
     'strips route prefix correctly for root requests'
   );
-  const testRes = await request(`http://localhost:${port}/test`);
+  const testRes = await request(`http://localhost:${port}/test-prefix/test`);
   t.equal(
     testRes,
     'TEST REQUEST',
