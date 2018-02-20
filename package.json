@@ -113,7 +113,7 @@
     "react-test-renderer": "16.2.0",
     "request-promise": "4.2.2",
     "strip-indent": "2.0.0",
-    "tape": "4.8.0"
+    "tape": "4.9.0"
   },
   "peerDependencies": {
     "enzyme": "^3.3.0",
