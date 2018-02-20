@@ -57,7 +57,7 @@ The CLI API can be most easily run through the Yarn or NPX CLI, e.g. `yarn fusio
 
   * `--environment`: Which environment/assets to run - defaults to first available assets among `["development", "test", "production"]`
 
-* `fusion test [--watch] [--match]`
+* `fusion test [--watch] [--match] [--coverage] [--env] [--debug] [--updateSnapshot]`
   Builds test assets and runs tests
 
   Tests are run with Jest
