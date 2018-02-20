@@ -138,6 +138,28 @@ test('`fusion build` works in production with default asset path and supplied RO
   t.end();
 });
 
+test('`fusion build/start with ROUTE_PREFIX and custom routes`', async t => {
+  const dir = path.resolve(__dirname, '../fixtures/prefix');
+  await cmd(`build --dir=${dir} --production`);
+  const {proc, port} = await start(`--dir=${dir}`, {
+    env: Object.assign({}, process.env, {ROUTE_PREFIX: '/test-prefix'}),
+  });
+  const rootRes = await request(`http://localhost:${port}/`);
+  t.equal(
+    rootRes,
+    'ROOT REQUEST',
+    'strips route prefix correctly for root requests'
+  );
+  const testRes = await request(`http://localhost:${port}/test`);
+  t.equal(
+    testRes,
+    'TEST REQUEST',
+    'strips route prefix correctly for deep path requests'
+  );
+  proc.kill();
+  t.end();
+});
+
 test('`fusion build` works in production', async t => {
   const dir = path.resolve(__dirname, '../fixtures/noop');
   const serverEntryPath = path.resolve(

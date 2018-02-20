@@ -1,3 +1,4 @@
+/* eslint-env node */
 const tape = require('tape');
 const http = require('http');
 const getPort = require('get-port');
