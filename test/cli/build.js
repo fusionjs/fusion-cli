@@ -200,7 +200,7 @@ test('`fusion build` works in production', async t => {
   t.end();
 });
 
-test.only('`fusion build` with assets', async t => {
+test('`fusion build` with assets', async t => {
   const dir = path.resolve(__dirname, '../fixtures/assets');
   await cmd(`build --dir=${dir}`);
   const expectedAssetPath = '/_static/c300a7df05c8142598558365dbdaa451.css';
