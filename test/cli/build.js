@@ -200,12 +200,12 @@ test('`fusion build` works in production', async t => {
   t.end();
 });
 
-test('`fusion build` with assets', async t => {
+test.only('`fusion build` with assets', async t => {
   const dir = path.resolve(__dirname, '../fixtures/assets');
   await cmd(`build --dir=${dir}`);
-  const {proc, port} = await start(`--dir=${dir}`);
   const expectedAssetPath = '/_static/c300a7df05c8142598558365dbdaa451.css';
   try {
+    const {proc, port} = await start(`--dir=${dir}`);
     const res = await request(`http://localhost:${port}${expectedAssetPath}`, {
       resolveWithFullResponse: true,
     });
@@ -214,9 +214,30 @@ test('`fusion build` with assets', async t => {
       .toString();
     t.equal(res.body, contents);
     t.equal(res.headers['x-test'], 'test');
+    proc.kill();
   } catch (e) {
     t.ifError(e);
   }
-  proc.kill();
+
+  // with route prefix
+  try {
+    const {proc, port} = await start(`--dir=${dir}`, {
+      env: Object.assign({}, process.env, {ROUTE_PREFIX: '/test-prefix'}),
+    });
+    const res = await request(
+      `http://localhost:${port}/test-prefix${expectedAssetPath}`,
+      {
+        resolveWithFullResponse: true,
+      }
+    );
+    const contents = fs
+      .readFileSync(path.resolve(dir, 'src/static/test.css'))
+      .toString();
+    t.equal(res.body, contents);
+    t.equal(res.headers['x-test'], 'test');
+    proc.kill();
+  } catch (e) {
+    t.ifError(e);
+  }
   t.end();
 });
