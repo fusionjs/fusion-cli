@@ -89,7 +89,7 @@
     "yargs": "11.0.0"
   },
   "devDependencies": {
-    "babel-eslint": "8.2.1",
+    "babel-eslint": "8.2.2",
     "chrome-remote-interface": "^0.25.5",
     "enzyme": "3.3.0",
     "eslint": "4.17.0",
