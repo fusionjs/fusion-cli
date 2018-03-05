@@ -376,6 +376,32 @@ function getConfig({target, env, dir, watch, cover}) {
         __SECRET_MULTI_ENTRY_LOADER__: require.resolve('multi-entry-loader'),
       },
     },
+    optimization: {
+      splitChunks: target === 'web' && {
+        // See https://webpack.js.org/guides/code-splitting/
+        // See https://gist.github.com/sokra/1522d586b8e5c0f5072d7565c2bee693
+        // See https://medium.com/webpack/webpack-4-code-splitting-chunk-graph-and-the-splitchunks-optimization-be739a861366
+        // Bundles all node_modules code into vendor chunk
+        chunks: 'async',
+        minSize: 30000,
+        minChunks: 1,
+        maxAsyncRequests: 5,
+        maxInitialRequests: 3,
+        name: true,
+        cacheGroups: {
+          // default: {
+          //   minChunks: 2,
+          //   reuseExistingChunk: true,
+          // },
+          vendor: {
+            test: /[\\/]node_modules[\\/]/,
+            name: 'vendor',
+            chunks: 'initial',
+            enforce: true,
+          },
+        },
+      },
+    },
     plugins: [
       progress,
       // TODO(#9): relying only on timestamp will invalidate service worker after every build
@@ -410,16 +436,6 @@ function getConfig({target, env, dir, watch, cover}) {
       env === 'development' &&
         watch &&
         new webpack.HotModuleReplacementPlugin(),
-      target === 'web' &&
-        env !== 'test' &&
-        // Bundles all node_modules code into vendor chunk
-        // See https://webpack.js.org/guides/code-splitting-libraries/#implicit-common-vendor-chunk
-        new webpack.optimize.CommonsChunkPlugin({
-          name: 'vendor',
-          minChunks: module => {
-            return module.context && module.context.includes('node_modules');
-          },
-        }),
       // The next two plugins are required for deterministic file hashes
       // See https://github.com/webpack/webpack/issues/1315 and
       // https://webpack.js.org/guides/caching/#generating-unique-hashes-for-each-file
