@@ -20,8 +20,7 @@ class ChunkModuleManifestPlugin {
         const chunkIdsByFile = new Map();
         chunks.forEach(c => {
           const chunkId = c.id;
-          const files = c.mapModules(m => m.resource);
-
+          const files = Array.from(c.modulesIterable, m => m.resource);
           files.forEach(path => {
             if (!chunkIdsByFile.has(path)) {
               chunkIdsByFile.set(path, new Set());
