@@ -4,6 +4,8 @@
  * This is meant for the client
  */
 
+const Template = require('webpack/lib/Template');
+
 class ChunkPreloadPlugin {
   apply(compiler) {
     compiler.plugin('compilation', function(compilation) {
@@ -39,7 +41,7 @@ class ChunkPreloadPlugin {
   }
         `
         );
-        return this.asString(buf);
+        return Template.asString(buf);
       });
     });
   }
