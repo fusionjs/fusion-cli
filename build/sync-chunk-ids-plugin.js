@@ -17,10 +17,9 @@ class SyncChunkIdsPlugin {
 
     compiler.plugin('compilation', compilation => {
       compilation.plugin('after-optimize-chunk-assets', () => {
-        const chunkIds = compilation.entrypoints.main.chunks.map(c => c.id);
-        const chunkPaths = compilation.entrypoints.main.chunks.map(
-          c => c.files[0]
-        );
+        const mainEntrypoint = compilation.entrypoints.get('main');
+        const chunkIds = mainEntrypoint.chunks.map(c => c.id);
+        const chunkPaths = mainEntrypoint.chunks.map(c => c.files[0]);
         syncChunkIds.set(chunkIds);
         syncChunkPaths.set(chunkPaths);
       });
