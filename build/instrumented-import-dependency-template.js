@@ -1,7 +1,8 @@
 /* eslint-env node */
 const ImportDependencyTemplate = require('webpack/lib/dependencies/ImportDependency')
   .Template;
-const DepBlockHelpers = require('webpack/lib/dependencies/DepBlockHelpers');
+// TODO:
+// const DepBlockHelpers = require('webpack/lib/dependencies/DepBlockHelpers');
 
 /**
  * We create an extension to the original ImportDependency template

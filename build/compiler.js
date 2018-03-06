@@ -584,14 +584,15 @@ function Compiler({
 
   const statsLogger = getStatsLogger({dir, logger, envs});
 
-  this.on = (type, callback) => compiler.plugin(type, callback);
+  this.on = (type, callback) => compiler.hooks[type].tap('compiler', callback);
   this.start = cb => {
     cb = cb || function noop() {};
     // Handler may be called multiple times by `watch`
-    // But only call `cb` the first tiem
+    // But only call `cb` the first time
     // subsequent rebuilds are subscribed to with 'compiler.on('done')'
     let hasCalledCb = false;
     const handler = (err, stats) => {
+      // TODO: figure out what stats should be here.
       statsLogger(err, stats);
       if (!hasCalledCb) {
         hasCalledCb = true;
@@ -599,7 +600,7 @@ function Compiler({
       }
     };
     if (watch) {
-      return compiler.watch({}, handler);
+      return compiler.hooks.watchRun.tap('watch', handler);
     } else {
       compiler.run(handler);
       // mimic watcher interface for API consistency
