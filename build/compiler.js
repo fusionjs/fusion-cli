@@ -5,7 +5,6 @@ const path = require('path');
 const webpack = require('webpack');
 const ProgressBarPlugin = require('progress-bar-webpack-plugin');
 
-const progress = new ProgressBarPlugin();
 const WebpackChunkHash = require('webpack-chunk-hash');
 const webpackDevMiddleware = require('../lib/simple-webpack-dev-middleware');
 const ChunkManifestPlugin = require('./external-chunk-manifest-plugin.js');
@@ -145,6 +144,7 @@ function getConfig({target, env, dir, watch, cover}) {
         entry,
       ].filter(Boolean),
     },
+    mode: env === 'production' ? 'production' : 'development',
     // TODO(#47): Do we need to do something different here for production?
     stats: 'minimal',
     /**
@@ -222,6 +222,7 @@ function getConfig({target, env, dir, watch, cover}) {
       },
       node
     ),
+
     module: {
       /**
        * Compile-time error for importing a non-existent export
@@ -376,34 +377,8 @@ function getConfig({target, env, dir, watch, cover}) {
         __SECRET_MULTI_ENTRY_LOADER__: require.resolve('multi-entry-loader'),
       },
     },
-    optimization: {
-      splitChunks: target === 'web' && {
-        // See https://webpack.js.org/guides/code-splitting/
-        // See https://gist.github.com/sokra/1522d586b8e5c0f5072d7565c2bee693
-        // See https://medium.com/webpack/webpack-4-code-splitting-chunk-graph-and-the-splitchunks-optimization-be739a861366
-        // Bundles all node_modules code into vendor chunk
-        chunks: 'async',
-        minSize: 30000,
-        minChunks: 1,
-        maxAsyncRequests: 5,
-        maxInitialRequests: 3,
-        name: true,
-        cacheGroups: {
-          // default: {
-          //   minChunks: 2,
-          //   reuseExistingChunk: true,
-          // },
-          vendor: {
-            test: /[\\/]node_modules[\\/]/,
-            name: 'vendor',
-            chunks: 'initial',
-            enforce: true,
-          },
-        },
-      },
-    },
     plugins: [
-      progress,
+      new ProgressBarPlugin(),
       // TODO(#9): relying only on timestamp will invalidate service worker after every build
       // optimize by importing all chunk names to sw and then remove timestamp in non-dev.
       target === 'webworker' && new ServiceWorkerTimestampPlugin(),
@@ -505,6 +480,36 @@ function getConfig({target, env, dir, watch, cover}) {
           sourceMap: true,
         }),
     ].filter(Boolean),
+    optimization: {
+      splitChunks: target === 'web' && {
+        // See https://webpack.js.org/guides/code-splitting/
+        // See https://gist.github.com/sokra/1522d586b8e5c0f5072d7565c2bee693
+        // See https://medium.com/webpack/webpack-4-code-splitting-chunk-graph-and-the-splitchunks-optimization-be739a861366
+        // Bundles all node_modules code into vendor chunk
+        chunks: 'async',
+        minSize: 30000,
+        minChunks: 1,
+        maxAsyncRequests: 5,
+        maxInitialRequests: 3,
+        name: true,
+        cacheGroups: {
+          default: {
+            minChunks: 2,
+            reuseExistingChunk: true,
+          },
+          vendor: {
+            test: /[\\/]node_modules[\\/]/,
+            name: 'vendor',
+            filename:
+              env === 'production' && target === 'web'
+                ? `${name}-[name]-[chunkhash].js`
+                : `${name}-[name].js`,
+            chunks: 'initial',
+            enforce: true,
+          },
+        },
+      },
+    },
   };
 }
 
@@ -588,11 +593,10 @@ function Compiler({
   this.start = cb => {
     cb = cb || function noop() {};
     // Handler may be called multiple times by `watch`
-    // But only call `cb` the first time
+    // But only call `cb` the first tiem
     // subsequent rebuilds are subscribed to with 'compiler.on('done')'
     let hasCalledCb = false;
     const handler = (err, stats) => {
-      // TODO: figure out what stats should be here.
       statsLogger(err, stats);
       if (!hasCalledCb) {
         hasCalledCb = true;
@@ -600,7 +604,7 @@ function Compiler({
       }
     };
     if (watch) {
-      return compiler.hooks.watchRun.tap('watch', handler);
+      return compiler.watch({}, handler);
     } else {
       compiler.run(handler);
       // mimic watcher interface for API consistency
@@ -610,6 +614,7 @@ function Compiler({
       };
     }
   };
+
   this.getMiddleware = () => {
     const dev = webpackDevMiddleware(compiler, {
       filter: c => c.name === 'client' || c.name === 'client-evergreen',
