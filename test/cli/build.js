@@ -82,6 +82,7 @@ test('`fusion build` works in production with a CDN_URL', async t => {
     'Server Entry file sourcemap gets compiled'
   );
   const {res, proc} = await start(`--dir=${dir}`, {
+    cwd: dir,
     env: Object.assign({}, process.env, {CDN_URL: 'https://cdn.com/test'}),
   });
   t.ok(
