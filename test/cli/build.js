@@ -35,7 +35,7 @@ test('`fusion build` works', async t => {
     dir,
     `.fusion/dist/development/client/client-vendor.js.map`
   );
-  await cmd(`build --dir=${dir}`);
+  await cmd(`build --dir=${dir}`, {cwd: dir});
   t.ok(await exists(serverEntryPath), 'Server Entry file gets compiled');
   t.ok(
     await exists(serverMapPath),
@@ -64,7 +64,7 @@ test('`fusion build` works in production with a CDN_URL', async t => {
     dir,
     `.fusion/dist/production/server/server-main.js.map`
   );
-  await cmd(`build --dir=${dir} --production`);
+  await cmd(`build --dir=${dir} --production`, {cwd: dir});
   const clientFiles = await readdir(
     path.resolve(dir, '.fusion/dist/production/client')
   );
@@ -106,7 +106,7 @@ test('`fusion build` works in production with default asset path and supplied RO
     dir,
     `.fusion/dist/production/server/server-main.js.map`
   );
-  await cmd(`build --dir=${dir} --production`);
+  await cmd(`build --dir=${dir} --production`, {cwd: dir});
   const clientFiles = await readdir(
     path.resolve(dir, '.fusion/dist/production/client')
   );
@@ -140,8 +140,11 @@ test('`fusion build` works in production with default asset path and supplied RO
 
 test('`fusion build/start with ROUTE_PREFIX and custom routes`', async t => {
   const dir = path.resolve(__dirname, '../fixtures/prefix');
-  await cmd(`build --dir=${dir} --production`);
+  await cmd(`build --dir=${dir} --production`, {
+    cwd: dir,
+  });
   const {proc, port} = await start(`--dir=${dir}`, {
+    cwd: dir,
     env: Object.assign({}, process.env, {ROUTE_PREFIX: '/test-prefix'}),
   });
   const rootRes = await request(`http://localhost:${port}/test-prefix`);
@@ -170,7 +173,7 @@ test('`fusion build` works in production', async t => {
     dir,
     `.fusion/dist/production/server/server-main.js.map`
   );
-  await cmd(`build --dir=${dir} --production`);
+  await cmd(`build --dir=${dir} --production`, {cwd: dir});
   const clientFiles = await readdir(
     path.resolve(dir, '.fusion/dist/production/client')
   );
