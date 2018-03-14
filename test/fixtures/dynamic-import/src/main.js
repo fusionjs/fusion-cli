@@ -1,6 +1,13 @@
 export default function main() {
-  return import('./dynamic.js').then(dynamicImport =>
-    console.log(dynamicImport.default())
+  const loader2 = import('./dynamic2.js');
+  const loader = import('./dynamic.js');
+  loader.then(dynamicImport =>
+    console.log(
+      JSON.stringify({
+        dynamicContent: dynamicImport.default(),
+        chunkIds: [loader.__CHUNK_IDS, loader2.__CHUNK_IDS],
+      })
+    )
   );
 }
 

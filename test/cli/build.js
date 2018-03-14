@@ -251,7 +251,12 @@ test('`fusion build` with dynamic imports', async t => {
   const entry = path.resolve(dir, entryPath);
   const command = `require('${entry}');`;
   const {stdout} = await run(command, {stdio: 'pipe'});
-  t.ok(stdout.includes('loaded dynamic import'), 'dynamic import is executed');
+  const testContent = JSON.parse(stdout);
+  t.ok(
+    testContent.dynamicContent.includes('loaded dynamic import'),
+    'dynamic import is executed'
+  );
+  t.deepEqual(testContent.chunkIds, [[1], [0]], 'Chunk IDs are populated');
 
   t.ok(
     await exists(path.resolve(dir, `.fusion/dist/development/client/0.js`)),
