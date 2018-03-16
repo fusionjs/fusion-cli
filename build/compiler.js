@@ -226,7 +226,7 @@ function getConfig({target, env, dir, watch, cover}) {
                     ? fusionConfig.babel.plugins
                     : []),
                   //cup-globals works with webpack.EnvironmentPlugin(['NODE_ENV']) to implement static conditionals
-                  require.resolve('babel-plugin-syntax-dynamic-import'),
+                  require.resolve('@babel/plugin-syntax-dynamic-import'),
                   require.resolve('./babel-plugins/babel-plugin-asseturl'),
                   require.resolve(
                     './babel-plugins/babel-plugin-sync-chunk-ids'
@@ -238,7 +238,7 @@ function getConfig({target, env, dir, watch, cover}) {
                   // TODO(#8): sw implementation is totally busted.
                   // require.resolve('./babel-plugins/babel-plugin-sw'),
                   pragma && [
-                    require.resolve('babel-plugin-transform-react-jsx'),
+                    require.resolve('@babel/plugin-transform-react-jsx'),
                     {pragma},
                   ],
                   env === 'development' &&

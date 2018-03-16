@@ -1,7 +1,7 @@
 // @flow
 /* eslint-env node */
 const test = require('tape');
-const {transform} = require('babel-core');
+const {transform} = require('@babel/core');
 const createNamedModuleVisitor = require('../visit-named-module');
 const replaceImportDeclaration = require('../replace-import-declaration');
 

@@ -19,20 +19,20 @@ module.exports = function buildPreset(
   return {
     presets: [
       [
-        require('babel-preset-env'),
+        require('@babel/preset-env'),
         {
           targets: targets,
           modules: modules,
           exclude: ['transform-regenerator', 'transform-async-to-generator'],
         },
       ],
-      require('babel-preset-react'),
+      require('@babel/preset-react'),
     ],
     plugins: [
-      require('babel-plugin-transform-async-generator-functions'),
-      require('babel-plugin-transform-class-properties'),
+      require('@babel/plugin-proposal-async-generator-functions'),
+      require('@babel/plugin-proposal-class-properties'),
       [
-        require('babel-plugin-transform-object-rest-spread'),
+        require('@babel/plugin-proposal-object-rest-spread'),
         {
           useBuiltIns: true,
         },
