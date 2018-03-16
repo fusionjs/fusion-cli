@@ -17,6 +17,24 @@ function createTestPlugin(handler) {
   };
 }
 
+test('with flow types', t => {
+  t.plan(2);
+
+  const plugin = createTestPlugin((types, context, refs) => {
+    t.equal(refs.length, 1);
+    t.ok(types.isCallExpression(refs[0].parent));
+  });
+
+  transform(
+    `
+    import {foo} from 'bar';
+    import type {footype} from 'bar';
+    let baz: string = foo();
+  `,
+    {plugins: [plugin, require('@babel/plugin-transform-flow-strip-types')]}
+  );
+});
+
 test('import case', t => {
   t.plan(2);
 
