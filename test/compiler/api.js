@@ -53,17 +53,17 @@ test('development/production env globals', async t => {
     const clientContent = await readFile(clientEntryPath, 'utf8');
 
     const expectedClientBrowser = {
-      development: `main __BROWSER__ is ' + true`,
-      production: 'main __BROWSER__ is "+!0',
+      development: `main __BROWSER__ is ".concat(true)`,
+      production: 'main __BROWSER__ is ".concat(!0)',
     };
     t.ok(
       clientContent.includes(expectedClientBrowser[envs[i]]),
-      '__BROWSER__ is transpiled to be true'
+      `__BROWSER__ is transpiled to be true in ${envs[i]}`
     );
 
     const expectedClientNode = {
-      development: `main __NODE__ is ' + false`,
-      production: 'main __NODE__ is "+!1',
+      development: `main __NODE__ is ".concat(false)`,
+      production: 'main __NODE__ is ".concat(!1)',
     };
     t.ok(
       clientContent.includes(expectedClientNode[envs[i]]),
