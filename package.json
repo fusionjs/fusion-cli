@@ -108,6 +108,7 @@
     "fusion-tokens": "^1.0.2",
     "globby": "8.0.1",
     "prettier": "1.11.1",
+    "puppeteer": "^1.2.0",
     "react": "16.2.0",
     "react-dom": "16.2.0",
     "react-test-renderer": "16.2.0",
