@@ -50,7 +50,7 @@ async function testHmr(app, t) {
   proc.kill();
 }
 
-test('hmr without router', async t => {
+test('test hmr across multiple fixtures', async t => {
   const testDirs = ['hmr-simple-app', 'hmr-with-router'];
   for (let i = 0; i < testDirs.length; i++) {
     await testHmr(testDirs[i], t);
