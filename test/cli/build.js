@@ -267,3 +267,56 @@ test('`fusion build` with dynamic imports', async t => {
   );
   t.end();
 });
+
+test.only('`fusion build` tree shaking', async t => {
+  const dir = path.resolve(__dirname, '../fixtures/tree-shaking');
+  await cmd(`build --dir=${dir} --production=true`);
+
+  const serverMain = path.resolve(
+    dir,
+    `.fusion/dist/production/server/server-main.js`
+  );
+  const clientFiles = await readdir(
+    path.resolve(dir, '.fusion/dist/production/client')
+  );
+  const clientMainFile = clientFiles.filter(f =>
+    /client-main-(.*?).js$/.test(f)
+  )[0];
+  const clientMain = path.resolve(
+    dir,
+    '.fusion/dist/production/client',
+    clientMainFile
+  );
+
+  // Manually instrumented
+  t.ok(
+    !fs
+      .readFileSync(serverMain, 'utf-8')
+      .includes('instrumented-as-pure-browser-plugin'),
+    'should not include browserPlugin in node'
+  );
+
+  t.ok(
+    !fs
+      .readFileSync(clientMain, 'utf-8')
+      .includes('instrumented-as-pure-node-plugin'),
+    'should not include nodePlugin in browser'
+  );
+
+  // export default createPlugin()
+  t.ok(
+    !fs
+      .readFileSync(serverMain, 'utf-8')
+      .includes('default-export-browser-plugin'),
+    'should not include browserPlugin in node'
+  );
+
+  t.ok(
+    !fs
+      .readFileSync(clientMain, 'utf-8')
+      .includes('default-export-node-plugin'),
+    'should not include nodePlugin in browser'
+  );
+
+  t.end();
+});

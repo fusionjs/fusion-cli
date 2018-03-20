@@ -452,6 +452,7 @@ function getConfig({target, env, dir, watch, cover}) {
         }),
     ].filter(Boolean),
     optimization: {
+      sideEffects: true,
       splitChunks: target === 'web' && {
         // See https://webpack.js.org/guides/code-splitting/
         // See https://gist.github.com/sokra/1522d586b8e5c0f5072d7565c2bee693
