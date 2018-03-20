@@ -268,7 +268,7 @@ test('`fusion build` with dynamic imports', async t => {
   t.end();
 });
 
-test.only('`fusion build` tree shaking', async t => {
+test('`fusion build` tree shaking', async t => {
   const dir = path.resolve(__dirname, '../fixtures/tree-shaking');
   await cmd(`build --dir=${dir} --production=true`);
 

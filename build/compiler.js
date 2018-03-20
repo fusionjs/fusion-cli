@@ -229,6 +229,9 @@ function getConfig({target, env, dir, watch, cover}) {
                   require.resolve('@babel/plugin-syntax-dynamic-import'),
                   require.resolve('./babel-plugins/babel-plugin-asseturl'),
                   require.resolve(
+                    './babel-plugins/babel-plugin-pure-create-plugin'
+                  ),
+                  require.resolve(
                     './babel-plugins/babel-plugin-sync-chunk-ids'
                   ),
                   require.resolve(
