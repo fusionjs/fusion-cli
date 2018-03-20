@@ -303,19 +303,32 @@ test('`fusion build` tree shaking', async t => {
     'should not include nodePlugin in browser'
   );
 
-  // export default createPlugin()
+  // Default export
   t.ok(
     !fs
       .readFileSync(serverMain, 'utf-8')
       .includes('default-export-browser-plugin'),
-    'should not include browserPlugin in node'
+    'should not include default browser export in node'
   );
 
   t.ok(
     !fs
       .readFileSync(clientMain, 'utf-8')
       .includes('default-export-node-plugin'),
-    'should not include nodePlugin in browser'
+    'should not include default node export in browser'
+  );
+
+  // Named export
+  t.ok(
+    !fs
+      .readFileSync(serverMain, 'utf-8')
+      .includes('named-export-browser-plugin'),
+    'should not include named browser export in node'
+  );
+
+  t.ok(
+    !fs.readFileSync(clientMain, 'utf-8').includes('named-export-node-plugin'),
+    'should not include named node export in browser'
   );
 
   t.end();
