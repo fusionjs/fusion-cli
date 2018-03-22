@@ -25,18 +25,22 @@ class ChunkManifestPlugin {
       compilation.mainTemplate.hooks.requireEnsure.tap(
         'ChunkManifestPlugin',
         function(_) {
-          oldChunkFilename = this.outputOptions.chunkFilename;
-          this.outputOptions.chunkFilename = '__CHUNK_MANIFEST__';
+          oldChunkFilename =
+            compilation.mainTemplate.outputOptions.chunkFilename;
+          compilation.mainTemplate.outputOptions.chunkFilename =
+            '__CHUNK_MANIFEST__';
           return _;
         }
       );
     });
 
-    compiler.hooks.compilation.tap('ChunkManifestPlugin', compilation => {
+    compiler.hooks.compilation.tap('ChunkManifestPlugin', function(
+      compilation
+    ) {
       compilation.mainTemplate.hooks.requireEnsure.tap(
         'ChunkManifestPlugin',
         function(_, chunk, hash, chunkIdVar) {
-          this.outputOptions.chunkFilename = oldChunkFilename;
+          compilation.mainTemplate.outputOptions.chunkFilename = oldChunkFilename;
           return _.replace(
             '"__CHUNK_MANIFEST__"',
             `window["${manifestVariable}"][${chunkIdVar}]`
