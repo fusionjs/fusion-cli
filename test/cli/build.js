@@ -96,9 +96,26 @@ test('`fusion build` works in production with a CDN_URL', async t => {
   t.end();
 });
 
-test.only('`fusion build` works in production with dynamic imports', async () => {
-  const dir = path.resolve(__dirname, '../fixtures/dynamic-import');
+test('`fusion build` works in production in app with dynamic imports', async t => {
+  const dir = path.resolve(__dirname, '../fixtures/dynamic-import-app');
   await cmd(`build --dir=${dir} --production`);
+
+  const clientFiles = await readdir(
+    path.resolve(dir, '.fusion/dist/production/client')
+  );
+  const clientMainFile = clientFiles.filter(f => /0-(.*?).js$/.test(f))[0];
+  const clientMain = path.resolve(
+    dir,
+    '.fusion/dist/production/client',
+    clientMainFile
+  );
+  const clientContent = fs.readFileSync(clientMain).toString();
+  t.ok(
+    clientContent.includes('loaded dynamic import'),
+    'dynamic content exists in bundle'
+  );
+
+  t.end();
 });
 
 test('`fusion build` works in production with default asset path and supplied ROUTE_PREFIX', async t => {
