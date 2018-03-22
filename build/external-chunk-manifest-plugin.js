@@ -34,9 +34,7 @@ class ChunkManifestPlugin {
       );
     });
 
-    compiler.hooks.compilation.tap('ChunkManifestPlugin', function(
-      compilation
-    ) {
+    compiler.hooks.compilation.tap('ChunkManifestPlugin', compilation => {
       compilation.mainTemplate.hooks.requireEnsure.tap(
         'ChunkManifestPlugin',
         function(_, chunk, hash, chunkIdVar) {
