@@ -96,6 +96,11 @@ test('`fusion build` works in production with a CDN_URL', async t => {
   t.end();
 });
 
+test.only('`fusion build` works in production with dynamic imports', async () => {
+  const dir = path.resolve(__dirname, '../fixtures/dynamic-import');
+  await cmd(`build --dir=${dir} --production`);
+});
+
 test('`fusion build` works in production with default asset path and supplied ROUTE_PREFIX', async t => {
   const dir = path.resolve(__dirname, '../fixtures/noop');
   const serverEntryPath = path.resolve(
