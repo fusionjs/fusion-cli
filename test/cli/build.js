@@ -116,7 +116,7 @@ async function getDistFiles(dir) {
   };
 }
 
-test.only('`fusion build` works in production in app with dynamic imports', async t => {
+test('`fusion build` works in production in app with dynamic imports', async t => {
   const dir = path.resolve(__dirname, '../fixtures/dynamic-import-app');
   await cmd(`build --dir=${dir} --production`);
 
@@ -166,6 +166,21 @@ test.only('`fusion build` works in production in app with dynamic imports', asyn
   );
 
   // Run puppeteer test to ensure that page loads with dynamic content.
+  const {proc, port} = await start(`--dir=${dir}`);
+  const browser = await puppeteer.launch({
+    args: ['--no-sandbox', '--disable-setuid-sandbox'],
+  });
+  const page = await browser.newPage();
+  await page.goto(`http://localhost:${port}/`);
+
+  const content = await page.content();
+  t.ok(
+    content.includes('loaded-dynamic-import-updated'),
+    'app content contains loaded-dynamic-import-updated'
+  );
+
+  await browser.close();
+  proc.kill();
 
   // Clean up changed files
   fs.writeFileSync(path.resolve(dir, 'src/dynamic.js'), dynamicFileContent);
