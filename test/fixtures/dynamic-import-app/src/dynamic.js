@@ -1,3 +1,3 @@
 export default function() {
-  return 'loaded dynamic import';
+  return 'loaded-dynamic-import';
 }
