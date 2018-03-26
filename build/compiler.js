@@ -7,6 +7,7 @@ const ProgressBarPlugin = require('progress-bar-webpack-plugin');
 const WebpackChunkHash = require('webpack-chunk-hash');
 const webpackDevMiddleware = require('../lib/simple-webpack-dev-middleware');
 const ChunkManifestPlugin = require('./external-chunk-manifest-plugin.js');
+const UglifyJSPlugin = require('uglifyjs-webpack-plugin');
 const CaseSensitivePathsPlugin = require('case-sensitive-paths-webpack-plugin');
 const {
   //zopfliWebpackPlugin,
@@ -108,7 +109,6 @@ function getConfig({target, env, dir, watch, cover}) {
   // NODE_ENV should be built as 'production' for everything except 'development'
   // 'test' and 'production' entries should both map to NODE_ENV='production'
   const nodeEnv = env === 'development' ? 'development' : 'production';
-  const isProduction = nodeEnv === 'production';
 
   // Allow overrides with a warning for `dev` and `test` commands. In production builds, throw if NODE_ENV is not `production`.
   const nodeEnvBanner =
@@ -145,9 +145,7 @@ function getConfig({target, env, dir, watch, cover}) {
         entry,
       ].filter(Boolean),
     },
-    // TODO(#297) Enable production mode, for now continue to apply manual optimizations.
-    // mode: env === 'production' ? 'production' : 'development',
-    mode: 'development',
+    mode: env === 'production' ? 'production' : 'development',
     // TODO(#47): Do we need to do something different here for production?
     stats: 'minimal',
     /**
@@ -448,15 +446,18 @@ function getConfig({target, env, dir, watch, cover}) {
           banner: nodeEnvBanner,
         }),
       new webpack.EnvironmentPlugin({NODE_ENV: nodeEnv}),
+      target !== 'node' &&
+        env === 'production' &&
+        new UglifyJSPlugin({
+          // TODO(#12): Investigate if these options are still required - they are causing production builds to fail
+          // compress: {warnings: false},
+          // mangle: true,
+          // output: {comments: false},
+          sourceMap: true,
+        }),
     ].filter(Boolean),
     optimization: {
-      // Implement webpack production defaults.
-      minimize: isProduction,
-      flagIncludedChunks: isProduction,
-      occurrenceOrder: isProduction,
-      sideEffects: isProduction,
-      usedExports: isProduction,
-      concatenateModules: isProduction,
+      sideEffects: true,
       splitChunks: target === 'web' && {
         // See https://webpack.js.org/guides/code-splitting/
         // See https://gist.github.com/sokra/1522d586b8e5c0f5072d7565c2bee693
