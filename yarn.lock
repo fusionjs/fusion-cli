@@ -2686,9 +2686,9 @@ eslint-visitor-keys@^1.0.0:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/eslint-visitor-keys/-/eslint-visitor-keys-1.0.0.tgz#3f3180fb2e291017716acb4c9d6d5b5c34a6a81d"
 
-eslint@4.19.0:
-  version "4.19.0"
-  resolved "https://registry.yarnpkg.com/eslint/-/eslint-4.19.0.tgz#9e900efb5506812ac374557034ef6f5c3642fc4c"
+eslint@4.19.1:
+  version "4.19.1"
+  resolved "https://registry.yarnpkg.com/eslint/-/eslint-4.19.1.tgz#32d1d653e1d90408854bfb296f076ec7e186a300"
   dependencies:
     ajv "^5.3.0"
     babel-code-frame "^6.22.0"
@@ -3313,7 +3313,7 @@ fusion-plugin-i18n@^1.0.1:
     locale "^0.1.0"
     rollup "^0.56.0"
 
-fusion-plugin-react-router@^1.0.3:
+fusion-plugin-react-router@^1.0.4:
   version "1.0.4"
   resolved "https://registry.yarnpkg.com/fusion-plugin-react-router/-/fusion-plugin-react-router-1.0.4.tgz#2716ec58c99a85c0b68fc6f22550e4e10a27bdd1"
   dependencies:
@@ -3328,7 +3328,7 @@ fusion-plugin-universal-events@^1.0.2:
   dependencies:
     koa-bodyparser "4.2.0"
 
-fusion-react-async@^1.1.0:
+fusion-react-async@^1.1.1:
   version "1.1.1"
   resolved "https://registry.yarnpkg.com/fusion-react-async/-/fusion-react-async-1.1.1.tgz#fb2ce8aff32788d8723055d1c73b30662229dd8e"
   dependencies:
@@ -3346,7 +3346,7 @@ fusion-test-utils@^1.0.1:
     koa "^2.4.1"
     node-mocks-http "^1.6.6"
 
-fusion-tokens@^1.0.2:
+fusion-tokens@^1.0.3:
   version "1.0.3"
   resolved "https://registry.yarnpkg.com/fusion-tokens/-/fusion-tokens-1.0.3.tgz#e247a076ef145337287e103ecbc42486594e96c5"
 
@@ -3863,7 +3863,7 @@ ignore@^3.3.3, ignore@^3.3.5:
   version "3.3.7"
   resolved "https://registry.yarnpkg.com/ignore/-/ignore-3.3.7.tgz#612289bfb3c220e186a58118618d5be8c1bab021"
 
-iltorb@^2.0.5:
+iltorb@^2.1.0:
   version "2.1.0"
   resolved "https://registry.yarnpkg.com/iltorb/-/iltorb-2.1.0.tgz#f48d91acb37455490c519ea18a25422359e60072"
   dependencies:
@@ -4872,7 +4872,7 @@ jest-worker@^23.0.0-alpha.1:
   dependencies:
     merge-stream "^1.0.1"
 
-jest@^22.4.2:
+jest@^22.4.3:
   version "22.4.3"
   resolved "https://registry.yarnpkg.com/jest/-/jest-22.4.3.tgz#2261f4b117dc46d9a4a1a673d2150958dee92f16"
   dependencies:
@@ -5168,7 +5168,7 @@ lighthouse-logger@^1.0.0:
   dependencies:
     debug "^2.6.8"
 
-lighthouse@^2.9.2:
+lighthouse@^2.9.4:
   version "2.9.4"
   resolved "https://registry.yarnpkg.com/lighthouse/-/lighthouse-2.9.4.tgz#01aa469abaad1cfc06814293b3f6b6ba8971320f"
   dependencies:
@@ -8344,7 +8344,7 @@ webpack-sources@^1.0.1, webpack-sources@^1.1.0:
     source-list-map "^2.0.0"
     source-map "~0.6.1"
 
-webpack@^4.1.1:
+webpack@^4.2.0:
   version "4.2.0"
   resolved "https://registry.yarnpkg.com/webpack/-/webpack-4.2.0.tgz#a4f80807651a0e611bb09609600dc266262efcc1"
   dependencies:
