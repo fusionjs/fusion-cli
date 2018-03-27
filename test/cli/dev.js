@@ -6,7 +6,6 @@ const {dev} = require('../run-command');
 const {promisify} = require('util');
 const request = require('request-promise');
 const requestCb = require('request');
-const Koa = require('koa');
 
 const exists = promisify(fs.exists);
 
