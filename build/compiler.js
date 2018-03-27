@@ -245,62 +245,61 @@ function getConfig({target, env, dir, watch, cover}) {
                     ? fusionConfig.babel.presets
                     : []),
                 ],
+
+                /**
+                 * Fusion-specific transforms (not applied to node_modules)
+                 */
+                overrides: [
+                  {
+                    include: [
+                      // Whitelist the app directory rather than maintain a blacklist
+                      appSrcDir,
+                      // Allow babelifying our client entry. We want to use JSX here.
+                      entry,
+                      /fusion-cli\/entries/,
+                    ],
+                    plugins: [
+                      //cup-globals works with webpack.EnvironmentPlugin(['NODE_ENV']) to implement static conditionals
+                      require.resolve('./babel-plugins/babel-plugin-asseturl'),
+                      require.resolve(
+                        './babel-plugins/babel-plugin-pure-create-plugin'
+                      ),
+                      require.resolve(
+                        './babel-plugins/babel-plugin-sync-chunk-ids'
+                      ),
+                      require.resolve(
+                        './babel-plugins/babel-plugin-sync-chunk-paths'
+                      ),
+                      require.resolve('./babel-plugins/babel-plugin-chunkid'),
+                      // TODO(#8): sw implementation is totally busted.
+                      // require.resolve('./babel-plugins/babel-plugin-sw'),
+                      pragma && [
+                        require.resolve('@babel/plugin-transform-react-jsx'),
+                        {pragma},
+                      ],
+                      cover && require.resolve('babel-plugin-istanbul'),
+                      target === 'node' &&
+                        require.resolve('./babel-plugins/babel-plugin-i18n'),
+                      target === 'node' &&
+                        require.resolve(
+                          './babel-plugins/babel-plugin-experimentation'
+                        ),
+                    ].filter(Boolean),
+                    presets: [
+                      [
+                        require.resolve('./babel-fusion-preset.js'),
+                        {
+                          targets,
+                        },
+                      ],
+                    ],
+                  },
+                ],
+
                 babelrc: false,
               },
             },
           ],
-        },
-        /**
-         * Fusion-specific transforms (not applied to node_modules)
-         */
-        {
-          test: /\.jsx?$/,
-          include: [
-            // Whitelist the app directory rather than maintain a blacklist
-            appSrcDir,
-            // Allow babelifying our client entry. We want to use JSX here.
-            entry,
-            /fusion-cli\/entries/,
-          ],
-          use: {
-            loader: require.resolve('babel-loader'),
-            options: {
-              plugins: [
-                //cup-globals works with webpack.EnvironmentPlugin(['NODE_ENV']) to implement static conditionals
-                require.resolve('./babel-plugins/babel-plugin-asseturl'),
-                require.resolve(
-                  './babel-plugins/babel-plugin-pure-create-plugin'
-                ),
-                require.resolve('./babel-plugins/babel-plugin-sync-chunk-ids'),
-                require.resolve(
-                  './babel-plugins/babel-plugin-sync-chunk-paths'
-                ),
-                require.resolve('./babel-plugins/babel-plugin-chunkid'),
-                // TODO(#8): sw implementation is totally busted.
-                // require.resolve('./babel-plugins/babel-plugin-sw'),
-                pragma && [
-                  require.resolve('@babel/plugin-transform-react-jsx'),
-                  {pragma},
-                ],
-                cover && require.resolve('babel-plugin-istanbul'),
-                target === 'node' &&
-                  require.resolve('./babel-plugins/babel-plugin-i18n'),
-                target === 'node' &&
-                  require.resolve(
-                    './babel-plugins/babel-plugin-experimentation'
-                  ),
-              ].filter(Boolean),
-              presets: [
-                [
-                  require.resolve('./babel-fusion-preset.js'),
-                  {
-                    targets,
-                  },
-                ],
-              ],
-              babelrc: false,
-            },
-          },
         },
       ],
     },
