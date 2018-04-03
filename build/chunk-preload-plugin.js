@@ -28,10 +28,10 @@ class ChunkPreloadPlugin {
     });
   }
 
-  var rejectChunkPreload = function(chunkId) {
+  var rejectChunkPreload = function(chunkId, err) {
     var chunk = installedChunks[chunkId];
     if(chunk !== 0) {
-      if(chunk) chunk[1](new Error('Loading chunk ' + chunkId + ' failed.'));
+      if(chunk) chunk[1](new Error('Loading chunk ' + chunkId + ' failed. ' + (err.message ? err.message : err)));
       installedChunks[chunkId] = undefined;
     }
   }
@@ -39,7 +39,7 @@ class ChunkPreloadPlugin {
   window.__HANDLE_ERROR = rejectChunkPreload;
 
   if (window.__UNHANDLED_ERRORS__) {
-    window.__UNHANDLED_ERRORS__.forEach(rejectChunkPreload);
+    window.__UNHANDLED_ERRORS__.forEach(unhandled => rejectChunkPreload(unhandled[0], unhandled[1]));
   }
         `
           );
