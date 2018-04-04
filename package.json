@@ -1,6 +1,6 @@
 {
   "name": "fusion-cli",
-  "version": "1.2.7",
+  "version": "1.3.1",
   "description": "CLI",
   "repository": "fusionjs/fusion-cli",
   "bin": {
@@ -75,7 +75,6 @@
     "rimraf": "^2.6.2",
     "source-map-explorer": "^1.5.0",
     "source-map-support": "^0.5.4",
-    "uglifyjs-webpack-plugin": "^1.2.4",
     "unitest": "^2.1.1",
     "webpack": "^4.2.0",
     "webpack-chunk-hash": "^0.5.0",
@@ -99,7 +98,7 @@
     "eslint-plugin-import": "2.9.0",
     "eslint-plugin-prettier": "2.6.0",
     "eslint-plugin-react": "7.7.0",
-    "flow-bin": "0.68.0",
+    "flow-bin": "0.69.0",
     "fusion-core": "^1.2.0",
     "fusion-plugin-csrf-protection-react": "^1.0.2",
     "fusion-plugin-i18n-react": "^1.0.2",
