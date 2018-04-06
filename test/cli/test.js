@@ -337,7 +337,7 @@ test('`fusion test --debug --env=jsdom,node`', async t => {
   child.kill();
 });
 
-test.only('`fusion test` simultaneous simulation tests across envs', async t => {
+test('`fusion test` simultaneous simulation tests across envs', async t => {
   const dir = path.resolve(__dirname, '../fixtures/test-jest-react-app');
   const args = `test --dir=${dir} --configPath=../../../build/jest-config.js`;
 
