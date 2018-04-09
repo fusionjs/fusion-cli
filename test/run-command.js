@@ -16,15 +16,18 @@ function run(args, options) {
   const promise = new Promise((resolve, reject) => {
     child.stdout &&
       child.stdout.on('data', data => {
+        console.log('stdout!', String(data));
         stdoutLines.push(data.toString());
       });
     child.stderr &&
       child.stderr.on('data', data => {
+        console.log('stderr!', String(data));
         stderrLines.push(data.toString());
       });
     child.on('close', code => {
       const stdout = stdoutLines.join('\n');
       const stderr = stderrLines.join('\n');
+      console.log('Close with code!', code);
       if (code === 0 || code === null) {
         resolve({stdout, stderr});
       } else {
@@ -32,6 +35,7 @@ function run(args, options) {
       }
     });
     child.on('error', e => {
+      console.log('Error!', e);
       reject(e);
     });
   });
