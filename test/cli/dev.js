@@ -168,7 +168,7 @@ test('`fusion dev` works with fs', async t => {
   t.end();
 });
 
-test.only('`fusion dev` recovering from errors', async t => {
+test('`fusion dev` recovering from errors', async t => {
   const dir = path.resolve(__dirname, '../fixtures/server-startup-error');
   const {res, proc} = await dev(`--dir=${dir}`, {
     stdio: ['inherit', 'inherit', 'pipe'],
@@ -189,18 +189,13 @@ test.only('`fusion dev` recovering from errors', async t => {
       fs.writeFileSync(mainPath, fs.readFileSync(mainPath));
     }
   }
-  // proc.stdout.on('data', data => {
-  //   console.log('DEBUG: Got stdout data: ', data);
-  // });
   proc.stderr.on('data', stderr => {
-    console.log('DEBUG: Got stderr data: ', String(stderr));
     t.ok(
       stderr.toString().includes('server-startup-error'),
       'should log server startup error'
     );
     next();
   });
-  // Maybe we just need a lil pause?
   await new Promise(resolve => setTimeout(resolve, 1000));
   fs.writeFileSync(mainPath, fs.readFileSync(mainPath));
 });
