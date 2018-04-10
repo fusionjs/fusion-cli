@@ -200,9 +200,8 @@ test.only('`fusion dev` recovering from errors', async t => {
     );
     next();
   });
-  proc.on('close', code => {
-    console.log(`DEBUG: child process exited with code ${code}`);
-  });
+  // Maybe we just need a lil pause?
+  await new Promise(resolve => setTimeout(resolve, 1000));
   fs.writeFileSync(mainPath, fs.readFileSync(mainPath));
 });
 

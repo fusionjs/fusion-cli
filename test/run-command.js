@@ -10,6 +10,7 @@ function run(args, options) {
     ...options,
   };
   const command = Array.isArray(args) ? args : [args];
+  console.log('command is?!', command)
   const child = spawn('node', command, opts);
   const stdoutLines = [];
   const stderrLines = [];
