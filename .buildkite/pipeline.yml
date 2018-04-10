@@ -9,7 +9,7 @@ steps:
   - wait
   - name: ':node: :white_check_mark:'
     command: .buildkite/nodeTests
-    parallelism: 10
+    parallelism: 50
     plugins:
       'docker-compose#v1.7.0':
         run: fusion-cli
