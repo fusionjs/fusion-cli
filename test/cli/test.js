@@ -234,7 +234,7 @@ test('`fusion test` cobertura coverage reports', async t => {
   t.ok(!cobertunaReport.includes('<line number="1" hits="2"/>'));
 
   t.ok(
-    cobertunaReport.includes('bar.js'),
+    cobertunaReport.includes('not-imported-in-tests.js'),
     'report includes files not imported in tests'
   );
 
@@ -251,7 +251,7 @@ test('`fusion test` cobertura coverage reports', async t => {
   t.ok(!combinedReport.includes('<line number="1" hits="1"/>'));
 
   t.ok(
-    combinedReport.includes('bar.js'),
+    combinedReport.includes('not-imported-in-tests.js'),
     'report includes files not imported in tests'
   );
   t.end();
