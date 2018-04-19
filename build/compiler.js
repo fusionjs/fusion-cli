@@ -234,7 +234,7 @@ function getConfig({target, env, dir, watch, cover}) {
             {
               loader: require.resolve('babel-loader'),
               options: {
-                cacheDirectory: `${dir}/.fusion/babel_cache`,
+                cacheDirectory: `${dir}/node_modules/.babel_cache`,
                 plugins: [
                   // Note: plugins run first to last, so user-defined plugins go first
                   ...(fusionConfig.babel && fusionConfig.babel.plugins
@@ -639,7 +639,7 @@ function Compiler({
 
   this.clean = () => {
     return new Promise((resolve, reject) => {
-      rimraf(`${dir}/.fusion/!(babel_cache)`, e => (e ? reject(e) : resolve()));
+      rimraf(`${dir}/.fusion`, e => (e ? reject(e) : resolve()));
     });
   };
 }
