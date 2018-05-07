@@ -2,11 +2,17 @@
 
 const testFolder = process.env.TEST_FOLDER || '__tests__';
 
-const meta = require(process.cwd() + '/package.json');
-const reactVersion = meta.dependencies.react
-  .split('.')
-  .shift()
-  .match(/\d+/);
+function getReactVersion() {
+  try {
+    const meta = require(process.cwd() + '/package.json');
+    return meta.dependencies.react
+      .split('.')
+      .shift()
+      .match(/\d+/);
+  } catch (e) {
+    return '16';
+  }
+}
 
 module.exports = {
   cache: false,
@@ -19,7 +25,7 @@ module.exports = {
   transformIgnorePatterns: ['/node_modules/(?!(fusion-cli.*build))'],
   setupFiles: [
     require.resolve('./jest-framework-shims.js'),
-    require.resolve(`./jest-framework-setup-${reactVersion}.js`),
+    require.resolve(`./jest-framework-setup-${getReactVersion()}.js`),
   ],
   snapshotSerializers: [require.resolve('enzyme-to-json/serializer')],
   testMatch: [`**/${testFolder}/**/*.js`],
