@@ -1,0 +1,12 @@
+import { universal, browserOnly } from "other";
+import browser from "browser";
+export const foo = false;
+export default browser;
+export const blah = blah ? blah : blah;
+universal;
+
+if (true) {
+  browser;
+  browser;
+  browserOnly;
+}
