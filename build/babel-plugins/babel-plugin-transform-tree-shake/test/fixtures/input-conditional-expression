@@ -1,0 +1,11 @@
+import foo from "foo";
+import {bar, baz} from "bar";
+if (false) {
+  foo;
+  foo;
+}
+if (false) {
+  bar;
+  bar;
+}
+baz;

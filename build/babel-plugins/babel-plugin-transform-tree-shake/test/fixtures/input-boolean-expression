@@ -1,0 +1,5 @@
+import foo from "foo";
+import {bar, baz} from "bar";
+false && something && other && foo;
+false && something && other && bar;
+true && baz;
