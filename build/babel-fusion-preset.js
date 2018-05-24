@@ -13,7 +13,6 @@ function globalsPreset(context, {target, transformGlobals}) {
       ...(transformGlobals
         ? [
             [require.resolve('babel-plugin-transform-cup-globals'), {target}],
-            // Note: plugins run first to last, cup globals must be transformed before tree shaking
             [
               require.resolve(
                 './babel-plugins/babel-plugin-transform-tree-shake'
