@@ -6,7 +6,7 @@ const {transformFileSync} = require('@babel/core');
 const plugin = require('../');
 const {globalsPreset} = require('../../../babel-fusion-preset.js');
 
-test.only('boolean expression transformed', t => {
+test('boolean expression transformed', t => {
   const output = transformFileSync(
     __dirname + '/fixtures/input-boolean-expression',
     {
