@@ -75,7 +75,6 @@ async function reload() {
   const app = await initialize();
   reverseRegister(app, AssetsPlugin);
   reverseRegister(app, ContextPlugin);
-  // $FlowFixMe
   if (__DEV__) {
     reverseRegister(app, ServerErrorPlugin);
   }
