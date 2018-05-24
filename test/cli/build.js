@@ -127,7 +127,7 @@ async function getDistFiles(dir) {
   };
 }
 
-test('`fusion build` app with dynamic imports chunk hashing', async t => {
+test.only('`fusion build` app with dynamic imports chunk hashing', async t => {
   const dir = path.resolve(__dirname, '../fixtures/dynamic-import-app');
   await cmd(`build --dir=${dir} --production`);
 
