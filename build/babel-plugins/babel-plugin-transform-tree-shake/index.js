@@ -1,5 +1,5 @@
 /* eslint-env node */
-module.exports = babel => {
+module.exports = (babel, {target}) => {
   const {types: t} = babel;
 
   return {
@@ -30,7 +30,7 @@ module.exports = babel => {
           if (binding) {
             const refPaths = binding.referencePaths;
             for (const path of refPaths) {
-              const task = getShakeTask(t, path);
+              const task = getShakeTask(t, path, target);
               if (task) {
                 shakeTasks.push(task);
               } else {
@@ -64,14 +64,27 @@ function isLiteralFalse(path) {
   return node.type === 'BooleanLiteral' && node.value === false;
 }
 
-function getShakeTask(t, path) {
+const inverseTargetMap = {
+  node: '__BROWSER__',
+  browser: '__NODE__',
+};
+function isCUPGlobalFalse(path, target) {
+  const node = path.node;
+  return node.type === 'Identifier' && node.name === inverseTargetMap[target];
+}
+
+function isFalse(path, target) {
+  return isLiteralFalse(path) || isCUPGlobalFalse(path, target);
+}
+
+function getShakeTask(t, path, target) {
   while (path && !path.removed) {
     if (path.type === 'IfStatement') {
-      if (isLiteralFalse(path.get('test'))) {
+      if (isFalse(path.get('test'), target)) {
         return () => !path.removed && path.remove();
       }
     } else if (path.type === 'ConditionalExpression') {
-      if (isLiteralFalse(path.get('test'))) {
+      if (isFalse(path.get('test'), target)) {
         return () => !path.removed && path.replaceWith(path.get('alternate'));
       }
     }
@@ -84,7 +97,7 @@ function getShakeTask(t, path) {
         _path.get('operator').node === '&&'
       ) {
         _path = _path.get('left');
-        if (isLiteralFalse(_path)) {
+        if (isFalse(_path, target)) {
           return () =>
             !path.removed && path.replaceWith(t.booleanLiteral(false));
         }
