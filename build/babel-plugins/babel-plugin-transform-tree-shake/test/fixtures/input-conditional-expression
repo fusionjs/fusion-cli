@@ -9,3 +9,9 @@ if (false) {
   bar;
 }
 baz;
+if (false) {
+  foo;
+  bar;
+} else {
+  other;
+}
