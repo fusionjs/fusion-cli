@@ -69,8 +69,8 @@ const inverseTargetMap = {
   browser: '__NODE__',
 };
 const opposite = {
-  node: "browser",
-  browser: "node"
+  node: 'browser',
+  browser: 'node',
 };
 function isCUPGlobalFalse(path, target) {
   const node = path.node;
@@ -88,8 +88,8 @@ function isTrue(path, target) {
 function isPathCertainlyUnreachable(t, path, target) {
   while (path) {
     if (path.parentPath && path.parentPath.type === 'IfStatement') {
-      const consquent = path.parentPath.get("consequent");
-      const alternate = path.parentPath.get("alternate");
+      const consquent = path.parentPath.get('consequent');
+      const alternate = path.parentPath.get('alternate');
       if (isFalse(path.parentPath.get('test'), target) && consquent === path) {
         return true;
       }
