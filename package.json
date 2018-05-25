@@ -8,7 +8,7 @@
   },
   "scripts": {
     "lint": "eslint .",
-    "test": "node test/index.js"
+    "test": "git clean -Xfd test/fixtures && node test/index.js"
   },
   "dependencies": {
     "@babel/core": "^7.0.0-beta.49",

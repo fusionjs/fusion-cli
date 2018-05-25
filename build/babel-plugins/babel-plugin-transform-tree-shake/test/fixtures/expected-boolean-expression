@@ -1,4 +1,6 @@
 import { baz } from "bar";
 false;
 false;
+false;
+false;
 true && baz;
