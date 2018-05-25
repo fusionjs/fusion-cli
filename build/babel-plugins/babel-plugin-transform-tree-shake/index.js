@@ -9,7 +9,6 @@ module.exports = (babel, {target}) => {
         if (path.removed) {
           return;
         }
-        let shakeTasks = [];
         const specifiers = path.get('specifiers');
 
         // Imports with no specifiers is probably specifically for side effects
@@ -30,10 +29,8 @@ module.exports = (babel, {target}) => {
           if (binding) {
             const refPaths = binding.referencePaths;
             for (const path of refPaths) {
-              const task = getShakeTask(t, path, target);
-              if (task) {
-                shakeTasks.push(task);
-              } else {
+              const unreachable = isPathCertainlyUnreachable(t, path, target);
+              if (!unreachable) {
                 shakeSpecifier = false;
                 shakeDeclaration = false;
               }
@@ -53,7 +50,6 @@ module.exports = (babel, {target}) => {
         if (shakeDeclaration) {
           path.remove();
         }
-        shakeTasks.forEach(task => task());
       },
     },
   };
@@ -63,10 +59,18 @@ function isLiteralFalse(path) {
   const node = path.node;
   return node.type === 'BooleanLiteral' && node.value === false;
 }
+function isLiteralTrue(path) {
+  const node = path.node;
+  return node.type === 'BooleanLiteral' && node.value === true;
+}
 
 const inverseTargetMap = {
   node: '__BROWSER__',
   browser: '__NODE__',
+};
+const opposite = {
+  node: "browser",
+  browser: "node"
 };
 function isCUPGlobalFalse(path, target) {
   const node = path.node;
@@ -77,15 +81,24 @@ function isFalse(path, target) {
   return isLiteralFalse(path) || isCUPGlobalFalse(path, target);
 }
 
-function getShakeTask(t, path, target) {
-  while (path && !path.removed) {
-    if (path.type === 'IfStatement') {
-      if (isFalse(path.get('test'), target)) {
-        return () => !path.removed && path.remove();
+function isTrue(path, target) {
+  return isLiteralTrue(path) || isCUPGlobalFalse(path, opposite[target]);
+}
+
+function isPathCertainlyUnreachable(t, path, target) {
+  while (path) {
+    if (path.parentPath && path.parentPath.type === 'IfStatement') {
+      const consquent = path.parentPath.get("consequent");
+      const alternate = path.parentPath.get("alternate");
+      if (isFalse(path.parentPath.get('test'), target) && consquent === path) {
+        return true;
+      }
+      if (isTrue(path.parentPath.get('test'), target) && alternate === path) {
+        return true;
       }
     } else if (path.type === 'ConditionalExpression') {
       if (isFalse(path.get('test'), target)) {
-        return () => !path.removed && path.replaceWith(path.get('alternate'));
+        return true;
       }
     }
     // traverse chained BooleanExpressions
@@ -98,8 +111,7 @@ function getShakeTask(t, path, target) {
       ) {
         _path = _path.get('left');
         if (isFalse(_path, target)) {
-          return () =>
-            !path.removed && path.replaceWith(t.booleanLiteral(false));
+          return true;
         }
       } else {
         break;
