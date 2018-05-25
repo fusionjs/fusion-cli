@@ -1,4 +1,4 @@
 import { baz } from "bar";
-other;
-other;
+false ? foo : other;
+false ? bar : other;
 true ? baz : other;
