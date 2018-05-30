@@ -6,7 +6,7 @@ const babelPluginSyntaxJsx = require('@babel/plugin-syntax-jsx');
 module.exports = function doTransform(inputString) {
   return (
     transform(inputString.trim(), {
-      filename: 'fake-file.js',
+      filename: '/fake-file.js',
       plugins: [
         [
           plugin,
