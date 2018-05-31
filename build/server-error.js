@@ -12,7 +12,7 @@ const React = require('react');
 const RedBox = require('redbox-react').RedBoxError;
 const ReactDOMServer = require('react-dom/server');
 
-function renderError(error /*: any = {} */) {
+function renderError(error /*: any */ = {}) {
   const content = [
     '<!DOCTYPE html><html><head><title>Server error</title></head><body>',
   ];
