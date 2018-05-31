@@ -41,7 +41,7 @@ module.exports = {
   collectCoverageFrom: [
     '**/*.js',
     '!**/__integration__/**',
-    '!**/node_modules/**'
+    '!**/node_modules/**',
   ],
   testResultsProcessor: require.resolve('./results-processor.js'),
 };
