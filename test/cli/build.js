@@ -95,10 +95,30 @@ test('`fusion build` works in production with a CDN_URL', async t => {
   const {res, proc} = await start(`--dir=${dir}`, {
     env: Object.assign({}, process.env, {
       CDN_URL: 'https://cdn.com/test',
-      FRAMEWORK_STATIC_ASSET_PATH: 'http://some.com/url/some/special',
     }),
   });
 
+  t.ok(
+    res.includes('src="https://cdn.com/test/client-main'),
+    'includes a script reference to client-main'
+  );
+  t.ok(
+    res.includes('src="https://cdn.com/test/client-vendor'),
+    'includes a script reference to client-vendor'
+  );
+  proc.kill();
+  t.end();
+});
+
+test('`fusion start` asset mount plugin cuts only relative path of asset URL', async t => {
+  const dir = path.resolve(__dirname, '../fixtures/noop');
+  await cmd(`build --dir=${dir} --production`);
+  const {res, proc} = await start(`--dir=${dir}`, {
+    env: Object.assign({}, process.env, {
+      CDN_URL: 'https://cdn.com/test',
+      FRAMEWORK_STATIC_ASSET_PATH: 'http://some.com/url/some/special',
+    }),
+  });
   t.ok(
     res.includes('src="https://cdn.com/test/client-main'),
     'includes a script reference to client-main'
