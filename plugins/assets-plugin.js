@@ -12,13 +12,15 @@ const {createPlugin, getEnv} = require('fusion-core');
 const path = require('path');
 const mount = require('koa-mount');
 const serve = require('koa-static');
+const parseUri = require('../lib/parseUri.js');
 
 module.exports = function(dir /*: string */) {
   return createPlugin({
     middleware: () => {
-      const {baseAssetPath, env} = getEnv();
+      let {baseAssetPath, env} = getEnv();
       // setting defer here tells the `serve` middleware to `await next` first before
       // setting the response. This allows composition with user middleware
+      baseAssetPath = parseUri(baseAssetPath).relative;
       return mount(
         baseAssetPath,
         serve(path.resolve(dir, `.fusion/dist/${env}/client`), {
