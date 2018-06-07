@@ -10,6 +10,11 @@
 
 const {Compiler} = require('../build/compiler');
 const analyzer = require('bundle-analyzer');
+const fs = require('fs');
+const util = require('util');
+
+const unlink = util.promisify(fs.unlink);
+const readDir = util.promisify(fs.readdir);
 
 exports.command = 'profile [--dir] [--environment] [--port]';
 exports.desc = 'Profile your application';
@@ -38,9 +43,18 @@ exports.run = async function profileHandler(
     dir: `${dir}/.fusion/dist/${environment}/client`,
     port,
   });
-  const watcher = compiler.start(() => {
+
+  const run = async ({stats}) => {
+    const filenames = Object.keys(stats[0].compilation.assets);
+    const dirname = `${dir}/.fusion/dist/${environment}/client`;
+    const files = await readDir(dirname);
+    const obsolete = files.filter(f => !filenames.find(n => f.match(n)));
+    await Promise.all(obsolete.map(o => unlink(`${dirname}/${o}`)));
     server.update();
-  });
+  };
+  const watcher = compiler.start();
+  compiler.on('done', run);
+
   return {
     compiler,
     stop() {
