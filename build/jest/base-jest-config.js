@@ -1,9 +1,18 @@
+/** Copyright (c) 2018 Uber Technologies, Inc.
+ *
+ * This source code is licensed under the MIT license found in the
+ * LICENSE file in the root directory of this source tree.
+ *
+ * @flow
+ */
+
 /* eslint-env node */
 
 const testFolder = process.env.TEST_FOLDER || '__tests__';
 
 function getReactVersion() {
   try {
+    // $FlowFixMe
     const meta = require(process.cwd() + '/package.json');
     return meta.dependencies.react
       .split('.')
@@ -29,6 +38,10 @@ module.exports = {
   ],
   snapshotSerializers: [require.resolve('enzyme-to-json/serializer')],
   testMatch: [`**/${testFolder}/**/*.js`],
-  collectCoverageFrom: ['**.js', '!**/__integration__/**'],
+  collectCoverageFrom: [
+    '**/*.js',
+    '!**/__integration__/**',
+    '!**/node_modules/**',
+  ],
   testResultsProcessor: require.resolve('./results-processor.js'),
 };
