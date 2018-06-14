@@ -1,5 +1,10 @@
 /* @flow */
 
+/**
+ * Note: this plugin probably becomes redundant (assuming Webpack is used) once
+ * https://github.com/webpack/webpack/issues/7519 is resolved
+ */
+
 /* eslint-env node */
 module.exports = (
   babel /*: any */,
