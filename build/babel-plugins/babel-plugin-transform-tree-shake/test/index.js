@@ -10,7 +10,16 @@ test('boolean expression transformed', t => {
   const output = transformFileSync(
     __dirname + '/fixtures/input-boolean-expression',
     {
-      presets: [[globalsPreset, {target: 'browser', transformGlobals: true}]],
+      presets: [
+        [
+          globalsPreset,
+          {
+            target: 'browser',
+            transformGlobals: true,
+            assumeNoImportSideEffects: true,
+          },
+        ],
+      ],
     }
   );
   const expected = fs
