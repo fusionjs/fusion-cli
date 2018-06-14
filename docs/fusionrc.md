@@ -8,7 +8,8 @@ This configuration object supports the following fields:
 
 ### Adding plugins/presets
 
-To add your own Babel plugins/prelease, create a 
+For example, to add your own Babel plugins/preset:
+
 ```
 module.exports = {
   babel: {
