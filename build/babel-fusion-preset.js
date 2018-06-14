@@ -15,19 +15,22 @@
  */
 
 // Needs to be a preset, because tree shaking must run after JSX plugin (in React preset)
-function globalsPreset(context /*: any */, {target, transformGlobals} /*: any */) {
+function globalsPreset(
+  context /*: any */,
+  {target, transformGlobals, assumeNoImportSideEffects} /*: any */
+) {
   return {
     plugins: [
       ...(transformGlobals
         ? [
             [require.resolve('babel-plugin-transform-cup-globals'), {target}],
-            [
+            assumeNoImportSideEffects && [
               require.resolve(
                 './babel-plugins/babel-plugin-transform-tree-shake'
               ),
               {target},
             ],
-          ]
+          ].filter(Boolean)
         : []),
     ],
   };
@@ -35,7 +38,11 @@ function globalsPreset(context /*: any */, {target, transformGlobals} /*: any */
 
 module.exports = function buildPreset(
   context /*: any */,
-  {targets, transformGlobals = true} /*: any */
+  {
+    targets,
+    transformGlobals = true,
+    assumeNoImportSideEffects = false,
+  } /*: any */
 ) {
   const target = targets.hasOwnProperty('node') ? 'node' : 'browser';
 
@@ -43,7 +50,7 @@ module.exports = function buildPreset(
     presets: [
       require('@babel/preset-react'),
       require('@babel/preset-flow'),
-      [globalsPreset, {target, transformGlobals}],
+      [globalsPreset, {target, transformGlobals, assumeNoImportSideEffects}],
     ],
     plugins: [
       require('@babel/plugin-syntax-object-rest-spread'),

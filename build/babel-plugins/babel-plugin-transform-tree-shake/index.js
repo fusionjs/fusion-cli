@@ -1,11 +1,15 @@
-/* eslint-env node */
-module.exports = (babel, {target}) => {
-  const {types: t} = babel;
+/* @flow */
 
+/* eslint-env node */
+module.exports = (
+  babel /*: any */,
+  {target} /*: {target: "node" | "browser"} */
+) => {
+  const {types: t} = babel;
   return {
     name: 'transform-tree-shake',
     visitor: {
-      ImportDeclaration(path) {
+      ImportDeclaration(path /* :any */) {
         if (path.removed) {
           return;
         }

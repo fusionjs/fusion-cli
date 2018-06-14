@@ -421,6 +421,45 @@ test('`fusion build` with dynamic imports and group chunks', async t => {
   t.end();
 });
 
+test('`fusion build` with dynamic imports and group chunks', async t => {
+  const dir = path.resolve(__dirname, '../fixtures/import-pruning');
+  await cmd(`build --dir=${dir}`);
+  const {proc, port} = await start(`--dir=${dir}`, {
+    env: {
+      ...process.env,
+      NODE_ENV: 'production',
+    },
+  });
+  const resA = await request(`http://localhost:${port}/test-a`);
+  const resB = await request(`http://localhost:${port}/test-b`);
+  const res = await request(`http://localhost:${port}/test`);
+  t.deepLooseEqual(JSON.parse(res), [0]);
+  t.deepLooseEqual(JSON.parse(resA), [0, 2]);
+  t.deepLooseEqual(JSON.parse(resB), [0, 1]);
+  proc.kill();
+  t.end();
+});
+
+test('`fusion build` tree shaking unused imports in dev w/ assumeNoImportSideEffects: true', async t => {
+  const dir = path.resolve(__dirname, '../fixtures/tree-shaking-unused');
+  await cmd(`build --dir=${dir}`);
+
+  const distFolder = path.resolve(dir, '.fusion/dist/development/client');
+  const clientFiles = await readdir(distFolder);
+
+  clientFiles
+    .filter(file => path.extname(file) === '.js')
+    .map(file => path.join(distFolder, file))
+    .forEach(file => {
+      t.ok(
+        !fs.readFileSync(file, 'utf-8').includes('__fixture_pkg_unused__'),
+        'should not include unused export in browser'
+      );
+    });
+
+  t.end();
+});
+
 test('`fusion build` tree shaking', async t => {
   const dir = path.resolve(__dirname, '../fixtures/tree-shaking');
   await cmd(`build --dir=${dir} --production=true`);

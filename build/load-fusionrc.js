@@ -42,11 +42,38 @@ module.exports = function validateConfig(dir /*: any */) {
 };
 
 function isValid(config) {
-  return (
-    typeof config === 'object' &&
-    config !== null &&
-    Object.keys(config).every(el => ['babel'].includes(el)) &&
+  if (!(typeof config === 'object' && config !== null)) {
+    throw new Error('.fusionrc.js must export an object');
+  }
+
+  if (
+    !Object.keys(config).every(key =>
+      ['babel', 'assumeNoImportSideEffects'].includes(key)
+    )
+  ) {
+    throw new Error(`Invalid property in .fusionrc.js`);
+  }
+
+  if (
     config.babel &&
-    Object.keys(config.babel).every(el => ['plugins', 'presets'].includes(el))
-  );
+    !Object.keys(config.babel).every(el => ['plugins', 'presets'].includes(el))
+  ) {
+    throw new Error(
+      `Only "plugins" and "presets" are supported in fusionrc.js babel config`
+    );
+  }
+
+  if (
+    !(
+      config.assumeNoImportSideEffects === false ||
+      config.assumeNoImportSideEffects === true ||
+      config.assumeNoImportSideEffects === void 0
+    )
+  ) {
+    throw new Error(
+      'assumeNoImportSideEffects must be true, false, or undefined in fusionrc.js babel config'
+    );
+  }
+
+  return true;
 }
