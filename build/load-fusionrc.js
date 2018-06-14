@@ -15,7 +15,9 @@ const chalk = require('chalk');
 
 let loggedNotice = false;
 
-module.exports = function validateConfig(dir /*: any */) {
+module.exports = function validateConfig(
+  dir /*: any */
+) /*: {babel?: {include?: Array<any>, exclude?: Array<any>}, assumeNoImportSideEffects?: boolean} */ {
   const configPath = path.join(dir, '.fusionrc.js');
   let config;
   if (fs.existsSync(configPath)) {
