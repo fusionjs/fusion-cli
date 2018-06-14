@@ -165,7 +165,7 @@ test('`fusion build` app with dynamic imports chunk hashing', async t => {
     rebuiltDistFiles.clientVendorFile,
     'vendor file hash should not change'
   );
-  // TODO(#385) Add this back https://github.com/fusionjs/fusion-cli/pull/385
+  // TODO(#393) Add this back https://github.com/fusionjs/fusion-cli/pull/385
   // t.equal(
   //   distFiles.clientMainFile,
   //   rebuiltDistFiles.clientMainFile,
