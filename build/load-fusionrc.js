@@ -17,7 +17,7 @@ let loggedNotice = false;
 
 module.exports = function validateConfig(
   dir /*: any */
-) /*: {babel?: {include?: Array<any>, exclude?: Array<any>}, assumeNoImportSideEffects?: boolean} */ {
+) /*: {babel?: {plugins?: Array<any>, presets?: Array<any>}, assumeNoImportSideEffects?: boolean} */ {
   const configPath = path.join(dir, '.fusionrc.js');
   let config;
   if (fs.existsSync(configPath)) {
