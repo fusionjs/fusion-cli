@@ -28,7 +28,7 @@ module.exports = (
 
           const localPath = specifier.get('local');
           const localName = localPath.node.name;
-          // This should not be hardoded to React and/or improve compat with JSX transform
+          // This should not be hardcoded to React and/or improve compat with JSX transform
           // However, this stopgap is fine until this plugin is made redundant by
           // https://github.com/webpack/webpack/issues/7519
           if (localName === 'React') {
