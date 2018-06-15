@@ -13,11 +13,11 @@ const fs = require('fs');
 const path = require('path');
 const chalk = require('chalk');
 
-let loggedNotice = false;
+let loggedBabelNotice = false;
 
 module.exports = function validateConfig(
   dir /*: any */
-) /*: {babel?: {plugins?: Array<any>, presets?: Array<any>}, assumeNoImportSideEffects?: boolean} */ {
+) /*: {babel?: {plugins?: Array<any>, presets?: Array<any>}, assumeNoImportSideEffects?: boolean, additionalCoveragePatterns?: Array<string>} */ {
   const configPath = path.join(dir, '.fusionrc.js');
   let config;
   if (fs.existsSync(configPath)) {
@@ -26,7 +26,7 @@ module.exports = function validateConfig(
     if (!isValid(config)) {
       throw new Error('.fusionrc.js is invalid');
     }
-    if (!loggedNotice) {
+    if (!loggedBabelNotice && config.babel) {
       console.log(chalk.dim('Using custom Babel config from .fusionrc.js'));
       console.warn(
         chalk.yellow(
@@ -35,7 +35,7 @@ module.exports = function validateConfig(
           'and may be not be supported in future releases. Use at your own risk.'
         )
       );
-      loggedNotice = true;
+      loggedBabelNotice = true;
     }
   } else {
     config = {};
@@ -50,7 +50,11 @@ function isValid(config) {
 
   if (
     !Object.keys(config).every(key =>
-      ['babel', 'assumeNoImportSideEffects'].includes(key)
+      [
+        'babel',
+        'assumeNoImportSideEffects',
+        'additionalCoveragePatterns',
+      ].includes(key)
     )
   ) {
     throw new Error(`Invalid property in .fusionrc.js`);
@@ -75,6 +79,13 @@ function isValid(config) {
     throw new Error(
       'assumeNoImportSideEffects must be true, false, or undefined in fusionrc.js babel config'
     );
+  }
+
+  if (
+    config.additionalCoveragePatterns &&
+    !Array.isArray(config.additionalCoveragePatterns)
+  ) {
+    throw new Error('additionalCoveragePatterns must be an array');
   }
 
   return true;

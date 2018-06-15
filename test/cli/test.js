@@ -265,6 +265,21 @@ test('`fusion test` cobertura coverage reports', async t => {
   t.end();
 });
 
+test('`fusion test` additional coverage patterns', async t => {
+  const dir = path.resolve(
+    __dirname,
+    '../fixtures/test-jest-coverage-patterns'
+  );
+  const args = `test --dir=${dir} --configPath=../../../build/jest/jest-config.js --coverage`;
+
+  const cmd = `require('${runnerPath}').run('${args}')`;
+  const response = await exec(`node -e "${cmd}"`);
+
+  // Ensure that the ignored file is not present
+  t.ok(!response.stdout.includes('ignore-me-in-coverage'));
+  t.end();
+});
+
 test('`fusion test` environment variables', async t => {
   const dir = path.resolve(__dirname, '../fixtures/test-jest-app');
   const args = `test --dir=${dir} --configPath=../../../build/jest/jest-config.js --match=environment-variables`;
