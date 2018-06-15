@@ -8,6 +8,10 @@
 
 /* eslint-env node */
 
+const loadFusionRC = require('../load-fusionrc.js');
+
+const fusionConfig = loadFusionRC(process.cwd());
+
 const testFolder = process.env.TEST_FOLDER || '__tests__';
 
 function getReactVersion() {
@@ -21,6 +25,15 @@ function getReactVersion() {
   } catch (e) {
     return '16';
   }
+}
+
+function coveragePatterns() /*: Array<string> */ {
+  const additionalCoveragePatterns =
+    fusionConfig.additionalCoveragePatterns || [];
+
+  return ['**/*.js', '!**/__integration__/**', '!**/node_modules/**'].concat(
+    additionalCoveragePatterns
+  );
 }
 
 module.exports = {
@@ -38,10 +51,6 @@ module.exports = {
   ],
   snapshotSerializers: [require.resolve('enzyme-to-json/serializer')],
   testMatch: [`**/${testFolder}/**/*.js`],
-  collectCoverageFrom: [
-    '**/*.js',
-    '!**/__integration__/**',
-    '!**/node_modules/**',
-  ],
+  collectCoverageFrom: coveragePatterns(),
   testResultsProcessor: require.resolve('./results-processor.js'),
 };
