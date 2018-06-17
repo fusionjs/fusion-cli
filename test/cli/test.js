@@ -1,3 +1,11 @@
+/** Copyright (c) 2018 Uber Technologies, Inc.
+ *
+ * This source code is licensed under the MIT license found in the
+ * LICENSE file in the root directory of this source tree.
+ *
+ * @flow
+ */
+
 /* eslint-env node */
 
 const fs = require('fs');
@@ -98,9 +106,9 @@ test('`fusion test` snapshotting', async t => {
     __dirname + '/../fixtures/snapshots/snapshot-no-match.js.fixture';
 
   // Copy fixture to snapshot
-  fs
-    .createReadStream(snapshotFile)
-    .pipe(fs.createWriteStream(snapshotFile.replace(/fixture$/, 'snap')));
+  fs.createReadStream(snapshotFile).pipe(
+    fs.createWriteStream(snapshotFile.replace(/fixture$/, 'snap'))
+  );
 
   const cmd = `require('${runnerPath}').run('${args}')`;
   try {
@@ -134,9 +142,9 @@ test('`fusion test` snapshotting with -u option', async t => {
     __dirname + '/../fixtures/snapshots/snapshot-no-match.js.fixture';
 
   // Copy fixture to snapshot
-  fs
-    .createReadStream(snapshotFile)
-    .pipe(fs.createWriteStream(snapshotFile.replace(/fixture$/, 'snap')));
+  fs.createReadStream(snapshotFile).pipe(
+    fs.createWriteStream(snapshotFile.replace(/fixture$/, 'snap'))
+  );
 
   const cmd = `require('${runnerPath}').run('${args}')`;
   try {
@@ -170,9 +178,9 @@ test('`fusion test` snapshotting - enzyme serializer', async t => {
     __dirname + '/../fixtures/snapshots/snapshot-enzyme-no-match.js.fixture';
 
   // Copy fixture to snapshot
-  fs
-    .createReadStream(snapshotFile)
-    .pipe(fs.createWriteStream(snapshotFile.replace(/fixture$/, 'snap')));
+  fs.createReadStream(snapshotFile).pipe(
+    fs.createWriteStream(snapshotFile.replace(/fixture$/, 'snap'))
+  );
 
   const cmd = `require('${runnerPath}').run('${args}')`;
   try {
@@ -269,6 +277,25 @@ test('`fusion test` environment variables', async t => {
   });
   t.equal(countTests(response.stderr), 2, 'ran 2 tests');
 
+  t.end();
+});
+
+test('`fusion test` writes results to disk based on env var', async t => {
+  const dir = path.resolve(__dirname, '../fixtures/test-jest-app');
+  const args = `test --dir=${dir} --configPath=../../../build/jest/jest-config.js --match=passes`;
+
+  const testMetadataPath = path.join(dir, 'test-results.json');
+
+  const cmd = `require('${runnerPath}').run('${args}')`;
+  const response = await exec(`node -e "${cmd}"`, {
+    env: Object.assign({}, process.env, {
+      FUSION_TEST_METADATA_PATH: testMetadataPath,
+    }),
+  });
+  t.equal(countTests(response.stderr), 2, 'ran 2 tests');
+  const results = require(testMetadataPath);
+  t.equal(results.numTotalTests, 2, 'two tests in results json');
+  fs.unlinkSync(testMetadataPath);
   t.end();
 });
 

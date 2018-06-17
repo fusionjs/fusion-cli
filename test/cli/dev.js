@@ -1,11 +1,21 @@
+/** Copyright (c) 2018 Uber Technologies, Inc.
+ *
+ * This source code is licensed under the MIT license found in the
+ * LICENSE file in the root directory of this source tree.
+ *
+ * @flow
+ */
+
 /* eslint-env node */
+
 const fs = require('fs');
 const path = require('path');
 const test = require('tape');
-const {dev} = require('../run-command');
 const {promisify} = require('util');
 const request = require('request-promise');
 const requestCb = require('request');
+
+const {dev} = require('../run-command');
 
 const exists = promisify(fs.exists);
 
@@ -138,8 +148,14 @@ test('`fusion dev` works with assets with cdnUrl', async t => {
 
 test('`fusion dev` top-level error', async t => {
   const dir = path.resolve(__dirname, '../fixtures/server-startup-error');
-  const {res, proc} = await dev(`--dir=${dir}`);
-  t.ok(res.includes('server-startup-error'));
+  const {res, proc} = await dev(`--dir=${dir}`, {
+    stdio: ['inherit', 'inherit', 'pipe'],
+  });
+  t.ok(
+    res.includes('server-startup-error'),
+    'should respond with server startup error'
+  );
+  proc.stderr.destroy();
   proc.kill();
   t.end();
 });
@@ -170,6 +186,7 @@ test('`fusion dev` works with fs', async t => {
 
 test('`fusion dev` recovering from errors', async t => {
   const dir = path.resolve(__dirname, '../fixtures/server-startup-error');
+  // $FlowFixMe
   const {res, proc} = await dev(`--dir=${dir}`, {
     stdio: ['inherit', 'inherit', 'pipe'],
   });

@@ -1,14 +1,14 @@
 [ignore]
 .*/node_modules/.*[^(package)]\.json$
-.*/.fusion/
+<PROJECT_ROOT>/dist/.*
 
 [include]
+./src/
 
 [libs]
 
 [lints]
 
 [options]
-suppress_comment= \\(.\\|\n\\)*\\$FlowIgnore
 
 [strict]

@@ -1,12 +1,19 @@
+/** Copyright (c) 2018 Uber Technologies, Inc.
+ *
+ * This source code is licensed under the MIT license found in the
+ * LICENSE file in the root directory of this source tree.
+ *
+ * @flow
+ */
+
 /* eslint-env node */
+
 const fs = require('fs');
 const path = require('path');
 
 const webpack = require('webpack');
 const ProgressBarPlugin = require('progress-bar-webpack-plugin');
-const WebpackChunkHash = require('webpack-chunk-hash');
 const webpackDevMiddleware = require('../lib/simple-webpack-dev-middleware');
-const ChunkManifestPlugin = require('./external-chunk-manifest-plugin.js');
 const CaseSensitivePathsPlugin = require('case-sensitive-paths-webpack-plugin');
 const {
   //zopfliWebpackPlugin,
@@ -78,6 +85,7 @@ function getConfig({target, env, dir, watch, cover}) {
   const fusionConfig = loadFusionRC(dir);
 
   const configPath = path.join(dir, 'package.json');
+  // $FlowFixMe
   const configData = fs.existsSync(configPath) ? require(configPath) : {};
   const {pragma, clientHotLoaderEntry, node, alias} = configData;
 
@@ -190,7 +198,9 @@ function getConfig({target, env, dir, watch, cover}) {
       chunkFilename:
         env === 'production' && target === 'web'
           ? '[id]-[chunkhash].js'
-          : evergreen ? 'evergreen-[id].js' : '[id].js',
+          : evergreen
+            ? 'evergreen-[id].js'
+            : '[id].js',
       // We will set __webpack_public_path__ at runtime, so this should be set to undefined
       publicPath: void 0,
       // TODO(#7): Do we really need this? See lite config
@@ -234,6 +244,7 @@ function getConfig({target, env, dir, watch, cover}) {
             {
               loader: require.resolve('babel-loader'),
               options: {
+                cacheDirectory: `${dir}/node_modules/.fusion_babel_cache`,
                 plugins: [
                   // Note: plugins run first to last, so user-defined plugins go first
                   ...(fusionConfig.babel && fusionConfig.babel.plugins
@@ -297,6 +308,8 @@ function getConfig({target, env, dir, watch, cover}) {
                         require.resolve('./babel-fusion-preset.js'),
                         {
                           targets,
+                          assumeNoImportSideEffects:
+                            fusionConfig.assumeNoImportSideEffects,
                         },
                       ],
                     ],
@@ -308,7 +321,11 @@ function getConfig({target, env, dir, watch, cover}) {
             },
           ],
         },
-      ],
+        fusionConfig.assumeNoImportSideEffects && {
+          sideEffects: false,
+          test: () => true,
+        },
+      ].filter(Boolean),
     },
     externals: [
       // These externals are required to work with enzyme
@@ -323,7 +340,12 @@ function getConfig({target, env, dir, watch, cover}) {
             return callback();
           } else if (/^[@a-z\-0-9]+/.test(request)) {
             // do not bundle external packages and those not whitelisted
-            return callback(null, 'commonjs ' + resolveFrom(context, request));
+            const absolutePath = resolveFrom.silent(context, request);
+            if (absolutePath === null) {
+              // if module is missing, skip rewriting to absolute path
+              return callback(null, request);
+            }
+            return callback(null, 'commonjs ' + absolutePath);
           }
           // bundle everything else (local files, __*)
           return callback();
@@ -347,6 +369,7 @@ function getConfig({target, env, dir, watch, cover}) {
       //   target !== 'node' && appModules,
       //   'node_modules',
       // ].filter(Boolean),
+      // $FlowFixMe
       alias: Object.assign(
         {
           // we replace need to set the path to user application at build-time
@@ -417,22 +440,9 @@ function getConfig({target, env, dir, watch, cover}) {
       env === 'development' &&
         watch &&
         new webpack.HotModuleReplacementPlugin(),
-      // The next two plugins are required for deterministic file hashes
-      // See https://github.com/webpack/webpack/issues/1315 and
-      // https://webpack.js.org/guides/caching/#generating-unique-hashes-for-each-file
-      // Use deterministic, internal webpack identifiers based on hashed contents
       env === 'production' &&
         target === 'web' &&
         new webpack.HashedModuleIdsPlugin(),
-      // Adds md5 hashing of webpack chunks
-      env === 'production' && target === 'web' && new WebpackChunkHash(),
-      // This is necessary to tell webpack not to inline code referencing
-      // assets. See https://github.com/webpack/webpack/issues/1315
-      env === 'production' &&
-        target === 'web' &&
-        new ChunkManifestPlugin({
-          manifestVariable: '__MANIFEST__',
-        }),
       target === 'web' && env !== 'test' && new ChunkPreloadPlugin(),
       // TODO(#11): What do we do for client-side error reporting in the service worker?
       // Do we add in reporting code to the sw? Should we map stack traces on the server?
@@ -573,13 +583,24 @@ function getStatsLogger({dir, logger, envs}) {
   };
 }
 
-function Compiler({
-  dir = '.',
-  envs = [],
-  watch = false,
-  cover = false,
-  logger = console,
-}) {
+/*::
+type CompilerType = {
+  on: (type: any, callback: any) => any,
+  start: (callback: any) => any,
+  getMiddleware: () => any,
+  clean: () => any,
+};
+*/
+
+function Compiler(
+  {
+    dir = '.',
+    envs = [],
+    watch = false,
+    cover = false,
+    logger = console,
+  } /*: any */
+) /*: CompilerType */ {
   const profiles = envs.map(env => {
     return getProfile({env: env, dir: path.resolve(dir), watch, cover});
   });
@@ -641,6 +662,8 @@ function Compiler({
       rimraf(`${dir}/.fusion`, e => (e ? reject(e) : resolve()));
     });
   };
+
+  return this;
 }
 
 function getNodeConfig(target, env) {
@@ -661,6 +684,7 @@ function getNodeConfig(target, env) {
     // This is required until we have better tree shaking. See https://github.com/fusionjs/fusion-cli/issues/254
     child_process: emptyForWeb,
     cluster: emptyForWeb,
+    crypto: emptyForWeb,
     dgram: emptyForWeb,
     dns: emptyForWeb,
     fs: emptyForWeb,
