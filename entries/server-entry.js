@@ -69,7 +69,6 @@ export async function start({port, dir = '.'} /*: any */) {
   return new Promise(resolve => {
     server &&
       server.listen(port, () => {
-        // eslint-disable-next-line no-console
         resolve(server);
       });
   });
