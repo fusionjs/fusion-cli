@@ -35,7 +35,8 @@ into `__webpack_require__.p = ...` and uses it for HMR manifest requests
 */
 
 // $FlowFixMe
-__webpack_public_path__ = window.__WEBPACK_PUBLIC_PATH__ + '/'; /* eslint-disable-line */
+__webpack_public_path__ =
+  window.__WEBPACK_PUBLIC_PATH__ + '/'; /* eslint-disable-line */
 
 function reload() {
   Promise.resolve(initialize()).then(app => {
