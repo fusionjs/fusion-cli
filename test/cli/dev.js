@@ -31,7 +31,7 @@ test('`fusion dev` works', async t => {
   t.end();
 });
 
-test('`fusion dev` works with assets', async t => {
+test.only('`fusion dev` works with assets', async t => {
   const dir = path.resolve(__dirname, '../fixtures/assets');
   const entryPath = path.resolve(
     dir,
@@ -64,6 +64,7 @@ test('`fusion dev` works with assets', async t => {
       await request(`http://localhost:${port}/json`),
       '/_static/20355efabaae9ed4d51fbc5a68eb4ce3.json'
     );
+    t.equal(await request(`http://localhost:${port}/json-import`), 'value');
     t.equal(
       await request(`http://localhost:${port}/hoisted`),
       expectedAssetPath
