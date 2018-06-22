@@ -21,7 +21,7 @@ export default (async function() {
       } else if (ctx.url === '/json') {
         ctx.body = assetUrl('./static/test.json');
       } else if (ctx.url === '/json-import') {
-        ctx.body = jsonData.key;
+        ctx.body = JSON.stringify(jsonData);
       }
       return next();
     });
