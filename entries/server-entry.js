@@ -10,7 +10,7 @@
 
 import http from 'http';
 
-import {getEnv, HttpServerToken} from 'fusion-core';
+import {createPlugin, getEnv, HttpServerToken} from 'fusion-core';
 
 import AssetsFactory from '../plugins/assets-plugin';
 import ContextPlugin from '../plugins/context-plugin';
@@ -79,7 +79,7 @@ async function reload() {
   reverseRegister(app, AssetsPlugin);
   reverseRegister(app, ContextPlugin);
   if (server) {
-    app.register(HttpServerToken, server);
+    app.register(HttpServerToken, createPlugin({provides: () => server}));
   }
   if (__DEV__) {
     reverseRegister(app, ServerErrorPlugin);
