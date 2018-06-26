@@ -21,6 +21,9 @@ const {prefix, webpackPublicPath} = getEnv();
 
 let AssetsPlugin;
 
+/* eslint-disable-next-line */
+import '__SECRET_I18N_MANIFEST_INSTRUMENTATION_LOADER__!';
+
 /*
 Webpack has a configuration option called `publicPath`, which determines the
 base path for all assets within an application
