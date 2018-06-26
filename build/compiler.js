@@ -12,6 +12,7 @@ const fs = require('fs');
 const path = require('path');
 
 const webpack = require('webpack');
+const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
 const ProgressBarPlugin = require('progress-bar-webpack-plugin');
 const webpackDevMiddleware = require('../lib/simple-webpack-dev-middleware');
 const CaseSensitivePathsPlugin = require('case-sensitive-paths-webpack-plugin');
@@ -496,6 +497,18 @@ function getConfig({target, env, dir, watch, cover}) {
       new webpack.EnvironmentPlugin({NODE_ENV: nodeEnv}),
     ].filter(Boolean),
     optimization: {
+      minimizer: [
+        new UglifyJsPlugin({
+          sourceMap: true,
+          cache: true,
+          parallel: true,
+          uglifyOptions: {
+            compress: {
+              inline: 1, // inline=2 can cause const reassignment (https://github.com/mishoo/UglifyJS2/issues/2842)
+            },
+          },
+        }),
+      ],
       sideEffects: true,
       splitChunks: target === 'web' && {
         // See https://webpack.js.org/guides/code-splitting/
