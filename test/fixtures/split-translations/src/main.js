@@ -23,8 +23,10 @@ export default async function start() {
   return app;
 }
 
+// $FlowFixMe
 if (__BROWSER__ && module.hot) {
   window.__addHotStatusHandler = (handler) => {
+    // $FlowFixMe
     module.hot.addStatusHandler(handler);
   };
 }

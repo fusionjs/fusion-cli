@@ -21,7 +21,7 @@ const {prefix, webpackPublicPath} = getEnv();
 
 let AssetsPlugin;
 
-/* eslint-disable-next-line */
+/* eslint-disable-next-line $FlowFixMe */
 import '__SECRET_I18N_MANIFEST_INSTRUMENTATION_LOADER__!';
 
 /*
