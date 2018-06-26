@@ -501,9 +501,9 @@ function getConfig({target, env, dir, watch, cover}) {
         env === 'production' && target === 'web'
           ? [
               new UglifyJsPlugin({
-                sourceMap: true,
-                cache: true,
-                parallel: true,
+                sourceMap: true, // default from webpack (see https://github.com/webpack/webpack/blob/aab3554cad2ebc5d5e9645e74fb61842e266da34/lib/WebpackOptionsDefaulter.js#L290-L297)
+                cache: true, // default from webpack
+                parallel: true, // default from webpack
                 uglifyOptions: {
                   compress: {
                     inline: 1, // inline=2 can cause const reassignment (https://github.com/mishoo/UglifyJS2/issues/2842)
