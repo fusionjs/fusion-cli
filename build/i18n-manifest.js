@@ -8,6 +8,6 @@
 
 /* eslint-env node */
 
-const manifest /*: Map<string, any> */ = new Map();
+const manifest /*: Map<string, Set<string>> */ = new Map();
 
 module.exports = manifest;
