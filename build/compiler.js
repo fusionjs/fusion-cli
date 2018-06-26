@@ -497,18 +497,21 @@ function getConfig({target, env, dir, watch, cover}) {
       new webpack.EnvironmentPlugin({NODE_ENV: nodeEnv}),
     ].filter(Boolean),
     optimization: {
-      minimizer: [
-        new UglifyJsPlugin({
-          sourceMap: true,
-          cache: true,
-          parallel: true,
-          uglifyOptions: {
-            compress: {
-              inline: 1, // inline=2 can cause const reassignment (https://github.com/mishoo/UglifyJS2/issues/2842)
-            },
-          },
-        }),
-      ],
+      minimizer:
+        env === 'production' && target === 'web'
+          ? [
+              new UglifyJsPlugin({
+                sourceMap: true,
+                cache: true,
+                parallel: true,
+                uglifyOptions: {
+                  compress: {
+                    inline: 1, // inline=2 can cause const reassignment (https://github.com/mishoo/UglifyJS2/issues/2842)
+                  },
+                },
+              }),
+            ]
+          : undefined,
       sideEffects: true,
       splitChunks: target === 'web' && {
         // See https://webpack.js.org/guides/code-splitting/
