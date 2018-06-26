@@ -3,7 +3,6 @@
 import React from 'react';
 import Router, {Route, Switch, Link} from 'fusion-plugin-react-router';
 import {Translate} from 'fusion-plugin-i18n-react';
-import {split} from 'fusion-react-async';
 
 import routes from './routes';
 
