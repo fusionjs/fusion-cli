@@ -14,6 +14,6 @@ module.exports = {
   ...baseJestConfig,
   displayName: 'browser',
   browser: true,
-  testEnvironment: 'jsdom',
+  testEnvironment: 'jest-environment-jsdom-global',
   testPathIgnorePatterns: ['.*\\.node\\.js'],
 };
