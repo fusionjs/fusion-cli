@@ -73,6 +73,21 @@ test('`fusion dev` works with assets', async t => {
       await request(`http://localhost:${port}/hoisted`),
       expectedAssetPath
     );
+
+    // Spin up puppeteer to make runtime assertions on assetURLs
+    const browser = await puppeteer.launch({
+      args: ['--no-sandbox', '--disable-setuid-sandbox'],
+    });
+    const page = await browser.newPage();
+    await page.goto(`http://localhost:${port}/`, {waitUntil: 'load'});
+    const browserAssetUrl = await page.evaluate(() => {
+      return typeof window !== undefined && window.__hoistedUrl__; //eslint-disable-line
+    });
+    t.equal(
+      browserAssetUrl,
+      expectedAssetPath,
+      'hoisted assetURL works in the browser'
+    );
   } catch (e) {
     t.iferror(e);
   }
