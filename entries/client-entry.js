@@ -34,14 +34,12 @@ into `__webpack_require__.p = ...` and uses it for HMR manifest requests
 /* eslint-disable */
 // $FlowFixMe
 __webpack_public_path__ = window.__WEBPACK_PUBLIC_PATH__ + '/';
-
-// $FlowFixMe
-const main = require('__FRAMEWORK_SHARED_ENTRY__');
 /* eslint-enable */
 
-const initialize = main.default || main;
-
 function reload() {
+  // $FlowFixMe
+  const main = require('__FRAMEWORK_SHARED_ENTRY__'); // eslint-disable-line
+  const initialize = main.default || main;
   Promise.resolve(initialize()).then(app => {
     app.callback().call();
   });
