@@ -356,6 +356,7 @@ function getConfig({target, env, dir, watch, cover}) {
         }),
     ].filter(Boolean),
     resolve: {
+      symlinks: false,
       aliasFields: [
         (target === 'web' || target === 'webworker') && 'browser',
         evergreen && 'es2015',
