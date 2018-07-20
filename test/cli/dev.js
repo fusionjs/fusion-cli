@@ -371,7 +371,12 @@ test('`fusion dev` app with split translations integration', async t => {
 test('`fusion dev` app with split translations integration (cached)', async t => {
   const dir = path.resolve(__dirname, '../fixtures/split-translations');
 
-  const {proc, port} = await dev(`--dir=${dir}`, {cwd: dir});
+  // Startup first time
+  let {proc, port} = await dev(`--dir=${dir}`, {cwd: dir});
+  proc.kill();
+
+  // Restart
+  ({proc, port} = await dev(`--dir=${dir}`, {cwd: dir}));
   const browser = await puppeteer.launch({
     args: ['--no-sandbox', '--disable-setuid-sandbox'],
   });
