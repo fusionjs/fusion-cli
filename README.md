@@ -6,7 +6,7 @@ The CLI interface for Fusion.js
 
 The `fusion-cli` package is responsible for orchestrating compile-time configuration for server and browser bundles, as well as development, test and production variations. It provides a standardized Babel configuration that includes async/await support as well as stage 3+ Ecmascript features.
 
-Due to the complexity involved in configuring many permutations of configurations, Fusion.js does not support custom `webpack.config`. This design decision allows Fusion.js to eventually move away from Webpack if faster and better bundlers become available. Additionally, it allows Fusion.js to make changes to the internal webpack configuration without the concern of breaking users customizations. If you run into a situation where you feel you need to make a webpack customization, please reach out to us or create an issue describing your usecase.
+Due to the complexity involved in configuring many permutations of configurations, Fusion.js does not support custom `webpack.config`. This design decision allows Fusion.js to eventually move away from Webpack if faster and better bundlers become available. Additionally, it allows Fusion.js to make changes to the internal webpack configuration without the concern of breaking users customizations. If you run into a situation where you feel you need to make a webpack customization, please reach out to us or create an issue describing your use case.
 
 The CLI is also responsible for hot module reloading in development mode, and for running the web server.
 
