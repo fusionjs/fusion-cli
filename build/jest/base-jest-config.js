@@ -37,9 +37,9 @@ module.exports = {
     require.resolve(`./jest-framework-setup-${getReactVersion()}.js`),
   ],
   snapshotSerializers: [require.resolve('enzyme-to-json/serializer')],
-  testMatch: [`**/${testFolder}/**/*.js`],
+  testMatch: [`src/**/${testFolder}/**/*.js`],
   collectCoverageFrom: [
-    '**/*.js',
+    'src/**/*.js',
     '!**/__integration__/**',
     '!**/node_modules/**',
   ],
