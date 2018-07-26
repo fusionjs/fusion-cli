@@ -19,7 +19,7 @@ const spawn = require('child_process').spawn;
 
 const readFile = promisify(fs.readFile);
 
-const countTests = require('../fixtures/test-jest-app/count-tests');
+const countTests = require('../fixtures/test-jest-app/src/count-tests');
 
 const runnerPath = require.resolve('../../bin/cli-runner');
 
@@ -223,6 +223,8 @@ test('`fusion test` coverage', async t => {
 
   // Look for something like coverage
   t.ok(response.stdout.includes('Uncovered Line #s'));
+
+  t.ok(!response.stdout.includes('should-not-count-for-coverage.js'));
   t.end();
 });
 
