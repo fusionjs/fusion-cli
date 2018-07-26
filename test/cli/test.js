@@ -101,7 +101,7 @@ test('`fusion test` snapshotting', async t => {
 
   const snapshotFile =
     __dirname +
-    '/../fixtures/test-jest-app/__tests__/__snapshots__/snapshot-no-match.js.fixture';
+    '/../fixtures/test-jest-app/src/__tests__/__snapshots__/snapshot-no-match.js.fixture';
   const backupSnapshot =
     __dirname + '/../fixtures/snapshots/snapshot-no-match.js.fixture';
 
@@ -137,7 +137,7 @@ test('`fusion test` snapshotting with -u option', async t => {
 
   const snapshotFile =
     __dirname +
-    '/../fixtures/test-jest-app/__tests__/__snapshots__/snapshot-no-match.js.fixture';
+    '/../fixtures/test-jest-app/src/__tests__/__snapshots__/snapshot-no-match.js.fixture';
   const backupSnapshot =
     __dirname + '/../fixtures/snapshots/snapshot-no-match.js.fixture';
 
@@ -173,7 +173,7 @@ test('`fusion test` snapshotting - enzyme serializer', async t => {
 
   const snapshotFile =
     __dirname +
-    '/../fixtures/test-jest-app/__tests__/__snapshots__/snapshot-enzyme-no-match.js.fixture';
+    '/../fixtures/test-jest-app/src/__tests__/__snapshots__/snapshot-enzyme-no-match.js.fixture';
   const backupSnapshot =
     __dirname + '/../fixtures/snapshots/snapshot-enzyme-no-match.js.fixture';
 
