@@ -7,7 +7,7 @@ const FileLoaderStorage = (function getLoaderStorage() {
   function createFileLoaderStorage() {
     const emittedFiles = [];
 
-    function addFileItem(outputPath, content) {
+    function addFileItem(outputPath /*: string */, content /*: string */) {
       emittedFiles.push({outputPath, content});
     }
     return {

@@ -8,7 +8,7 @@ const path = require('path');
 const loaderUtils = require('loader-utils');
 const storageSingleton = require('./file-loader-asset-storage.js');
 
-module.exports = function fileLoader(content) {
+module.exports = function fileLoader(content /*: string */) {
   if (!this.emitFile)
     throw new Error('emitFile is required from module system');
 
@@ -34,17 +34,10 @@ module.exports = function fileLoader(content) {
   let url = loaderUtils.interpolateName(this, config.name, {
     context,
     content,
-    regExp: config.regExp,
+    regExp: void 0,
   });
 
   let outputPath = '';
-  if (config.outputPath) {
-    // support functions as outputPath to generate them dynamically
-    outputPath =
-      typeof config.outputPath === 'function'
-        ? config.outputPath(url)
-        : config.outputPath;
-  }
 
   const filePath = this.resourcePath;
   if (config.useRelativePath) {
@@ -67,13 +60,6 @@ module.exports = function fileLoader(content) {
       outputPath = relativePath + url;
     }
     url = relativePath + url;
-  } else if (config.outputPath) {
-    // support functions as outputPath to generate them dynamically
-    outputPath =
-      typeof config.outputPath === 'function'
-        ? config.outputPath(url)
-        : config.outputPath + url;
-    url = outputPath;
   } else {
     outputPath = url;
   }

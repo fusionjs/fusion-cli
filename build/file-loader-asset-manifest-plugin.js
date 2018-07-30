@@ -4,7 +4,7 @@ const assetsSingleton = require('./file-loader-asset-storage.js');
 
 class AssetsManifestPlugin {
   // eslint-disable-next-line class-methods-use-this
-  apply(compiler) {
+  apply(compiler /*: any */) {
     const onCompilation = compilation => {
       const additionalAssetsHook = cb => {
         const storage = assetsSingleton.getStorage();
