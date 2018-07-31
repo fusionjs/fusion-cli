@@ -79,7 +79,7 @@
     "chrome-remote-interface": "^0.26.0",
     "enzyme": "3.3.0",
     "eslint": "5.2.0",
-    "eslint-config-fusion": "^3.0.2",
+    "eslint-config-fusion": "^4.0.0",
     "eslint-plugin-cup": "2.0.0",
     "eslint-plugin-flowtype": "^2.50.0",
     "eslint-plugin-import": "^2.13.0",
