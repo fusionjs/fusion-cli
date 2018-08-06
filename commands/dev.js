@@ -60,6 +60,9 @@ exports.run = async function(
         // $FlowFixMe
         testRuntime ? testRuntime.run() : Promise.resolve(),
       ]);
+      if (!open) {
+        logger.info(`Application is running on http://localhost:${port}`);
+      }
     } catch (e) {} // eslint-disable-line
   };
 
@@ -74,9 +77,7 @@ exports.run = async function(
 
   // Rerun for each recompile
   compiler.on('done', runAll);
-  compiler.on('invalid', () => {
-    devRuntime.run();
-  });
+  compiler.on('invalid', () => devRuntime.invalidate());
 
   return {
     compiler,

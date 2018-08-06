@@ -38,8 +38,9 @@ module.exports = {
   ],
   snapshotSerializers: [require.resolve('enzyme-to-json/serializer')],
   testMatch: [`**/${testFolder}/**/*.js`],
+  testURL: 'http://localhost:3000/',
   collectCoverageFrom: [
-    '**/*.js',
+    'src/**/*.js',
     '!**/__integration__/**',
     '!**/node_modules/**',
   ],
