@@ -127,10 +127,6 @@ async function getDistFiles(dir) {
   };
 }
 
-function getFileExtension(file_name) {
-  return file_name.split('.').pop();
-}
-
 test('`fusion build` app with dynamic imports chunk hashing', async t => {
   const dir = path.resolve(__dirname, '../fixtures/dynamic-import-app');
   await cmd(`build --dir=${dir} --production`);
@@ -441,18 +437,21 @@ test('`fusion build` compresses assets for production', async t => {
   const dir = path.resolve(__dirname, '../fixtures/compress-assets');
   await cmd(`build --dir=${dir} --production`);
 
-  fs.readdir(
-    path.resolve(dir, '.fusion/dist/production/client/'),
-    (err, files) => {
-      if (err) throw err;
-      t.ok(files.filter(file => getFileExtension(file) === 'gz'), 'gzip works');
-      t.ok(
-        files.filter(file => getFileExtension(file) === 'br'),
-        'brotli works'
-      );
-      t.ok(files.filter(file => getFileExtension(file) === 'svg'), 'svg works');
-    }
-  );
+  const fusion_folder = '.fusion/dist/production/client/';
+  fs.readdir(path.resolve(dir, fusion_folder), (err, files) => {
+    if (err) throw err;
+    t.ok(files.some(file => path.extname(file) === '.gz'), 'gzip works');
+    t.ok(files.some(file => path.extname(file) === '.br'), 'brotli works');
+    t.ok(
+      files.some(
+        file =>
+          path.extname(file) === '.svg' &&
+          fs.statSync(path.resolve(dir, fusion_folder, file)).size <
+            fs.statSync(path.resolve(dir, 'src/assets/SVG_logo.svg')).size
+      ),
+      'svg works'
+    );
+  });
   t.end();
 });
 
