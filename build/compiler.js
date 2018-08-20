@@ -238,6 +238,7 @@ function getConfig({target, env, dir, watch, cover}) {
             // Blacklist react packages for performance
             /node_modules\/react-dom/,
             /node_modules\/react/,
+            /node_modules\/core-js/,
           ],
           use: [
             {
