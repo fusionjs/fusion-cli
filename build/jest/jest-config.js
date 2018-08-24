@@ -26,6 +26,7 @@ if (projects.length > 1) {
   // $FlowFixMe
   config.projects = projects.map(project => {
     return {
+      // $FlowFixMe
       ...require(`./${project === 'jsdom' ? 'jsdom' : 'node'}/jest.config.js`),
     };
   });
