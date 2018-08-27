@@ -34,7 +34,6 @@ const I18nDiscoveryPlugin = require('./i18n-discovery-plugin.js');
 const ClientChunkBundleUrlMapPlugin = require('./client-chunk-bundle-url-map-plugin');
 const SyncChunkIdsPlugin = require('./sync-chunk-ids-plugin');
 const browserSupport = require('./browser-support');
-const ServiceWorkerTimestampPlugin = require('./service-worker-timestamp-plugin.js');
 const chalk = require('chalk');
 const webpackHotMiddleware = require('webpack-hot-middleware');
 const globby = require('globby');
@@ -289,8 +288,6 @@ function getConfig({target, env, dir, watch, cover}) {
                         './babel-plugins/babel-plugin-sync-chunk-paths'
                       ),
                       require.resolve('./babel-plugins/babel-plugin-chunkid'),
-                      // TODO(#8): sw implementation is totally busted.
-                      // require.resolve('./babel-plugins/babel-plugin-sw'),
                       pragma && [
                         require.resolve('@babel/plugin-transform-react-jsx'),
                         {pragma},
@@ -417,7 +414,6 @@ function getConfig({target, env, dir, watch, cover}) {
       // TODO(#9): relying only on timestamp will invalidate service worker after every build
       // optimize by importing all chunk names to sw and then remove timestamp in non-dev.
       target === 'web' && env === 'production' && zopfliWebpackPlugin, // gzip
-      target === 'webworker' && new ServiceWorkerTimestampPlugin(),
       // generate compressed files
       target === 'web' && env === 'production' && brotliWebpackPlugin, // brotli
       // target === 'web' && env === 'production' && pngquantWebpackPlugin, // png TODO(#10): production server requires libpng-dev installed to use this
