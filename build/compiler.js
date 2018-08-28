@@ -34,7 +34,6 @@ const SyncChunkIdsPlugin = require('./sync-chunk-ids-plugin');
 const browserSupport = require('./browser-support');
 const chalk = require('chalk');
 const webpackHotMiddleware = require('webpack-hot-middleware');
-const globby = require('globby');
 const loadFusionRC = require('./load-fusionrc.js');
 const rimraf = require('rimraf');
 const {getEnv} = require('fusion-core');
@@ -47,35 +46,11 @@ function getConfig({target, env, dir, watch, cover}) {
   if (target !== 'node' && target !== 'web' && target !== 'webworker') {
     throw new Error('Invalid target: must be `node`, `web`, or `webworker`');
   }
-  if (env !== 'production' && env !== 'development' && env !== 'test') {
-    throw new Error('Invalid name: must be `production`, `dev`, or `test`');
+  if (env !== 'production' && env !== 'development') {
+    throw new Error('Invalid name: must be `production` or `dev`');
   }
   if (!fs.existsSync(path.resolve(dir, main))) {
     throw new Error(`Project directory must contain a ${main} file`);
-  }
-
-  const serverOnlyTestGlob = `${dir}/src/**/__tests__/*.node.js`;
-  const browserOnlyTestGlob = `${dir}/src/**/__tests__/*.browser.js`;
-  const universalTestGlob = `${dir}/src/**/__tests__/*.js`;
-
-  const serverTestEntry = `__SECRET_MULTI_ENTRY_LOADER__?include[]=${universalTestGlob},include[]=${dir}/${main},exclude[]=${browserOnlyTestGlob}!`;
-  const browserTestEntry = `__SECRET_MULTI_ENTRY_LOADER__?include[]=${universalTestGlob},include[]=${dir}/${main},exclude[]=${serverOnlyTestGlob}!`;
-
-  if (
-    env === 'test' &&
-    !globby.sync([universalTestGlob, `!${browserOnlyTestGlob}`]).length
-  ) {
-    throw new Error(
-      `Testing requires server tests in __tests__ with *.js or *.node.js extension`
-    );
-  }
-  if (
-    env === 'test' &&
-    !globby.sync([universalTestGlob, `!${serverOnlyTestGlob}`]).length
-  ) {
-    throw new Error(
-      `Testing requires browser tests in __tests__ with *.js or *.browser.js extension`
-    );
   }
 
   const fusionConfig = loadFusionRC(dir);
@@ -92,14 +67,8 @@ function getConfig({target, env, dir, watch, cover}) {
   const destination = path.resolve(dir, `.fusion/dist/${env}/${side}`);
   const evergreen = false;
   const possibleESVersions = ['es5'];
-  const serverEntry =
-    env === 'test'
-      ? serverTestEntry
-      : path.join(__dirname, `../entries/server-entry.js`);
-  const clientEntry =
-    env === 'test'
-      ? browserTestEntry
-      : path.join(__dirname, `../entries/client-entry.js`);
+  const serverEntry = path.join(__dirname, `../entries/server-entry.js`);
+  const clientEntry = path.join(__dirname, `../entries/client-entry.js`);
   const entry = {
     node: serverEntry,
     web: clientEntry,
@@ -111,10 +80,10 @@ function getConfig({target, env, dir, watch, cover}) {
   if (target === 'webworker' && !fs.existsSync(entry)) return null;
 
   // NODE_ENV should be built as 'production' for everything except 'development'
-  // 'test' and 'production' entries should both map to NODE_ENV='production'
+  // and 'production' entries should both map to NODE_ENV='production'
   const nodeEnv = env === 'development' ? 'development' : 'production';
 
-  // Allow overrides with a warning for `dev` and `test` commands. In production builds, throw if NODE_ENV is not `production`.
+  // Allow overrides with a warning for `dev` command. In production builds, throw if NODE_ENV is not `production`.
   const nodeEnvBanner =
     `if(process.env.NODE_ENV && process.env.NODE_ENV !== '${nodeEnv}') {` +
     `if ('${env}' === 'production') {` +
@@ -199,7 +168,6 @@ function getConfig({target, env, dir, watch, cover}) {
             : '[id].js',
       // We will set __webpack_public_path__ at runtime, so this should be set to undefined
       publicPath: void 0,
-      // TODO(#7): Do we really need this? See lite config
       crossOriginLoading: 'anonymous',
       devtoolModuleFilenameTemplate: info => {
         // always return absolute paths in order to get sensible source map explorer visualization
@@ -326,11 +294,6 @@ function getConfig({target, env, dir, watch, cover}) {
       ].filter(Boolean),
     },
     externals: [
-      // These externals are required to work with enzyme
-      // See: https://github.com/airbnb/enzyme/blob/master/docs/guides/webpack.md
-      env === 'test' && 'react/addons',
-      env === 'test' && 'react/lib/ReactContext',
-      env === 'test' && 'react/lib/ExecutionEnvironment',
       target === 'node' &&
         ((context, request, callback) => {
           // bundle whitelisted packages
@@ -374,14 +337,6 @@ function getConfig({target, env, dir, watch, cover}) {
           __FRAMEWORK_SHARED_ENTRY__: path.resolve(dir, main),
           __ENV__: env,
         },
-        target === 'node' &&
-          env === 'test' && {
-            __NODE_TEST_ENTRY__: serverTestEntry,
-          },
-        target === 'web' &&
-          env === 'test' && {
-            __BROWSER_TEST_ENTRY__: browserTestEntry,
-          },
         alias
       ),
     },
@@ -685,14 +640,13 @@ function Compiler(
 }
 
 function getNodeConfig(target, env) {
-  const tapeConfig = env === 'test' && target === 'web' ? 'mock' : false;
   const emptyForWeb = target === 'web' ? 'empty' : false;
   return {
     // Polyfilling process involves lots of cruft. Better to explicitly inline env value statically
     // Tape requires process to be defined
-    process: tapeConfig,
+    process: false,
     // We definitely don't want automatic Buffer polyfills. This should be explicit and in userland code
-    Buffer: tapeConfig,
+    Buffer: false,
     // We definitely don't want automatic setImmediate polyfills. This should be explicit and in userland code
     setImmediate: false,
     // We want these to resolve to the original file source location, not the compiled location

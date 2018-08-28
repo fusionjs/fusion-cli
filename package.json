@@ -41,7 +41,6 @@
     "fast-async": "^6.3.7",
     "fusion-plugin-universal-events": "^1.1.0",
     "get-port": "^4.0.0",
-    "globby": "^8.0.1",
     "http-proxy": "^1.17.0",
     "iltorb": "^2.4.0",
     "imagemin": "^6.0.0",

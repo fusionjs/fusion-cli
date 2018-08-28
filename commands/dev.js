@@ -26,7 +26,7 @@ exports.run = async function(
   logger.add(new winston.transports.Console({level: logLevel}));
 
   const compiler = new Compiler({
-    envs: test ? ['development', 'test'] : ['development'],
+    envs: ['development'],
     dir,
     watch: hmr,
     cover,
