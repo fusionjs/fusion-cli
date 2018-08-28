@@ -15,7 +15,7 @@ const {DevelopmentRuntime} = require('../build/dev-runtime');
 const {TestAppRuntime} = require('../build/test-runtime');
 
 exports.run = async function(
-  {dir = '.', test, debug, port, cover, hmr, open, logLevel} /*: any */
+  {dir = '.', test, debug, port, hmr, open, logLevel} /*: any */
 ) {
   const logger = winston.createLogger({
     format: winston.format.combine(
@@ -29,7 +29,6 @@ exports.run = async function(
     envs: ['development'],
     dir,
     watch: hmr,
-    cover,
     logger,
   });
 

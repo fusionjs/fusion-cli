@@ -40,7 +40,7 @@ const {getEnv} = require('fusion-core');
 
 const {assetPath} = getEnv();
 
-function getConfig({target, env, dir, watch, cover}) {
+function getConfig({target, env, dir, watch}) {
   const main = 'src/main.js';
 
   if (target !== 'node' && target !== 'web') {
@@ -249,7 +249,6 @@ function getConfig({target, env, dir, watch, cover}) {
                         require.resolve('@babel/plugin-transform-react-jsx'),
                         {pragma},
                       ],
-                      cover && require.resolve('babel-plugin-istanbul'),
                       target === 'web' &&
                         require.resolve('./babel-plugins/babel-plugin-i18n'),
                     ].filter(Boolean),
@@ -465,12 +464,12 @@ function getConfig({target, env, dir, watch, cover}) {
   };
 }
 
-function getProfile({dir, env, watch, cover}) {
+function getProfile({dir, env, watch}) {
   return [
     // browser
-    getConfig({target: 'web', env, dir, watch, cover}),
+    getConfig({target: 'web', env, dir, watch}),
     // server
-    getConfig({target: 'node', env, dir, watch, cover}),
+    getConfig({target: 'node', env, dir, watch}),
   ].filter(Boolean);
 }
 
@@ -534,16 +533,10 @@ type CompilerType = {
 */
 
 function Compiler(
-  {
-    dir = '.',
-    envs = [],
-    watch = false,
-    cover = false,
-    logger = console,
-  } /*: any */
+  {dir = '.', envs = [], watch = false, logger = console} /*: any */
 ) /*: CompilerType */ {
   const profiles = envs.map(env => {
-    return getProfile({env: env, dir: path.resolve(dir), watch, cover});
+    return getProfile({env: env, dir: path.resolve(dir), watch});
   });
   const flattened = [].concat(...profiles);
   const compiler = webpack(flattened);

@@ -22,18 +22,17 @@ yarn add fusion-cli
 
 The CLI API can be most easily run through the Yarn or NPX CLI, e.g. `yarn fusion build` or `npx fusion build`.
 
-- `fusion build [dir] [--cover] [--production] [--log-level]`
-  Builds your appplication assets
+- `fusion build [dir] [--production] [--log-level]`
+  Builds your application assets
 
   This command generates transpiled javascript/source map files (aka assets, artifacts) for browser and server. By default it builds development assets, but can also build test and production assets, given the respective flags.
 
   Build artifacts are stored in the `.fusion` directory.
 
-  - `--cover`: Build tests (with coverage) as well as application
   - `--production`: Build production assets
   - `--log-level`: Log level to output to console `[default: "info"]`
 
-- `fusion dev [dir] [--port] [--no-hmr] [--test] [--cover] [--log-level]`
+- `fusion dev [dir] [--port] [--no-hmr] [--test] [--log-level]`
   Builds development assets and runs the application in development mode
 
   Note that this command only builds browser artifacts in memory, and it doesn't save them to the filesystem. This allows hot module reloading to occur faster since there's no performance cost due to I/O access.
@@ -41,7 +40,6 @@ The CLI API can be most easily run through the Yarn or NPX CLI, e.g. `yarn fusio
   - `--port`: The port on which the application runs `[default: 3000]`
   - `--no-hmr`: Run without hot modules replacement
   - `--test`: Run tests as well as application
-  - `--cover`: Run tests (with coverage) as well as application
   - `--log-level`: Log level to output to console `[default: "info"]`
 
 <!--
