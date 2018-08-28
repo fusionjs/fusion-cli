@@ -43,8 +43,8 @@ const {assetPath} = getEnv();
 function getConfig({target, env, dir, watch, cover}) {
   const main = 'src/main.js';
 
-  if (target !== 'node' && target !== 'web' && target !== 'webworker') {
-    throw new Error('Invalid target: must be `node`, `web`, or `webworker`');
+  if (target !== 'node' && target !== 'web') {
+    throw new Error('Invalid target: must be `node` or `web`');
   }
   if (env !== 'production' && env !== 'development') {
     throw new Error('Invalid name: must be `production` or `dev`');
@@ -60,7 +60,7 @@ function getConfig({target, env, dir, watch, cover}) {
   const configData = fs.existsSync(configPath) ? require(configPath) : {};
   const {pragma, clientHotLoaderEntry, node, alias} = configData;
 
-  const name = {node: 'server', web: 'client', webworker: 'sw'}[target];
+  const name = {node: 'server', web: 'client'}[target];
   const appBase = path.resolve(dir);
   const appSrcDir = path.resolve(dir, 'src');
   const side = target === 'node' ? 'server' : 'client';
@@ -72,12 +72,9 @@ function getConfig({target, env, dir, watch, cover}) {
   const entry = {
     node: serverEntry,
     web: clientEntry,
-    webworker: path.join(dir, 'src/sw.js'),
   }[target];
 
   const whitelist = ['fusion-cli/entries'];
-
-  if (target === 'webworker' && !fs.existsSync(entry)) return null;
 
   // NODE_ENV should be built as 'production' for everything except 'development'
   // and 'production' entries should both map to NODE_ENV='production'
@@ -313,24 +310,7 @@ function getConfig({target, env, dir, watch, cover}) {
         }),
     ].filter(Boolean),
     resolve: {
-      aliasFields: [
-        (target === 'web' || target === 'webworker') && 'browser',
-        evergreen && 'es2015',
-      ].filter(Boolean),
-      // This is removed because it was causing a dependency issue when using
-      // recent versions of superfine. Specifically, if a project uses
-      // superfine-react and react-footer, two versions of superbase would be
-      // included. Version 6.x and 11.x. react-footer expects the 6.x and when
-      // rendered on the server would use the proper version, but in the browser
-      // it would require 11.x which breaks react-footer (and other dependencies
-      // that rely on react-superbase). Commenting out this section resolves
-      // this problem.
-      // modules: [
-      //   for the client, we need to tell webpack to resolve host node_modules so we can bundle them
-      //   target !== 'node' && appModules,
-      //   'node_modules',
-      // ].filter(Boolean),
-      // $FlowFixMe
+      aliasFields: [target === 'web' && 'browser'].filter(Boolean),
       alias: Object.assign(
         {
           // we replace need to set the path to user application at build-time
@@ -379,7 +359,7 @@ function getConfig({target, env, dir, watch, cover}) {
             {
               clientChunkModuleManifest: chunkModuleManifest,
             }
-          : // Server or SW
+          : // Server
             {
               /**
                * Don't wait for the client manifest on the client.
@@ -501,8 +481,6 @@ function getProfile({dir, env, watch, cover}) {
     getConfig({target: 'web', env, dir, watch, cover}),
     // server
     getConfig({target: 'node', env, dir, watch, cover}),
-    // sw
-    getConfig({target: 'webworker', env, dir, watch, cover}),
   ].filter(Boolean);
 }
 
