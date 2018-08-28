@@ -26,7 +26,7 @@ const {
 const resolveFrom = require('resolve-from');
 
 const LoaderContextProviderPlugin = require('./plugins/loader-context-provider-plugin.js');
-const {chunkIdsLoader} = require('./loaders/index.js');
+const {chunkIdsLoader, fileLoader} = require('./loaders/index.js');
 const {DeferredState} = require('./shared-state-containers.js');
 const {clientChunkIndexContextKey} = require('./loaders/loader-context.js');
 const ChunkIndexStateHydratorPlugin = require('./plugins/chunk-index-state-hydrator-plugin');
@@ -318,7 +318,7 @@ function getConfig({target, env, dir, watch, state}) {
     },
     resolveLoader: {
       alias: {
-        __SECRET_FILE_LOADER__: require.resolve('./file-loader'),
+        [fileLoader.alias]: fileLoader.path,
         [chunkIdsLoader.alias]: chunkIdsLoader.path,
         __SECRET_SYNC_CHUNK_IDS_LOADER__: require.resolve(
           './sync-chunk-ids-loader'
