@@ -8,6 +8,10 @@
 
 /* eslint-env node */
 
+/*::
+import type {ChunkIndexState} from "./types.js";
+*/
+
 const ImportDependency = require('webpack/lib/dependencies/ImportDependency');
 
 const InstrumentedImportDependencyTemplate = require('./instrumented-import-dependency-template');
@@ -18,40 +22,38 @@ const InstrumentedImportDependencyTemplate = require('./instrumented-import-depe
  */
 
 class InstrumentedImportDependencyTemplatePlugin {
-  /*:: clientChunkModuleManifest: any; */
+  /*:: clientChunkIndexState: ?ChunkIndexState; */
 
-  constructor(opts /*: any */) {
-    this.clientChunkModuleManifest = opts.clientChunkModuleManifest;
+  constructor(clientChunkIndexState /*: ?ChunkIndexState*/) {
+    this.clientChunkIndexState = clientChunkIndexState;
   }
 
   apply(compiler /*: any */) {
+    const name = this.constructor.name;
     /**
      * The standard plugin is added on `compile`,
      * which sets the default value for `ImportDependency` in  the `dependencyTemplates` map.
      * `make` is the subsequent lifeycle method, so we can override this value here.
      */
-    compiler.hooks.make.tapAsync(
-      'InstrumentedImportDependencyTemplatePlugin',
-      (compilation, done) => {
-        if (this.clientChunkModuleManifest) {
-          // server
-          this.clientChunkModuleManifest.get().then(manifest => {
-            compilation.dependencyTemplates.set(
-              ImportDependency,
-              new InstrumentedImportDependencyTemplate(manifest)
-            );
-            done();
-          });
-        } else {
-          // client
+    compiler.hooks.make.tapAsync(name, (compilation, done) => {
+      if (this.clientChunkIndexState) {
+        // server
+        this.clientChunkIndexState.result.then(chunkIndex => {
           compilation.dependencyTemplates.set(
             ImportDependency,
-            new InstrumentedImportDependencyTemplate()
+            new InstrumentedImportDependencyTemplate(chunkIndex)
           );
           done();
-        }
+        });
+      } else {
+        // client
+        compilation.dependencyTemplates.set(
+          ImportDependency,
+          new InstrumentedImportDependencyTemplate()
+        );
+        done();
       }
-    );
+    });
   }
 }
 

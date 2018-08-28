@@ -5,9 +5,13 @@
  *
  * @flow
  */
+/*eslint-env node */
 
-/* eslint-env node */
+const loaderIndex = {
+  chunkIdsLoader: {
+    alias: '__SECRET_CHUNK_ID_LOADER__',
+    path: require.resolve('./chunk-ids-loader.js'),
+  },
+};
 
-const WebpackState = require('./webpack-state');
-
-module.exports = new WebpackState();
+module.exports = loaderIndex;

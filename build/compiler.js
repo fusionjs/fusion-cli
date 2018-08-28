@@ -25,8 +25,11 @@ const {
 } = require('../lib/compression');
 const resolveFrom = require('resolve-from');
 
-const ChunkModuleManifestPlugin = require('./chunk-module-manifest-plugin');
-const chunkModuleManifest = require('./chunk-module-manifest');
+const LoaderContextProviderPlugin = require('./plugins/loader-context-provider-plugin.js');
+const {chunkIdsLoader} = require('./loaders/index.js');
+const {DeferredState} = require('./shared-state-containers.js');
+const {clientChunkIndexContextKey} = require('./loaders/loader-context.js');
+const ChunkIndexStateHydratorPlugin = require('./plugins/chunk-index-state-hydrator-plugin');
 const InstrumentedImportDependencyTemplatePlugin = require('./instrumented-import-dependency-template-plugin');
 const I18nDiscoveryPlugin = require('./i18n-discovery-plugin.js');
 const ClientChunkBundleUrlMapPlugin = require('./client-chunk-bundle-url-map-plugin');
@@ -40,7 +43,7 @@ const {getEnv} = require('fusion-core');
 
 const {assetPath} = getEnv();
 
-function getConfig({target, env, dir, watch}) {
+function getConfig({target, env, dir, watch, state}) {
   const main = 'src/main.js';
 
   if (target !== 'node' && target !== 'web') {
@@ -316,7 +319,7 @@ function getConfig({target, env, dir, watch}) {
     resolveLoader: {
       alias: {
         __SECRET_FILE_LOADER__: require.resolve('./file-loader'),
-        __SECRET_CHUNK_ID_LOADER__: require.resolve('./chunk-id-loader'),
+        [chunkIdsLoader.alias]: chunkIdsLoader.path,
         __SECRET_SYNC_CHUNK_IDS_LOADER__: require.resolve(
           './sync-chunk-ids-loader'
         ),
@@ -334,6 +337,13 @@ function getConfig({target, env, dir, watch}) {
     },
     plugins: [
       new ProgressBarPlugin(),
+      target === 'web' &&
+        new ChunkIndexStateHydratorPlugin(state.clientChunkIndex),
+      target !== 'web' &&
+        new LoaderContextProviderPlugin(
+          clientChunkIndexContextKey,
+          state.clientChunkIndex
+        ),
       env === 'production' && zopfliWebpackPlugin, // gzip
       // generate compressed files
       env === 'production' && brotliWebpackPlugin, // brotli
@@ -349,16 +359,13 @@ function getConfig({target, env, dir, watch}) {
       new InstrumentedImportDependencyTemplatePlugin(
         target !== 'web'
           ? // Client
-            {
-              clientChunkModuleManifest: chunkModuleManifest,
-            }
-          : // Server
-            {
-              /**
-               * Don't wait for the client manifest on the client.
-               * The underlying plugin handles client instrumentation on its own.
-               */
-            }
+            state.clientChunkIndex
+          : /**
+             * Server
+             * Don't wait for the client manifest on the client.
+             * The underlying plugin handles client instrumentation on its own.
+             */
+            void 0
       ),
       env === 'development' &&
         watch &&
@@ -368,19 +375,6 @@ function getConfig({target, env, dir, watch}) {
         new webpack.HashedModuleIdsPlugin(),
       target === 'web' && new SyncChunkIdsPlugin(),
       target === 'web' && new ClientChunkBundleUrlMapPlugin(['es5'], 'es5'),
-      target === 'web' &&
-        new ChunkModuleManifestPlugin({
-          appSrcDir,
-          clientUserlandEntry: path.resolve(dir, 'src/main.js'),
-          onInvalidate: () => {
-            // translations are invalid
-            chunkModuleManifest.invalidate();
-          },
-          onChunkIndex: chunkMap => {
-            // We now have all translations
-            chunkModuleManifest.set(chunkMap);
-          },
-        }),
       target === 'web' &&
         new I18nDiscoveryPlugin({
           cachePath: path.join(
@@ -464,15 +458,6 @@ function getConfig({target, env, dir, watch}) {
   };
 }
 
-function getProfile({dir, env, watch}) {
-  return [
-    // browser
-    getConfig({target: 'web', env, dir, watch}),
-    // server
-    getConfig({target: 'node', env, dir, watch}),
-  ].filter(Boolean);
-}
-
 function getStatsLogger({dir, logger, envs}) {
   return (err, stats) => {
     // syntax errors are logged 4 times (once by webpack, once by babel, once on server and once on client)
@@ -535,8 +520,17 @@ type CompilerType = {
 function Compiler(
   {dir = '.', envs = [], watch = false, logger = console} /*: any */
 ) /*: CompilerType */ {
+  const state = {
+    clientChunkIndex: new DeferredState(),
+  };
+
+  const root = path.resolve(dir);
+
   const profiles = envs.map(env => {
-    return getProfile({env: env, dir: path.resolve(dir), watch});
+    return [
+      getConfig({target: 'web', env, dir: root, watch, state}),
+      getConfig({target: 'node', env, dir: root, watch, state}),
+    ];
   });
   const flattened = [].concat(...profiles);
   const compiler = webpack(flattened);
@@ -604,7 +598,6 @@ function getNodeConfig(target, env) {
   const emptyForWeb = target === 'web' ? 'empty' : false;
   return {
     // Polyfilling process involves lots of cruft. Better to explicitly inline env value statically
-    // Tape requires process to be defined
     process: false,
     // We definitely don't want automatic Buffer polyfills. This should be explicit and in userland code
     Buffer: false,

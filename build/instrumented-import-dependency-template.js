@@ -8,6 +8,10 @@
 
 /* eslint-env node */
 
+/*::
+import type {ChunkIndex} from "./types.js";
+*/
+
 const ImportDependencyTemplate = require('webpack/lib/dependencies/ImportDependency')
   .Template;
 
@@ -28,12 +32,12 @@ const ImportDependencyTemplate = require('webpack/lib/dependencies/ImportDepende
  */
 
 class InstrumentedImportDependencyTemplate extends ImportDependencyTemplate {
-  /*:: clientChunkMap: any; */
+  /*:: clientChunkIndex: ?ChunkIndex; */
 
-  constructor(clientChunkMap /*: any */) {
+  constructor(chunkIndex /*: ?ChunkIndex */) {
     super();
-    if (clientChunkMap) {
-      this.clientChunkMap = clientChunkMap;
+    if (chunkIndex) {
+      this.clientChunkIndex = chunkIndex;
     }
   }
   /**
@@ -51,16 +55,19 @@ class InstrumentedImportDependencyTemplate extends ImportDependencyTemplate {
       message: 'import()',
     });
 
-    // TODO(#17): throw with nice error message here if not in manifest
-    const chunkIds = this.clientChunkMap
-      ? // server-side, use values from client bundle
-        Array.from(
-          this.clientChunkMap.get(
-            (dep.module && dep.module.resource) || dep.originModule.resource
-          )
-        )
-      : // client-side, use built-in values
-        getChunkGroupIds(depBlock.chunkGroup);
+    let chunkIds;
+
+    if (this.clientChunkIndex) {
+      // server-side, use values from client bundle
+      let ids = this.clientChunkIndex.get(
+        (dep.module && dep.module.resource) || dep.originModule.resource
+      );
+      chunkIds = ids ? Array.from(ids) : [];
+    } else {
+      // client-side, use built-in values
+      chunkIds = getChunkGroupIds(depBlock.chunkGroup);
+    }
+
     // Add `__CHUNK_IDS` property to promise returned by `import()`` if they exist
     const customContent = chunkIds
       ? `Object.defineProperty(${content}, "__CHUNK_IDS", {value:${JSON.stringify(
