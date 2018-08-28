@@ -329,7 +329,6 @@ function getConfig({target, env, dir, watch, state}) {
         __SECRET_BUNDLE_MAP_LOADER__: require.resolve(
           './client-chunk-bundle-url-map-loader'
         ),
-        __SECRET_MULTI_ENTRY_LOADER__: require.resolve('multi-entry-loader'),
         __SECRET_I18N_MANIFEST_INSTRUMENTATION_LOADER__: require.resolve(
           './i18n-manifest-instrumentation-loader.js'
         ),
