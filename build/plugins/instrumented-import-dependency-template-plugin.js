@@ -9,9 +9,10 @@
 /* eslint-env node */
 
 /*::
-import type {ChunkIndex} from "./types.js";
+import type {ChunkIndexState, ChunkIndex} from "../types.js";
 */
 
+const ImportDependency = require('webpack/lib/dependencies/ImportDependency');
 const ImportDependencyTemplate = require('webpack/lib/dependencies/ImportDependency')
   .Template;
 
@@ -80,7 +81,48 @@ class InstrumentedImportDependencyTemplate extends ImportDependencyTemplate {
   }
 }
 
-module.exports = InstrumentedImportDependencyTemplate;
+/**
+ * Webpack plugin to replace standard ImportDependencyTemplate with custom one
+ * See InstrumentedImportDependencyTemplate for more info
+ */
+
+class InstrumentedImportDependencyTemplatePlugin {
+  /*:: clientChunkIndexState: ?ChunkIndexState; */
+
+  constructor(clientChunkIndexState /*: ?ChunkIndexState*/) {
+    this.clientChunkIndexState = clientChunkIndexState;
+  }
+
+  apply(compiler /*: any */) {
+    const name = this.constructor.name;
+    /**
+     * The standard plugin is added on `compile`,
+     * which sets the default value for `ImportDependency` in  the `dependencyTemplates` map.
+     * `make` is the subsequent lifeycle method, so we can override this value here.
+     */
+    compiler.hooks.make.tapAsync(name, (compilation, done) => {
+      if (this.clientChunkIndexState) {
+        // server
+        this.clientChunkIndexState.result.then(chunkIndex => {
+          compilation.dependencyTemplates.set(
+            ImportDependency,
+            new InstrumentedImportDependencyTemplate(chunkIndex)
+          );
+          done();
+        });
+      } else {
+        // client
+        compilation.dependencyTemplates.set(
+          ImportDependency,
+          new InstrumentedImportDependencyTemplate()
+        );
+        done();
+      }
+    });
+  }
+}
+
+module.exports = InstrumentedImportDependencyTemplatePlugin;
 
 /**
  * Adapted from
