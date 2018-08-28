@@ -65,8 +65,6 @@ function getConfig({target, env, dir, watch, cover}) {
   const appSrcDir = path.resolve(dir, 'src');
   const side = target === 'node' ? 'server' : 'client';
   const destination = path.resolve(dir, `.fusion/dist/${env}/${side}`);
-  const evergreen = false;
-  const possibleESVersions = ['es5'];
   const serverEntry = path.join(__dirname, `../entries/server-entry.js`);
   const clientEntry = path.join(__dirname, `../entries/client-entry.js`);
   const entry = {
@@ -99,9 +97,7 @@ function getConfig({target, env, dir, watch, cover}) {
           node: 'current',
         }
       : {
-          browsers: evergreen
-            ? browserSupport.evergreen
-            : browserSupport.conservative,
+          browsers: browserSupport.conservative,
         };
 
   return {
@@ -160,9 +156,7 @@ function getConfig({target, env, dir, watch, cover}) {
       chunkFilename:
         env === 'production' && target === 'web'
           ? '[id]-[chunkhash].js'
-          : evergreen
-            ? 'evergreen-[id].js'
-            : '[id].js',
+          : '[id].js',
       // We will set __webpack_public_path__ at runtime, so this should be set to undefined
       publicPath: void 0,
       crossOriginLoading: 'anonymous',
@@ -374,11 +368,7 @@ function getConfig({target, env, dir, watch, cover}) {
         target === 'web' &&
         new webpack.HashedModuleIdsPlugin(),
       target === 'web' && new SyncChunkIdsPlugin(),
-      target === 'web' &&
-        new ClientChunkBundleUrlMapPlugin(
-          possibleESVersions || ['es5'],
-          evergreen ? 'es6' : 'es5'
-        ),
+      target === 'web' && new ClientChunkBundleUrlMapPlugin(['es5'], 'es5'),
       target === 'web' &&
         new ChunkModuleManifestPlugin({
           appSrcDir,
@@ -588,7 +578,7 @@ function Compiler(
 
   this.getMiddleware = () => {
     const dev = webpackDevMiddleware(compiler, {
-      filter: c => c.name === 'client' || c.name === 'client-evergreen',
+      filter: c => c.name === 'client',
       noInfo: true,
       quiet: true,
       lazy: false,
