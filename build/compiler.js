@@ -25,7 +25,6 @@ const {
 } = require('../lib/compression');
 const resolveFrom = require('resolve-from');
 
-const AssetsManifestPlugin = require('./file-loader-asset-manifest-plugin');
 const ClientSourceMapPlugin = require('./client-source-map-plugin');
 const ChunkModuleManifestPlugin = require('./chunk-module-manifest-plugin');
 const chunkModuleManifest = require('./chunk-module-manifest');
@@ -411,14 +410,12 @@ function getConfig({target, env, dir, watch, cover}) {
     },
     plugins: [
       new ProgressBarPlugin(),
-      // TODO(#9): relying only on timestamp will invalidate service worker after every build
-      // optimize by importing all chunk names to sw and then remove timestamp in non-dev.
-      target === 'web' && env === 'production' && zopfliWebpackPlugin, // gzip
+      env === 'production' && zopfliWebpackPlugin, // gzip
       // generate compressed files
-      target === 'web' && env === 'production' && brotliWebpackPlugin, // brotli
+      env === 'production' && brotliWebpackPlugin, // brotli
       // target === 'web' && env === 'production' && pngquantWebpackPlugin, // png TODO(#10): production server requires libpng-dev installed to use this
       // target === 'web' && env === 'production' && guetzliWebpackPlugin, // jpg TODO(#10): guetzli also depends on libpng-dev for some reason
-      target === 'web' && env === 'production' && svgoWebpackPlugin, // svg
+      env === 'production' && svgoWebpackPlugin, // svg
       // In development, skip the emitting phase on errors to ensure there are
       // no assets emitted that include errors. This fixes an issue with hot reloading
       // server side code and recovering from errors correctly. We only want to do this
@@ -474,7 +471,6 @@ function getConfig({target, env, dir, watch, cover}) {
         }),
       // case-insensitive paths can cause problems
       new CaseSensitivePathsPlugin(),
-      target === 'web' && new AssetsManifestPlugin(),
       target === 'node' &&
         new webpack.BannerPlugin({
           raw: true,
