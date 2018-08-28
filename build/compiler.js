@@ -25,7 +25,6 @@ const {
 } = require('../lib/compression');
 const resolveFrom = require('resolve-from');
 
-const ClientSourceMapPlugin = require('./client-source-map-plugin');
 const ChunkModuleManifestPlugin = require('./chunk-module-manifest-plugin');
 const chunkModuleManifest = require('./chunk-module-manifest');
 const InstrumentedImportDependencyTemplatePlugin = require('./instrumented-import-dependency-template-plugin');
@@ -399,9 +398,6 @@ function getConfig({target, env, dir, watch, cover}) {
         __SECRET_BUNDLE_MAP_LOADER__: require.resolve(
           './client-chunk-bundle-url-map-loader'
         ),
-        __SECRET_CLIENT_SOURCE_MAP_LOADER__: require.resolve(
-          './client-source-map-loader'
-        ),
         __SECRET_MULTI_ENTRY_LOADER__: require.resolve('multi-entry-loader'),
         __SECRET_I18N_MANIFEST_INSTRUMENTATION_LOADER__: require.resolve(
           './i18n-manifest-instrumentation-loader.js'
@@ -442,7 +438,6 @@ function getConfig({target, env, dir, watch, cover}) {
       env === 'production' &&
         target === 'web' &&
         new webpack.HashedModuleIdsPlugin(),
-      target === 'web' && new ClientSourceMapPlugin(),
       target === 'web' && new SyncChunkIdsPlugin(),
       target === 'web' &&
         new ClientChunkBundleUrlMapPlugin(
