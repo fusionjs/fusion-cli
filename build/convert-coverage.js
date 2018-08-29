@@ -48,9 +48,10 @@ module.exports = function(rootDir /*: string */) {
     [rootDir].forEach(dir => {
       // $FlowFixMe
       const coverage = require(`${dir}/coverage/coverage-final.json`);
-      Object.keys(coverage).forEach(filename =>
-        map.addFileCoverage(coverage[filename])
-      );
+      Object.keys(coverage).forEach(filename => {
+        let obj = coverage[filename];
+        map.addFileCoverage(obj.data ? obj.data : obj);
+      });
     });
 
     reporter.dir = `${rootDir}/coverage`;
