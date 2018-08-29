@@ -49,7 +49,9 @@ module.exports = function(rootDir /*: string */) {
       // $FlowFixMe
       const coverage = require(`${dir}/coverage/coverage-final.json`);
       Object.keys(coverage).forEach(filename => {
-        let obj = coverage[filename];
+        const obj = coverage[filename];
+        // It seems coverage objects are arbitrarily nested or not
+        // See: https://github.com/fusionjs/fusion-cli/pull/489
         map.addFileCoverage(obj.data ? obj.data : obj);
       });
     });
