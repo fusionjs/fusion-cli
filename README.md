@@ -1,6 +1,6 @@
 # fusion-cli
 
-Just testing CI.............
+Just testing CI..............
 
 [![Build status](https://badge.buildkite.com/849975159b112300b6a2923f8ab4e58db8d3bf35227cf39a37.svg?branch=master)](https://buildkite.com/uberopensource/fusion-cli)
 
