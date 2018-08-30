@@ -8,14 +8,19 @@
 
 /* eslint-env node */
 
-const i18nManifest = require('./i18n-manifest-emitter.js');
+const {translationsManifestContextKey} = require('./loader-context.js');
 
 module.exports = function(/* content */) {
   this.cacheable(false);
+  const callback = this.async();
 
-  const done = this.async();
-  i18nManifest.get().then(manifest => {
-    done(null, generateSource(manifest));
+  const i18nManifest = this[translationsManifestContextKey];
+  if (!i18nManifest) {
+    return void callback('no i18n manifest');
+  }
+
+  i18nManifest.result.then(manifest => {
+    return void callback(null, generateSource(manifest));
   });
 };
 

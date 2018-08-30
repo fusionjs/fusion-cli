@@ -27,12 +27,20 @@ const resolveFrom = require('resolve-from');
 
 const getBabelConfig = require('./get-babel-config.js');
 const LoaderContextProviderPlugin = require('./plugins/loader-context-provider-plugin.js');
-const {chunkIdsLoader, fileLoader, babelLoader} = require('./loaders/index.js');
+const {
+  chunkIdsLoader,
+  fileLoader,
+  babelLoader,
+  i18nManifestLoader,
+} = require('./loaders/index.js');
 const {DeferredState} = require('./shared-state-containers.js');
-const {clientChunkIndexContextKey} = require('./loaders/loader-context.js');
+const {
+  clientChunkIndexContextKey,
+  translationsManifestContextKey,
+} = require('./loaders/loader-context.js');
 const ChunkIndexStateHydratorPlugin = require('./plugins/chunk-index-state-hydrator-plugin');
 const InstrumentedImportDependencyTemplatePlugin = require('./plugins/instrumented-import-dependency-template-plugin');
-const I18nDiscoveryPlugin = require('./i18n-discovery-plugin.js');
+const I18nDiscoveryPlugin = require('./plugins/i18n-discovery-plugin.js');
 const ClientChunkBundleUrlMapPlugin = require('./client-chunk-bundle-url-map-plugin');
 const SyncChunkIdsPlugin = require('./sync-chunk-ids-plugin');
 const chalk = require('chalk');
@@ -291,9 +299,7 @@ function getConfig({target, env, dir, watch, state}) {
         __SECRET_BUNDLE_MAP_LOADER__: require.resolve(
           './client-chunk-bundle-url-map-loader'
         ),
-        __SECRET_I18N_MANIFEST_INSTRUMENTATION_LOADER__: require.resolve(
-          './i18n-manifest-instrumentation-loader.js'
-        ),
+        [i18nManifestLoader.alias]: i18nManifestLoader.path,
       },
     },
     plugins: [
@@ -304,6 +310,11 @@ function getConfig({target, env, dir, watch, state}) {
         new LoaderContextProviderPlugin(
           clientChunkIndexContextKey,
           state.clientChunkIndex
+        ),
+      target !== 'web' &&
+        new LoaderContextProviderPlugin(
+          translationsManifestContextKey,
+          state.i18nManifest
         ),
       env === 'production' && zopfliWebpackPlugin, // gzip
       // generate compressed files
@@ -336,7 +347,7 @@ function getConfig({target, env, dir, watch, state}) {
         new webpack.HashedModuleIdsPlugin(),
       target === 'web' && new SyncChunkIdsPlugin(),
       target === 'web' && new ClientChunkBundleUrlMapPlugin(['es5'], 'es5'),
-      target === 'web' && new I18nDiscoveryPlugin(),
+      target === 'web' && new I18nDiscoveryPlugin(state.i18nManifest),
       // case-insensitive paths can cause problems
       new CaseSensitivePathsPlugin(),
       target === 'node' &&
@@ -477,6 +488,7 @@ function Compiler(
 ) /*: CompilerType */ {
   const state = {
     clientChunkIndex: new DeferredState(),
+    i18nManifest: new DeferredState(),
   };
 
   const root = path.resolve(dir);

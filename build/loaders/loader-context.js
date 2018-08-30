@@ -8,7 +8,11 @@
 /*eslint-env node */
 
 /*::
-import type {ChunkIndexState} from "../types.js";
+import type {
+  ChunkIndexState,
+  TranslationsManifest,
+  TranslationsManifestState
+} from "../types.js";
 */
 
 /*::
@@ -17,3 +21,15 @@ export type ClientChunkIndexContext = ChunkIndexState;
 exports.clientChunkIndexContextKey = Symbol(
   'context key for client chunk index'
 );
+
+/*::
+export type TranslationsManifestContext = TranslationsManifestState;
+*/
+exports.translationsManifestContextKey = Symbol(
+  'context key for translations manifest'
+);
+
+/*::
+export type TranslationsDiscoveryContext = TranslationsManifest;
+*/
+exports.translationsDiscoveryKey = Symbol('random key');

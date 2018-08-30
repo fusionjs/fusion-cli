@@ -13,9 +13,14 @@ const path = require('path');
 const babel = require('@babel/core');
 const loaderUtils = require('loader-utils');
 
-const i18nManifest = require('../i18n-manifest.js');
 const PersistentDiskCache = require('../persistent-disk-cache.js');
 const TranslationsExtractor = require('../babel-plugins/babel-plugin-i18n');
+
+const {translationsDiscoveryKey} = require('./loader-context.js');
+
+/*::
+import type {TranslationsDiscoveryContext} from "./loader-context.js";
+*/
 
 class LoaderError extends Error {
   /*::
@@ -40,7 +45,7 @@ function webpackLoader(source /*: string */, inputSourceMap /*: Object */) {
   const callback = this.async();
 
   loader
-    .call(this, source, inputSourceMap)
+    .call(this, source, inputSourceMap, this[translationsDiscoveryKey])
     .then(([code, map]) => callback(null, code, map), err => callback(err));
 }
 
@@ -53,7 +58,11 @@ function getCache(cacheDir) {
   return cache;
 }
 
-async function loader(source, inputSourceMap) {
+async function loader(
+  source,
+  inputSourceMap,
+  discoveryState /*: TranslationsDiscoveryContext*/
+) {
   const filename = this.resourcePath;
   const loaderOptions = loaderUtils.getOptions(this);
 
@@ -111,8 +120,8 @@ async function loader(source, inputSourceMap) {
   if (result) {
     const {code, map, metadata} = result;
 
-    if (metadata.translationIds) {
-      i18nManifest.set(filename, new Set(metadata.translationIds));
+    if (discoveryState && metadata.translationIds) {
+      discoveryState.set(filename, new Set(metadata.translationIds));
     }
 
     return [code, map];

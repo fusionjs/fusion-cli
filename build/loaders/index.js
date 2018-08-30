@@ -19,6 +19,10 @@ const loaderIndex = {
   babelLoader: {
     path: require.resolve('./babel-loader.js'),
   },
+  i18nManifestLoader: {
+    alias: '__SECRET_I18N_MANIFEST_INSTRUMENTATION_LOADER__',
+    path: require.resolve('./i18n-manifest-loader.js'),
+  },
 };
 
 module.exports = loaderIndex;
