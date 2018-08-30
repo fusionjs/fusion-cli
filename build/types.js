@@ -13,4 +13,7 @@ import type {DeferredState, SyncState} from "./shared-state-containers.js";
 export type ChunkIndex = Map<string, Set<number>>;
 export type ChunkIndexState = DeferredState<ChunkIndex>;
 
+export type TranslationsManifest = Map<string, Set<string>>;
+export type TranslationsManifestState = DeferredState<TranslationsManifest>;
+
 */

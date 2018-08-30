@@ -16,6 +16,9 @@ const loaderIndex = {
     alias: '__SECRET_FILE_LOADER__',
     path: require.resolve('./file-loader.js'),
   },
+  babelLoader: {
+    path: require.resolve('./babel-loader.js'),
+  },
 };
 
 module.exports = loaderIndex;

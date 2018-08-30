@@ -27,7 +27,7 @@ const babelConfig = getBabelConfig({
   plugins: customPlugins,
   presets: customPresets,
   dev: false,
-  transformGlobals: false,
+  fusionTransforms: false,
 });
 
 const transformer = require('babel-jest').createTransformer(babelConfig);

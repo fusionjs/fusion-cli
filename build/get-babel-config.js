@@ -28,7 +28,7 @@ type BabelConfigOpts =
     presets?: Array<any>,
     jsx?: JSXTransformOpts,
     assumeNoImportSideEffects?: boolean,
-    transformGlobals: boolean
+    fusionTransforms: boolean
   |};
 */
 
@@ -48,7 +48,7 @@ module.exports = function getBabelConfig(opts /*: BabelConfigOpts */) {
   };
 
   if (opts.specOnly === false) {
-    let {jsx, assumeNoImportSideEffects, dev, transformGlobals} = opts;
+    let {jsx, assumeNoImportSideEffects, dev, fusionTransforms} = opts;
     if (!jsx) {
       jsx = {};
     }
@@ -61,10 +61,9 @@ module.exports = function getBabelConfig(opts /*: BabelConfigOpts */) {
       },
     ]);
     config.presets.push(require('@babel/preset-flow'));
-    config.presets.push([
-      fusionPreset,
-      {runtime, assumeNoImportSideEffects, transformGlobals},
-    ]);
+    if (fusionTransforms) {
+      config.presets.push([fusionPreset, {runtime, assumeNoImportSideEffects}]);
+    }
   }
 
   if (runtime === 'node-native') {
@@ -112,7 +111,6 @@ module.exports = function getBabelConfig(opts /*: BabelConfigOpts */) {
 type FusionPresetOpts = {
   runtime: Runtime,
   assumeNoImportSideEffects: boolean,
-  transformGlobals: boolean,
 };
 */
 
@@ -125,7 +123,7 @@ type FusionPresetOpts = {
  */
 function fusionPreset(
   context /*: any */,
-  {runtime, transformGlobals, assumeNoImportSideEffects} /*: FusionPresetOpts */
+  {runtime, assumeNoImportSideEffects} /*: FusionPresetOpts */
 ) {
   const target =
     runtime === 'node-native' || runtime === 'node-bundled'
@@ -134,10 +132,12 @@ function fusionPreset(
 
   return {
     plugins: [
-      transformGlobals && [
-        require('babel-plugin-transform-cup-globals'),
-        {target},
-      ],
+      require('./babel-plugins/babel-plugin-asseturl'),
+      require('./babel-plugins/babel-plugin-pure-create-plugin'),
+      require('./babel-plugins/babel-plugin-sync-chunk-ids'),
+      require('./babel-plugins/babel-plugin-sync-chunk-paths'),
+      require('./babel-plugins/babel-plugin-chunkid'),
+      [require('babel-plugin-transform-cup-globals'), {target}],
       assumeNoImportSideEffects && [
         require('./babel-plugins/babel-plugin-transform-tree-shake'),
         {target},

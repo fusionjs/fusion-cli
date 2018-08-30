@@ -27,7 +27,7 @@ const resolveFrom = require('resolve-from');
 
 const getBabelConfig = require('./get-babel-config.js');
 const LoaderContextProviderPlugin = require('./plugins/loader-context-provider-plugin.js');
-const {chunkIdsLoader, fileLoader} = require('./loaders/index.js');
+const {chunkIdsLoader, fileLoader, babelLoader} = require('./loaders/index.js');
 const {DeferredState} = require('./shared-state-containers.js');
 const {clientChunkIndexContextKey} = require('./loaders/loader-context.js');
 const ChunkIndexStateHydratorPlugin = require('./plugins/chunk-index-state-hydrator-plugin');
@@ -192,9 +192,8 @@ function getConfig({target, env, dir, watch, state}) {
           ],
           use: [
             {
-              loader: require.resolve('babel-loader'),
+              loader: babelLoader.path,
               options: {
-                cacheDirectory: `${dir}/node_modules/.fusion_babel_cache`,
                 ...getBabelConfig({
                   runtime:
                     target === 'node' ? 'node-bundled' : 'browser-legacy',
@@ -222,34 +221,13 @@ function getConfig({target, env, dir, watch, state}) {
                     ],
                     ...getBabelConfig({
                       dev: env === 'development',
-                      transformGlobals: true,
+                      jsx: {pragma},
+                      fusionTransforms: true,
                       assumeNoImportSideEffects:
                         fusionConfig.assumeNoImportSideEffects,
                       runtime:
                         target === 'node' ? 'node-bundled' : 'browser-legacy',
                       specOnly: false,
-                      plugins: [
-                        //cup-globals works with webpack.EnvironmentPlugin(['NODE_ENV']) to implement static conditionals
-                        require.resolve(
-                          './babel-plugins/babel-plugin-asseturl'
-                        ),
-                        require.resolve(
-                          './babel-plugins/babel-plugin-pure-create-plugin'
-                        ),
-                        require.resolve(
-                          './babel-plugins/babel-plugin-sync-chunk-ids'
-                        ),
-                        require.resolve(
-                          './babel-plugins/babel-plugin-sync-chunk-paths'
-                        ),
-                        require.resolve('./babel-plugins/babel-plugin-chunkid'),
-                        pragma && [
-                          require.resolve('@babel/plugin-transform-react-jsx'),
-                          {pragma},
-                        ],
-                        target === 'web' &&
-                          require.resolve('./babel-plugins/babel-plugin-i18n'),
-                      ].filter(Boolean),
                     }),
                   },
                 ],
@@ -358,13 +336,7 @@ function getConfig({target, env, dir, watch, state}) {
         new webpack.HashedModuleIdsPlugin(),
       target === 'web' && new SyncChunkIdsPlugin(),
       target === 'web' && new ClientChunkBundleUrlMapPlugin(['es5'], 'es5'),
-      target === 'web' &&
-        new I18nDiscoveryPlugin({
-          cachePath: path.join(
-            dir,
-            'node_modules/.fusion_babel_cache/i18n-manifest.json'
-          ),
-        }),
+      target === 'web' && new I18nDiscoveryPlugin(),
       // case-insensitive paths can cause problems
       new CaseSensitivePathsPlugin(),
       target === 'node' &&
