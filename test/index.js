@@ -16,9 +16,6 @@ require('./compiler/errors');
 require('./hmr');
 require('./route-prefix.js');
 
-/*
-require('./browser-support');
-*/
 require('../build/babel-plugins/babel-plugin-pure-create-plugin/test');
 require('../build/babel-plugins/babel-plugin-asseturl/test');
 require('../build/babel-plugins/babel-plugin-chunkid/test');

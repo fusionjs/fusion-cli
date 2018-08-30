@@ -25,6 +25,7 @@ const {
 } = require('../lib/compression');
 const resolveFrom = require('resolve-from');
 
+const getBabelConfig = require('./get-babel-config.js');
 const LoaderContextProviderPlugin = require('./plugins/loader-context-provider-plugin.js');
 const {chunkIdsLoader, fileLoader} = require('./loaders/index.js');
 const {DeferredState} = require('./shared-state-containers.js');
@@ -34,7 +35,6 @@ const InstrumentedImportDependencyTemplatePlugin = require('./plugins/instrument
 const I18nDiscoveryPlugin = require('./i18n-discovery-plugin.js');
 const ClientChunkBundleUrlMapPlugin = require('./client-chunk-bundle-url-map-plugin');
 const SyncChunkIdsPlugin = require('./sync-chunk-ids-plugin');
-const browserSupport = require('./browser-support');
 const chalk = require('chalk');
 const webpackHotMiddleware = require('webpack-hot-middleware');
 const loadFusionRC = require('./load-fusionrc.js');
@@ -93,15 +93,6 @@ function getConfig({target, env, dir, watch, state}) {
     `} else {` +
     `process.env.NODE_ENV = '${nodeEnv}';` +
     `}`;
-
-  const targets =
-    target === 'node'
-      ? {
-          node: 'current',
-        }
-      : {
-          browsers: browserSupport.conservative,
-        };
 
   return {
     name,
@@ -204,25 +195,19 @@ function getConfig({target, env, dir, watch, state}) {
               loader: require.resolve('babel-loader'),
               options: {
                 cacheDirectory: `${dir}/node_modules/.fusion_babel_cache`,
-                plugins: [
-                  // Note: plugins run first to last, so user-defined plugins go first
-                  ...(fusionConfig.babel && fusionConfig.babel.plugins
-                    ? fusionConfig.babel.plugins
-                    : []),
-                ],
-                presets: [
-                  // Note: presets run last to first, so user-defined presets go last
-                  [
-                    require.resolve('./babel-transpilation-preset.js'),
-                    {
-                      targets,
-                    },
-                  ],
-                  ...(fusionConfig.babel && fusionConfig.babel.presets
-                    ? fusionConfig.babel.presets
-                    : []),
-                ],
-
+                ...getBabelConfig({
+                  runtime:
+                    target === 'node' ? 'node-bundled' : 'browser-legacy',
+                  specOnly: true,
+                  plugins:
+                    fusionConfig.babel && fusionConfig.babel.plugins
+                      ? fusionConfig.babel.plugins
+                      : [],
+                  presets:
+                    fusionConfig.babel && fusionConfig.babel.presets
+                      ? fusionConfig.babel.presets
+                      : [],
+                }),
                 /**
                  * Fusion-specific transforms (not applied to node_modules)
                  */
@@ -235,40 +220,39 @@ function getConfig({target, env, dir, watch, state}) {
                       entry,
                       /fusion-cli\/entries/,
                     ],
-                    plugins: [
-                      //cup-globals works with webpack.EnvironmentPlugin(['NODE_ENV']) to implement static conditionals
-                      require.resolve('./babel-plugins/babel-plugin-asseturl'),
-                      require.resolve(
-                        './babel-plugins/babel-plugin-pure-create-plugin'
-                      ),
-                      require.resolve(
-                        './babel-plugins/babel-plugin-sync-chunk-ids'
-                      ),
-                      require.resolve(
-                        './babel-plugins/babel-plugin-sync-chunk-paths'
-                      ),
-                      require.resolve('./babel-plugins/babel-plugin-chunkid'),
-                      pragma && [
-                        require.resolve('@babel/plugin-transform-react-jsx'),
-                        {pragma},
-                      ],
-                      target === 'web' &&
-                        require.resolve('./babel-plugins/babel-plugin-i18n'),
-                    ].filter(Boolean),
-                    presets: [
-                      [
-                        require.resolve('./babel-fusion-preset.js'),
-                        {
-                          targets,
-                          assumeNoImportSideEffects:
-                            fusionConfig.assumeNoImportSideEffects,
-                        },
-                      ],
-                    ],
+                    ...getBabelConfig({
+                      dev: env === 'development',
+                      transformGlobals: true,
+                      assumeNoImportSideEffects:
+                        fusionConfig.assumeNoImportSideEffects,
+                      runtime:
+                        target === 'node' ? 'node-bundled' : 'browser-legacy',
+                      specOnly: false,
+                      plugins: [
+                        //cup-globals works with webpack.EnvironmentPlugin(['NODE_ENV']) to implement static conditionals
+                        require.resolve(
+                          './babel-plugins/babel-plugin-asseturl'
+                        ),
+                        require.resolve(
+                          './babel-plugins/babel-plugin-pure-create-plugin'
+                        ),
+                        require.resolve(
+                          './babel-plugins/babel-plugin-sync-chunk-ids'
+                        ),
+                        require.resolve(
+                          './babel-plugins/babel-plugin-sync-chunk-paths'
+                        ),
+                        require.resolve('./babel-plugins/babel-plugin-chunkid'),
+                        pragma && [
+                          require.resolve('@babel/plugin-transform-react-jsx'),
+                          {pragma},
+                        ],
+                        target === 'web' &&
+                          require.resolve('./babel-plugins/babel-plugin-i18n'),
+                      ].filter(Boolean),
+                    }),
                   },
                 ],
-
-                babelrc: false,
               },
             },
           ],
