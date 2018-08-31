@@ -42,7 +42,10 @@ module.exports = function getBabelConfig(opts /*: BabelConfigOpts */) {
 
   // Shared base configuration
   let config = {
-    plugins: [require('@babel/plugin-syntax-dynamic-import')],
+    plugins: [
+      require('@babel/plugin-syntax-dynamic-import'),
+      [require('@babel/plugin-proposal-class-properties'), {loose: false}],
+    ],
     presets: [[require('@babel/preset-env'), envPresetOpts]],
     babelrc: false,
   };
