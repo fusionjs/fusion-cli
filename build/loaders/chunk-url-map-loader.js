@@ -8,24 +8,21 @@
 
 /* eslint-env node */
 
-// Probably have to do this via a loader configuration webpack plugin
-const clientChunkBundleUrlMap = require('./client-chunk-bundle-url-map');
+const {chunkUrlMapContextKey} = require('./loader-context.js');
 
-module.exports = function(/* content */) {
-  // Maybe split this loader in two and cache one of them.
-  // Additionally, it'd be nice to cache the whole thing if our manifest has not changed at all
+module.exports = function chunkUrlMapLoader() {
   this.cacheable(false);
-
-  const done = this.async();
-  clientChunkBundleUrlMap.get().then(data => {
-    done(null, generateSource(data.manifest));
+  const chunkUrlMapState = this[chunkUrlMapContextKey];
+  const callback = this.async();
+  chunkUrlMapState.result.then(chunkUrlMap => {
+    callback(null, generateSource(chunkUrlMap));
   });
 };
 
-function generateSource(manifest) {
+function generateSource(chunkUrlMap) {
   return `module.exports = new Map(
     ${JSON.stringify(
-      Array.from(manifest.entries()).map(entry => {
+      Array.from(chunkUrlMap.entries()).map(entry => {
         entry[1] = Array.from(entry[1].entries());
         return entry;
       })

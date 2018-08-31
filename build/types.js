@@ -16,4 +16,7 @@ export type ChunkIndexState = DeferredState<ChunkIndex>;
 export type TranslationsManifest = Map<string, Set<string>>;
 export type TranslationsManifestState = DeferredState<TranslationsManifest>;
 
+export type ChunkUrlMap = Map<number, Map<string, string>>;
+export type ChunkUrlMapState = DeferredState<ChunkUrlMap>;
+
 */

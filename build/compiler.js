@@ -32,16 +32,18 @@ const {
   fileLoader,
   babelLoader,
   i18nManifestLoader,
+  chunkUrlMapLoader,
 } = require('./loaders/index.js');
 const {DeferredState} = require('./shared-state-containers.js');
 const {
   clientChunkIndexContextKey,
   translationsManifestContextKey,
+  chunkUrlMapContextKey,
 } = require('./loaders/loader-context.js');
 const ChunkIndexStateHydratorPlugin = require('./plugins/chunk-index-state-hydrator-plugin');
 const InstrumentedImportDependencyTemplatePlugin = require('./plugins/instrumented-import-dependency-template-plugin');
 const I18nDiscoveryPlugin = require('./plugins/i18n-discovery-plugin.js');
-const ClientChunkBundleUrlMapPlugin = require('./client-chunk-bundle-url-map-plugin');
+const ChunkUrlMapStateHydratorPlugin = require('./plugins/chunk-url-map-state-hydrator-plugin');
 const SyncChunkIdsPlugin = require('./sync-chunk-ids-plugin');
 const chalk = require('chalk');
 const webpackHotMiddleware = require('webpack-hot-middleware');
@@ -296,9 +298,7 @@ function getConfig({target, env, dir, watch, state}) {
         __SECRET_SYNC_CHUNK_PATHS_LOADER__: require.resolve(
           './sync-chunk-paths-loader'
         ),
-        __SECRET_BUNDLE_MAP_LOADER__: require.resolve(
-          './client-chunk-bundle-url-map-loader'
-        ),
+        [chunkUrlMapLoader.alias]: chunkUrlMapLoader.path,
         [i18nManifestLoader.alias]: i18nManifestLoader.path,
       },
     },
@@ -346,7 +346,12 @@ function getConfig({target, env, dir, watch, state}) {
         target === 'web' &&
         new webpack.HashedModuleIdsPlugin(),
       target === 'web' && new SyncChunkIdsPlugin(),
-      target === 'web' && new ClientChunkBundleUrlMapPlugin(['es5'], 'es5'),
+      target === 'web' && new ChunkUrlMapStateHydratorPlugin(state.chunkUrlMap),
+      target !== 'web' &&
+        new LoaderContextProviderPlugin(
+          chunkUrlMapContextKey,
+          state.chunkUrlMap
+        ),
       target === 'web' && new I18nDiscoveryPlugin(state.i18nManifest),
       // case-insensitive paths can cause problems
       new CaseSensitivePathsPlugin(),
@@ -489,6 +494,7 @@ function Compiler(
   const state = {
     clientChunkIndex: new DeferredState(),
     i18nManifest: new DeferredState(),
+    chunkUrlMap: new DeferredState(),
   };
 
   const root = path.resolve(dir);

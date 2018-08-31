@@ -23,6 +23,10 @@ const loaderIndex = {
     alias: '__SECRET_I18N_MANIFEST_INSTRUMENTATION_LOADER__',
     path: require.resolve('./i18n-manifest-loader.js'),
   },
+  chunkUrlMapLoader: {
+    alias: '__SECRET_BUNDLE_MAP_LOADER__',
+    path: require.resolve('./chunk-url-map-loader.js'),
+  },
 };
 
 module.exports = loaderIndex;

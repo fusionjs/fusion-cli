@@ -11,7 +11,8 @@
 import type {
   ChunkIndexState,
   TranslationsManifest,
-  TranslationsManifestState
+  TranslationsManifestState,
+  ChunkUrlMapState,
 } from "../types.js";
 */
 
@@ -19,17 +20,24 @@ import type {
 export type ClientChunkIndexContext = ChunkIndexState;
 */
 exports.clientChunkIndexContextKey = Symbol(
-  'context key for client chunk index'
+  'loader context key for client chunk index'
 );
 
 /*::
 export type TranslationsManifestContext = TranslationsManifestState;
 */
 exports.translationsManifestContextKey = Symbol(
-  'context key for translations manifest'
+  'loader context key for translations manifest'
 );
 
 /*::
 export type TranslationsDiscoveryContext = TranslationsManifest;
 */
-exports.translationsDiscoveryKey = Symbol('random key');
+exports.translationsDiscoveryKey = Symbol(
+  'loader context key for translations discovery'
+);
+
+/*::
+export type ChunkUrlMapContext = ChunkUrlMapState;
+*/
+exports.chunkUrlMapContextKey = Symbol('loader context key for chunk url map');
