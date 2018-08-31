@@ -248,7 +248,7 @@ function getConfig({target, env, dir, watch, state}) {
         {
           type: 'javascript/auto',
           test: /\.(json)/,
-          loader: 'json-loader',
+          loader: require.resolve('json-loader'),
         },
         fusionConfig.assumeNoImportSideEffects && {
           sideEffects: false,
