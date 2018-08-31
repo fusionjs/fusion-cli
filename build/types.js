@@ -19,4 +19,10 @@ export type TranslationsManifestState = DeferredState<TranslationsManifest>;
 export type ChunkUrlMap = Map<number, Map<string, string>>;
 export type ChunkUrlMapState = DeferredState<ChunkUrlMap>;
 
+export type SyncChunkData = {
+  paths: Array<string>,
+  ids: Array<number>,
+};
+export type SyncChunkDataState = DeferredState<SyncChunkData>;
+
 */

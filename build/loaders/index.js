@@ -27,6 +27,14 @@ const loaderIndex = {
     alias: '__SECRET_BUNDLE_MAP_LOADER__',
     path: require.resolve('./chunk-url-map-loader.js'),
   },
+  syncChunkPathsLoader: {
+    alias: '__SECRET_SYNC_CHUNK_PATHS_LOADER__',
+    path: require.resolve('./sync-chunk-paths-loader.js'),
+  },
+  syncChunkIdsLoader: {
+    alias: '__SECRET_SYNC_CHUNK_IDS_LOADER__',
+    path: require.resolve('./sync-chunk-ids-loader.js'),
+  },
 };
 
 module.exports = loaderIndex;

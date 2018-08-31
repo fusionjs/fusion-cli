@@ -13,6 +13,7 @@ import type {
   TranslationsManifest,
   TranslationsManifestState,
   ChunkUrlMapState,
+  SyncChunkDataState,
 } from "../types.js";
 */
 
@@ -41,3 +42,10 @@ exports.translationsDiscoveryKey = Symbol(
 export type ChunkUrlMapContext = ChunkUrlMapState;
 */
 exports.chunkUrlMapContextKey = Symbol('loader context key for chunk url map');
+
+/*::
+export type SyncChunkDataContext = SyncChunkDataState;
+*/
+exports.syncChunkDataContextKey = Symbol(
+  'loader context key for sync chunk data'
+);

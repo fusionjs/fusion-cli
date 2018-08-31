@@ -33,18 +33,21 @@ const {
   babelLoader,
   i18nManifestLoader,
   chunkUrlMapLoader,
+  syncChunkIdsLoader,
+  syncChunkPathsLoader,
 } = require('./loaders/index.js');
 const {DeferredState} = require('./shared-state-containers.js');
 const {
   clientChunkIndexContextKey,
   translationsManifestContextKey,
   chunkUrlMapContextKey,
+  syncChunkDataContextKey,
 } = require('./loaders/loader-context.js');
 const ChunkIndexStateHydratorPlugin = require('./plugins/chunk-index-state-hydrator-plugin');
 const InstrumentedImportDependencyTemplatePlugin = require('./plugins/instrumented-import-dependency-template-plugin');
 const I18nDiscoveryPlugin = require('./plugins/i18n-discovery-plugin.js');
 const ChunkUrlMapStateHydratorPlugin = require('./plugins/chunk-url-map-state-hydrator-plugin');
-const SyncChunkIdsPlugin = require('./sync-chunk-ids-plugin');
+const SyncChunkDataStateHydratorPlugin = require('./plugins/sync-chunk-data-state-hydrator-plugin');
 const chalk = require('chalk');
 const webpackHotMiddleware = require('webpack-hot-middleware');
 const loadFusionRC = require('./load-fusionrc.js');
@@ -292,12 +295,8 @@ function getConfig({target, env, dir, watch, state}) {
       alias: {
         [fileLoader.alias]: fileLoader.path,
         [chunkIdsLoader.alias]: chunkIdsLoader.path,
-        __SECRET_SYNC_CHUNK_IDS_LOADER__: require.resolve(
-          './sync-chunk-ids-loader'
-        ),
-        __SECRET_SYNC_CHUNK_PATHS_LOADER__: require.resolve(
-          './sync-chunk-paths-loader'
-        ),
+        [syncChunkIdsLoader.alias]: syncChunkIdsLoader.path,
+        [syncChunkPathsLoader.alias]: syncChunkPathsLoader.path,
         [chunkUrlMapLoader.alias]: chunkUrlMapLoader.path,
         [i18nManifestLoader.alias]: i18nManifestLoader.path,
       },
@@ -345,7 +344,13 @@ function getConfig({target, env, dir, watch, state}) {
       env === 'production' &&
         target === 'web' &&
         new webpack.HashedModuleIdsPlugin(),
-      target === 'web' && new SyncChunkIdsPlugin(),
+      target === 'web' &&
+        new SyncChunkDataStateHydratorPlugin(state.syncChunkData),
+      target !== 'web' &&
+        new LoaderContextProviderPlugin(
+          syncChunkDataContextKey,
+          state.syncChunkData
+        ),
       target === 'web' && new ChunkUrlMapStateHydratorPlugin(state.chunkUrlMap),
       target !== 'web' &&
         new LoaderContextProviderPlugin(
@@ -495,6 +500,7 @@ function Compiler(
     clientChunkIndex: new DeferredState(),
     i18nManifest: new DeferredState(),
     chunkUrlMap: new DeferredState(),
+    syncChunkData: new DeferredState(),
   };
 
   const root = path.resolve(dir);
