@@ -183,10 +183,6 @@ test('`fusion dev` works with assets with cdnUrl', async t => {
 
 test('`fusion dev` cacheable paths with cdn', async t => {
   const dir = path.resolve(__dirname, '../fixtures/assets');
-  const entryPath = path.resolve(
-    dir,
-    '.fusion/dist/development/server/server-main.js'
-  );
   const {proc, port} = await dev(`--dir=${dir}`, {
     env: Object.assign({}, process.env, {CDN_URL: 'https://cdn.com'}),
   });
