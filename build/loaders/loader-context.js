@@ -9,19 +9,17 @@
 
 /*::
 import type {
-  ChunkIndexState,
+  ClientChunkMetadataState,
   TranslationsManifest,
   TranslationsManifestState,
-  ChunkUrlMapState,
-  SyncChunkDataState,
 } from "../types.js";
 */
 
 /*::
-export type ClientChunkIndexContext = ChunkIndexState;
+export type ClientChunkMetadataContext = ClientChunkMetadataState;
 */
-exports.clientChunkIndexContextKey = Symbol(
-  'loader context key for client chunk index'
+exports.clientChunkMetadataContextKey = Symbol(
+  'loader context key for client chunk metadata'
 );
 
 /*::
@@ -36,16 +34,4 @@ export type TranslationsDiscoveryContext = TranslationsManifest;
 */
 exports.translationsDiscoveryKey = Symbol(
   'loader context key for translations discovery'
-);
-
-/*::
-export type ChunkUrlMapContext = ChunkUrlMapState;
-*/
-exports.chunkUrlMapContextKey = Symbol('loader context key for chunk url map');
-
-/*::
-export type SyncChunkDataContext = SyncChunkDataState;
-*/
-exports.syncChunkDataContextKey = Symbol(
-  'loader context key for sync chunk data'
 );

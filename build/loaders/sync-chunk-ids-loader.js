@@ -7,14 +7,22 @@
  */
 /* eslint-env node */
 
-const {syncChunkDataContextKey} = require('./loader-context.js');
+/*::
+import type {ClientChunkMetadataContext} from "./loader-context.js";
+*/
+const {clientChunkMetadataContextKey} = require('./loader-context.js');
 
 module.exports = function syncChunkIdsLoader() {
-  const syncChunkDataState = this[syncChunkDataContextKey];
+  const chunkMetadataState /*: ClientChunkMetadataContext*/ = this[
+    clientChunkMetadataContextKey
+  ];
   this.cacheable(false);
   const callback = this.async();
 
-  syncChunkDataState.result.then(chunkData => {
-    callback(null, `module.exports = ${JSON.stringify(chunkData.ids)};`);
+  chunkMetadataState.result.then(chunkMetadata => {
+    callback(
+      null,
+      `module.exports = ${JSON.stringify(chunkMetadata.criticalIds)};`
+    );
   });
 };

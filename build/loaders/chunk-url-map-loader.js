@@ -5,17 +5,21 @@
  *
  * @flow
  */
-
 /* eslint-env node */
 
-const {chunkUrlMapContextKey} = require('./loader-context.js');
+/*::
+import type {ClientChunkMetadataContext} from "./loader-context.js";
+*/
+const {clientChunkMetadataContextKey} = require('./loader-context.js');
 
 module.exports = function chunkUrlMapLoader() {
   this.cacheable(false);
-  const chunkUrlMapState = this[chunkUrlMapContextKey];
+  const chunkMetadataState /*: ClientChunkMetadataContext*/ = this[
+    clientChunkMetadataContextKey
+  ];
   const callback = this.async();
-  chunkUrlMapState.result.then(chunkUrlMap => {
-    callback(null, generateSource(chunkUrlMap));
+  chunkMetadataState.result.then(chunkMetadata => {
+    callback(null, generateSource(chunkMetadata.urlMap));
   });
 };
 
@@ -23,8 +27,7 @@ function generateSource(chunkUrlMap) {
   return `module.exports = new Map(
     ${JSON.stringify(
       Array.from(chunkUrlMap.entries()).map(entry => {
-        entry[1] = Array.from(entry[1].entries());
-        return entry;
+        return [entry[0], Array.from(entry[1].entries())];
       })
     )}.map(entry => { //[number, Map<string,string>]
       entry[1] = new Map(

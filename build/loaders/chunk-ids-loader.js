@@ -8,24 +8,9 @@
 /*eslint-env node */
 
 /*::
-import type {ClientChunkIndexContext} from "./loader-context.js";
+import type {ClientChunkMetadataContext} from "./loader-context.js";
 */
-
-const {clientChunkIndexContextKey} = require('./loader-context.js');
-
-async function getChunks(
-  chunkIndexState /*: ClientChunkIndexContext*/,
-  filename /*: string*/
-) {
-  const chunkIndex = await chunkIndexState.result;
-  const chunks = chunkIndex.get(filename);
-  if (!chunks) {
-    throw new Error(
-      `Attempted to get client bundle chunk ids for "${filename}" but it is not the client bundle.`
-    );
-  }
-  return Array.from(chunks.values());
-}
+const {clientChunkMetadataContextKey} = require('./loader-context.js');
 
 async function chunkIdsLoader() {
   /**
@@ -35,19 +20,19 @@ async function chunkIdsLoader() {
   this.cacheable(false);
   const callback = this.async();
 
-  const clientChunkIndex /*: ClientChunkIndexContext*/ = this[
-    clientChunkIndexContextKey
+  const chunkMetadataState /*: ClientChunkMetadataContext*/ = this[
+    clientChunkMetadataContextKey
   ];
 
   const filename = this.resourcePath;
 
-  if (!clientChunkIndex) {
+  if (!chunkMetadataState) {
     return void callback('Chunk index context missing from chunk ids loader.');
   }
 
   try {
     const source = `module.exports = ${JSON.stringify(
-      await getChunks(clientChunkIndex, filename)
+      await getChunks(chunkMetadataState, filename)
     )};`;
     return void callback(null, source);
   } catch (err) {
@@ -56,3 +41,17 @@ async function chunkIdsLoader() {
 }
 
 module.exports = chunkIdsLoader;
+
+async function getChunks(
+  chunkMetadataState /*: ClientChunkMetadataContext*/,
+  filename /*: string*/
+) {
+  const {fileManifest} = await chunkMetadataState.result;
+  const chunks = fileManifest.get(filename);
+  if (!chunks) {
+    throw new Error(
+      `Attempted to get client bundle chunk ids for "${filename}" but it is not the client bundle.`
+    );
+  }
+  return Array.from(chunks.values());
+}

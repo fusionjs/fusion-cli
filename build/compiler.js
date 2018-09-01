@@ -38,16 +38,12 @@ const {
 } = require('./loaders/index.js');
 const {DeferredState} = require('./shared-state-containers.js');
 const {
-  clientChunkIndexContextKey,
   translationsManifestContextKey,
-  chunkUrlMapContextKey,
-  syncChunkDataContextKey,
+  clientChunkMetadataContextKey,
 } = require('./loaders/loader-context.js');
-const ChunkIndexStateHydratorPlugin = require('./plugins/chunk-index-state-hydrator-plugin');
+const ClientChunkMetadataStateHydratorPlugin = require('./plugins/client-chunk-metadata-state-hydrator-plugin.js');
 const InstrumentedImportDependencyTemplatePlugin = require('./plugins/instrumented-import-dependency-template-plugin');
 const I18nDiscoveryPlugin = require('./plugins/i18n-discovery-plugin.js');
-const ChunkUrlMapStateHydratorPlugin = require('./plugins/chunk-url-map-state-hydrator-plugin');
-const SyncChunkDataStateHydratorPlugin = require('./plugins/sync-chunk-data-state-hydrator-plugin');
 const chalk = require('chalk');
 const webpackHotMiddleware = require('webpack-hot-middleware');
 const loadFusionRC = require('./load-fusionrc.js');
@@ -303,18 +299,18 @@ function getConfig({target, env, dir, watch, state}) {
     },
     plugins: [
       new ProgressBarPlugin(),
-      target === 'web' &&
-        new ChunkIndexStateHydratorPlugin(state.clientChunkIndex),
-      target !== 'web' &&
-        new LoaderContextProviderPlugin(
-          clientChunkIndexContextKey,
-          state.clientChunkIndex
-        ),
-      target !== 'web' &&
-        new LoaderContextProviderPlugin(
-          translationsManifestContextKey,
-          state.i18nManifest
-        ),
+      target === 'web'
+        ? new ClientChunkMetadataStateHydratorPlugin(state.clientChunkMetadata)
+        : new LoaderContextProviderPlugin(
+            clientChunkMetadataContextKey,
+            state.clientChunkMetadata
+          ),
+      target === 'web'
+        ? new I18nDiscoveryPlugin(state.i18nManifest)
+        : new LoaderContextProviderPlugin(
+            translationsManifestContextKey,
+            state.i18nManifest
+          ),
       env === 'production' && zopfliWebpackPlugin, // gzip
       // generate compressed files
       env === 'production' && brotliWebpackPlugin, // brotli
@@ -330,7 +326,7 @@ function getConfig({target, env, dir, watch, state}) {
       new InstrumentedImportDependencyTemplatePlugin(
         target !== 'web'
           ? // Client
-            state.clientChunkIndex
+            state.clientChunkMetadata
           : /**
              * Server
              * Don't wait for the client manifest on the client.
@@ -345,21 +341,8 @@ function getConfig({target, env, dir, watch, state}) {
         target === 'web' &&
         new webpack.HashedModuleIdsPlugin(),
       target === 'web' &&
-        new SyncChunkDataStateHydratorPlugin(state.syncChunkData),
-      target !== 'web' &&
-        new LoaderContextProviderPlugin(
-          syncChunkDataContextKey,
-          state.syncChunkData
-        ),
-      target === 'web' && new ChunkUrlMapStateHydratorPlugin(state.chunkUrlMap),
-      target !== 'web' &&
-        new LoaderContextProviderPlugin(
-          chunkUrlMapContextKey,
-          state.chunkUrlMap
-        ),
-      target === 'web' && new I18nDiscoveryPlugin(state.i18nManifest),
-      // case-insensitive paths can cause problems
-      new CaseSensitivePathsPlugin(),
+        // case-insensitive paths can cause problems
+        new CaseSensitivePathsPlugin(),
       target === 'node' &&
         new webpack.BannerPlugin({
           raw: true,
@@ -497,10 +480,8 @@ function Compiler(
   {dir = '.', envs = [], watch = false, logger = console} /*: any */
 ) /*: CompilerType */ {
   const state = {
-    clientChunkIndex: new DeferredState(),
+    clientChunkMetadata: new DeferredState(),
     i18nManifest: new DeferredState(),
-    chunkUrlMap: new DeferredState(),
-    syncChunkData: new DeferredState(),
   };
 
   const root = path.resolve(dir);

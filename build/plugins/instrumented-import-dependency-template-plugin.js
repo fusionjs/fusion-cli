@@ -9,7 +9,7 @@
 /* eslint-env node */
 
 /*::
-import type {ChunkIndexState, ChunkIndex} from "../types.js";
+import type {ClientChunkMetadataState, ClientChunkMetadata} from "../types.js";
 */
 
 const ImportDependency = require('webpack/lib/dependencies/ImportDependency');
@@ -33,12 +33,12 @@ const ImportDependencyTemplate = require('webpack/lib/dependencies/ImportDepende
  */
 
 class InstrumentedImportDependencyTemplate extends ImportDependencyTemplate {
-  /*:: clientChunkIndex: ?ChunkIndex; */
+  /*:: clientChunkIndex: ?$PropertyType<ClientChunkMetadata, "fileManifest">; */
 
-  constructor(chunkIndex /*: ?ChunkIndex */) {
+  constructor(clientChunkMetadata /*: ?ClientChunkMetadata */) {
     super();
-    if (chunkIndex) {
-      this.clientChunkIndex = chunkIndex;
+    if (clientChunkMetadata) {
+      this.clientChunkIndex = clientChunkMetadata.fileManifest;
     }
   }
   /**
@@ -87,9 +87,9 @@ class InstrumentedImportDependencyTemplate extends ImportDependencyTemplate {
  */
 
 class InstrumentedImportDependencyTemplatePlugin {
-  /*:: clientChunkIndexState: ?ChunkIndexState; */
+  /*:: clientChunkIndexState: ?ClientChunkMetadataState; */
 
-  constructor(clientChunkIndexState /*: ?ChunkIndexState*/) {
+  constructor(clientChunkIndexState /*: ?ClientChunkMetadataState*/) {
     this.clientChunkIndexState = clientChunkIndexState;
   }
 

@@ -7,22 +7,16 @@
  */
 
 /*::
-
 import type {DeferredState, SyncState} from "./shared-state-containers.js";
 
-export type ChunkIndex = Map<string, Set<number>>;
-export type ChunkIndexState = DeferredState<ChunkIndex>;
+export type ClientChunkMetadata = {
+  fileManifest: Map<string, Set<number>>,
+  urlMap: Map<number, Map<string, string>>,
+  criticalPaths: Array<string>,
+  criticalIds: Array<number>,
+};
+export type ClientChunkMetadataState = DeferredState<ClientChunkMetadata>;
 
 export type TranslationsManifest = Map<string, Set<string>>;
 export type TranslationsManifestState = DeferredState<TranslationsManifest>;
-
-export type ChunkUrlMap = Map<number, Map<string, string>>;
-export type ChunkUrlMapState = DeferredState<ChunkUrlMap>;
-
-export type SyncChunkData = {
-  paths: Array<string>,
-  ids: Array<number>,
-};
-export type SyncChunkDataState = DeferredState<SyncChunkData>;
-
 */

@@ -5,12 +5,11 @@
  *
  * @flow
  */
-
 /* eslint-env node */
 
 const {translationsManifestContextKey} = require('./loader-context.js');
 
-module.exports = function(/* content */) {
+module.exports = function i18nManifestLoader() {
   this.cacheable(false);
   const callback = this.async();
 
