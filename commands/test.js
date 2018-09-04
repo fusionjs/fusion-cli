@@ -8,6 +8,7 @@
 
 /* eslint-env node */
 
+const {allowedJestOptions} = require('../build/jest/cli-options');
 const {TestAppRuntime} = require('../build/test-runtime');
 
 exports.run = async function(
@@ -30,36 +31,7 @@ exports.run = async function(
   const jestArgs /*: any */ = {
     updateSnapshot: updateSnapshot || u || false,
   };
-  const whitelistedJestOptions = [
-    'changedFilesWithAncestor',
-    'changedSince',
-    'ci',
-    'clearCache',
-    'colors',
-    'coverage',
-    'detectOpenHandles',
-    'errorOnDeprecated',
-    'expand',
-    'findRelatedTests',
-    'json',
-    'lastCommit',
-    'listTests',
-    'logHeapUsage',
-    'noStackTrace',
-    'notify',
-    'onlyChanged',
-    'passWithNoTests',
-    'reporters',
-    'showConfig',
-    'silent',
-    'testLocationInResults',
-    'useStderr',
-    'version',
-    'watch',
-    'watchAll',
-    'watchman',
-  ];
-  whitelistedJestOptions.forEach(arg => {
+  allowedJestOptions.forEach(arg => {
     if (rest[arg]) {
       jestArgs[arg] = rest[arg];
     }
