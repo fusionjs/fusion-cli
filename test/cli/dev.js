@@ -106,6 +106,33 @@ test('`fusion dev` works with assets', async t => {
   t.end();
 });
 
+test.only('`fusion dev` works with fetching assets', async t => {
+  const dir = path.resolve(__dirname, '../fixtures/assets-client-fetch');
+  let browser;
+  const {proc, port} = await dev(`--dir=${dir}`);
+
+  // Spin up puppeteer to make runtime assertions on assetURLs
+  try {
+    browser = await puppeteer.launch({
+      args: ['--no-sandbox', '--disable-setuid-sandbox'],
+    });
+    const page = await browser.newPage();
+    await page.goto(`http://localhost:${port}/`, {waitUntil: 'load'});
+
+    const jsonDynamicContent = await page.evaluate(
+      // $FlowFixMe
+      () => document.querySelector('#content').textContent // eslint-disable-line
+    );
+
+    t.equal(jsonDynamicContent, 'success', 'dynamic JSON content is populated');
+  } catch (e) {
+    t.iferror(e);
+  }
+  await (browser && browser.close());
+  proc.kill();
+  t.end();
+});
+
 test('`fusion dev` assets work with route prefix', async t => {
   const dir = path.resolve(__dirname, '../fixtures/assets');
   const entryPath = path.resolve(
