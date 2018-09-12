@@ -106,8 +106,8 @@ test('`fusion dev` works with assets', async t => {
   t.end();
 });
 
-test.only('`fusion dev` works with fetching assets', async t => {
-  const dir = path.resolve(__dirname, '../fixtures/assets-client-fetch');
+test('`fusion dev` works with assetUrl and JSON assets', async t => {
+  const dir = path.resolve(__dirname, '../fixtures/json-static-assets');
   let browser;
   const {proc, port} = await dev(`--dir=${dir}`);
 
@@ -117,14 +117,18 @@ test.only('`fusion dev` works with fetching assets', async t => {
       args: ['--no-sandbox', '--disable-setuid-sandbox'],
     });
     const page = await browser.newPage();
-    await page.goto(`http://localhost:${port}/`, {waitUntil: 'load'});
+    await page.goto(`http://localhost:${port}/`, {waitUntil: 'networkidle2'});
 
     const jsonDynamicContent = await page.evaluate(
       // $FlowFixMe
       () => document.querySelector('#content').textContent // eslint-disable-line
     );
 
-    t.equal(jsonDynamicContent, 'success', 'dynamic JSON content is populated');
+    t.equal(
+      jsonDynamicContent,
+      'success|success',
+      'both assetURL and imported JSON works'
+    );
   } catch (e) {
     t.iferror(e);
   }
