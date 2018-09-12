@@ -73,7 +73,7 @@ test('`fusion dev` works with assets', async t => {
     t.equal(await request(`http://localhost:${port}/filename`), 'src/main.js');
     t.equal(
       await request(`http://localhost:${port}/json`),
-      '/_static/7526e1bdce8d3d115d6b4d6b79096e1c.json'
+      '/_static/20355efabaae9ed4d51fbc5a68eb4ce3.json'
     );
     t.equal(
       await request(`http://localhost:${port}/json-import`),
@@ -232,7 +232,7 @@ test('`fusion dev` cacheable paths with cdn', async t => {
   );
   t.ok(
     cacheablePaths.includes(
-      'https://cdn.com/7526e1bdce8d3d115d6b4d6b79096e1c.json'
+      'https://cdn.com/20355efabaae9ed4d51fbc5a68eb4ce3.json'
     )
   );
   t.ok(cacheablePaths.includes('https://cdn.com/client-main.js'));
