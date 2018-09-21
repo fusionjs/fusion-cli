@@ -77,6 +77,10 @@ function getConfig({target, env, dir, watch, state}) {
   const appSrcDir = path.resolve(dir, 'src');
   const side = target === 'node' ? 'server' : 'client';
   const destination = path.resolve(dir, `.fusion/dist/${env}/${side}`);
+  const serverPublicPathEntry = path.join(
+    __dirname,
+    `../entries/server-public-path.js`
+  );
   const serverEntry = path.join(__dirname, `../entries/server-entry.js`);
   const clientEntry = path.join(__dirname, `../entries/client-entry.js`);
   const entry = {
@@ -149,6 +153,7 @@ function getConfig({target, env, dir, watch, state}) {
     target,
     entry: {
       main: [
+        target === 'node' && serverPublicPathEntry,
         env === 'development' &&
           target === 'web' &&
           watch &&

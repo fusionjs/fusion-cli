@@ -9,32 +9,11 @@
 /* eslint-env browser */
 /* global module */
 
+__webpack_public_path__ = window.__FUSION_ASSET_PATH__;
+
 // Require is used and assigned to an identifier to opt out of webpack tree-shaking of ununsed imports
 // See: https://github.com/webpack/webpack/issues/6571
 let some_identifier = require('core-js'); // eslint-disable-line
-/*
-Webpack has a configuration option called `publicPath`, which determines the
-base path for all assets within an application
-
-The property can be set at runtime by assigning to a magic
-global variable called `__webpack_public_path__`.
-
-We set this value at runtime because its value depends on the
-`ROUTE_PREFIX` and `CDN_URL` environment variables.
-
-The value of the env var is sent from the server to the client
-by the `../get-compilation-metadata.js` file. It creates
-a `window.__WEBPACK_PUBLIC_PATH__` global variable in the entry point html with the
-value from the environment variables above
-
-Webpack compiles the `__webpack_public_path__ = ...` assignment expression
-into `__webpack_require__.p = ...` and uses it for HMR manifest requests
-*/
-
-/* eslint-disable */
-// $FlowFixMe
-__webpack_public_path__ = window.__WEBPACK_PUBLIC_PATH__ + '/';
-/* eslint-enable */
 
 function reload() {
   // $FlowFixMe
