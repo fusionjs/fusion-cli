@@ -18,10 +18,11 @@ import {
   HttpServerToken,
   RoutePrefixToken,
   SSRBodyTemplateToken,
+  CriticalChunkIdsToken,
 } from 'fusion-core';
 
+import CriticalChunkIdsPlugin from '../plugins/critical-chunk-ids-plugin.js';
 import AssetsFactory from '../plugins/assets-plugin';
-import RoutePrefixPlugin from '../plugins/route-prefix-plugin';
 import ContextPlugin from '../plugins/context-plugin';
 import ServerErrorPlugin from '../plugins/server-error-plugin';
 import {SSRBodyTemplate} from '../plugins/ssr-plugin';
@@ -70,9 +71,9 @@ async function reload() {
   reverseRegister(app, AssetsPlugin);
   reverseRegister(app, ContextPlugin);
   reverseRegister(app, SSRBodyTemplateToken, SSRBodyTemplate);
+  app.register(CriticalChunkIdsToken, CriticalChunkIdsPlugin);
   if (prefix) {
     app.register(RoutePrefixToken, prefix);
-    app.register(RoutePrefixPlugin);
   }
   if (server) {
     app.register(HttpServerToken, createPlugin({provides: () => server}));

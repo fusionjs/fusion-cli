@@ -6,8 +6,11 @@
  * @flow
  */
 /* eslint-env node */
+/* global __webpack_public_path__ */
 
 /*::
+declare var __webpack_public_path__: string;
+
 import type {
   Context,
   SSRBodyTemplate as SSRBodyTemplateService,
@@ -19,13 +22,15 @@ import {
   escape,
   consumeSanitizedHTML,
   CriticalChunkIdsToken,
+  RoutePrefixToken,
 } from 'fusion-core';
 
 const SSRBodyTemplate = createPlugin({
   deps: {
     criticalChunkIds: CriticalChunkIdsToken.optional,
+    routePrefix: RoutePrefixToken.optional,
   },
-  provides: ({criticalChunkIds}) => {
+  provides: ({criticalChunkIds, routePrefix}) => {
     return ctx => {
       const {htmlAttrs, bodyAttrs, title, head, body} = ctx.template;
       const safeAttrs = Object.keys(htmlAttrs)
@@ -46,14 +51,17 @@ const SSRBodyTemplate = createPlugin({
       // $FlowFixMe
       const safeBody = body.map(consumeSanitizedHTML).join('');
 
-      const preloadHintLinks = getPreloadHintLinks(ctx);
-      const coreGlobals = getCoreGlobals(ctx);
+      const coreGlobals = [
+        `<script nonce="${ctx.nonce}">`,
+        `window.performance && window.performance.mark && window.performance.mark('firstRenderStart');`,
+        routePrefix && `__ROUTE_PREFIX__ = ${JSON.stringify(routePrefix)};`,
+        `__FUSION_ASSET_PATH__ = ${JSON.stringify(__webpack_public_path__)};`, // consumed by fusion-clientries/client-entry
+        `</script>`,
+      ]
+        .filter(Boolean)
+        .join('');
       const chunkScripts = getChunkScripts(ctx);
-      const bundleSplittingBootstrap = [
-        preloadHintLinks,
-        coreGlobals,
-        chunkScripts,
-      ].join('');
+      const bundleSplittingBootstrap = [coreGlobals, chunkScripts].join('');
 
       return [
         '<!doctype html>',
@@ -71,18 +79,6 @@ const SSRBodyTemplate = createPlugin({
 });
 
 export {SSRBodyTemplate};
-
-function getCoreGlobals(ctx) {
-  const {nonce} = ctx;
-
-  return [
-    `<script nonce="${nonce}">`,
-    `window.performance && window.performance.mark && window.performance.mark('firstRenderStart');`,
-    `__ROUTE_PREFIX__ = ${JSON.stringify(ctx.prefix)};`, // consumed by ./client
-    `__FUSION_ASSET_PATH__ = ${JSON.stringify(__webpack_public_path__)};`, // consumed by fusion-clientries/client-entry
-    `</script>`,
-  ].join('');
-}
 
 function getUrls({chunkUrlMap}, chunks) {
   return [...new Set(chunks)].map(id => {
@@ -115,12 +111,4 @@ function getChunkScripts(ctx) {
     }" defer${crossOrigin} src="${url}"></script>`;
   });
   return [...preloaded, ...sync].join('');
-}
-
-function getPreloadHintLinks(ctx) {
-  const chunks = [...ctx.preloadChunks, ...ctx.syncChunks];
-  const hints = getUrls(ctx, chunks).map(({url}) => {
-    return `<link rel="preload" href="${url}" as="script" />`;
-  });
-  return hints.join('');
 }

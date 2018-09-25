@@ -81,6 +81,10 @@ function getConfig({target, env, dir, watch, state}) {
     __dirname,
     `../entries/server-public-path.js`
   );
+  const clientPublicPathEntry = path.join(
+    __dirname,
+    `../entries/client-public-path.js`
+  );
   const serverEntry = path.join(__dirname, `../entries/server-entry.js`);
   const clientEntry = path.join(__dirname, `../entries/client-entry.js`);
   const entry = {
@@ -153,6 +157,7 @@ function getConfig({target, env, dir, watch, state}) {
     target,
     entry: {
       main: [
+        target === 'web' && clientPublicPathEntry,
         target === 'node' && serverPublicPathEntry,
         env === 'development' &&
           target === 'web' &&

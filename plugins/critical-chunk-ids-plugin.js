@@ -8,15 +8,14 @@
 
 /* eslint-env node */
 
-/*
-Hack to stop from complaining.
-*/
-
-const {createPlugin, RoutePrefixToken} = require('fusion-core');
+const {createPlugin, memoize} = require('fusion-core');
 
 module.exports = createPlugin({
-  deps: {
-    routePrefix: RoutePrefixToken,
+  provides: () => {
+    return {
+      from: memoize(() => {
+        return new Set();
+      }),
+    };
   },
-  provides: () => {},
 });

@@ -3231,9 +3231,9 @@ fusion-plugin-universal-events@^1.1.0:
   dependencies:
     koa-bodyparser "4.2.1"
 
-fusion-react@1.3.0-alpha.0:
-  version "1.3.0-alpha.0"
-  resolved "https://registry.yarnpkg.com/fusion-react/-/fusion-react-1.3.0-alpha.0.tgz#15d0bdec72407d48f3835367cda1adc5bac19d63"
+fusion-react@1.3.0-0:
+  version "1.3.0-0"
+  resolved "https://registry.yarnpkg.com/fusion-react/-/fusion-react-1.3.0-0.tgz#4b81628045e9b99a621d24af75b8d5394663774e"
   dependencies:
     prop-types "^15.6.2"
     react-is "^16.4.2"

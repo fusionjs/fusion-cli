@@ -7,6 +7,11 @@
  */
 
 /* eslint-env node */
+
+/*::
+declare var __webpack_public_path__: string;
+*/
+
 import assert from 'assert';
 import {URL} from 'url';
 
@@ -28,6 +33,7 @@ if (prefix) {
   assetBasePath = prefix + assetBasePath;
 }
 
+// eslint-disable-next-line
 __webpack_public_path__ = cdnUrl ? cdnUrl + '/' : assetBasePath;
 
 function load(key) {
