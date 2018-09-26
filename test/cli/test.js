@@ -224,7 +224,12 @@ test('`fusion test` coverage', async t => {
   // Look for something like coverage
   t.ok(response.stdout.includes('Uncovered Line #s'));
 
+  // This file is outside of src and should not be included in coverage
   t.ok(!response.stdout.includes('should-not-count-for-coverage.js'));
+
+  // This file instruments the istanbul ignore annotation and should not be included in coverage
+  t.ok(!response.stdout.includes('istanbul-ignore-coverage.js'));
+
   t.end();
 });
 
