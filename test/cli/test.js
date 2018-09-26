@@ -227,8 +227,9 @@ test('`fusion test` coverage', async t => {
   // This file is outside of src and should not be included in coverage
   t.ok(!response.stdout.includes('should-not-count-for-coverage.js'));
 
-  // This file instruments the istanbul ignore annotation and should not be included in coverage
+  // These files instruments the istanbul ignore annotation and should not be included in coverage
   t.ok(!response.stdout.includes('istanbul-ignore-coverage.js'));
+  t.ok(!response.stdout.includes('istanbul-ignore-coverage.flow.js'));
 
   t.end();
 });
