@@ -8,12 +8,19 @@
 
 /* eslint-env node */
 
-const {createPlugin, memoize} = require('fusion-core');
+import {createPlugin, memoize} from 'fusion-core';
 
-module.exports = createPlugin({
+// $FlowFixMe
+import {initialChunkIds} from '../build/loaders/chunk-manifest-loader.js!'; // eslint-disable-line
+
+export default createPlugin({
   provides: () => {
     return {
       from: memoize(() => {
+        const chunkIds = new Set();
+        for (const chunkId of initialChunkIds) {
+          chunkIds.add(chunkId);
+        }
         return new Set();
       }),
     };
