@@ -61,7 +61,7 @@ const SSRBodyTemplate = createPlugin({
         `<script nonce="${ctx.nonce}">`,
         `window.performance && window.performance.mark && window.performance.mark('firstRenderStart');`,
         routePrefix && `__ROUTE_PREFIX__ = ${JSON.stringify(routePrefix)};`,
-        `__FUSION_ASSET_PATH__ = ${JSON.stringify(__webpack_public_path__)};`, // consumed by fusion-clientries/client-entry
+        `__FUSION_ASSET_PATH__ = ${JSON.stringify(__webpack_public_path__)};`, // consumed in src/entries/client-public-path.js
         `</script>`,
       ]
         .filter(Boolean)
