@@ -25,6 +25,12 @@ import {
   RoutePrefixToken,
 } from 'fusion-core';
 
+import {
+  chunks,
+  runtimeChunkId,
+  initialChunkIds, // $FlowFixMe
+} from '../build/loaders/chunk-manifest-loader.js!'; // eslint-disable-line
+
 const SSRBodyTemplate = createPlugin({
   deps: {
     criticalChunkIds: CriticalChunkIdsToken.optional,
@@ -60,8 +66,24 @@ const SSRBodyTemplate = createPlugin({
       ]
         .filter(Boolean)
         .join('');
-      const chunkScripts = getChunkScripts(ctx);
-      const bundleSplittingBootstrap = [coreGlobals, chunkScripts].join('');
+
+      const legacyCriticalChunkIds = ctx.preloadChunks;
+      const modernCriticalChunkIds = criticalChunkIds
+        ? criticalChunkIds.from(ctx)
+        : new Set();
+
+      const allCriticalChunkIds = new Set([
+        ...initialChunkIds,
+        // For now, take union of both legacy and modern
+        ...legacyCriticalChunkIds,
+        ...modernCriticalChunkIds,
+        // runtime chunk must be last script
+        runtimeChunkId,
+      ]);
+
+      const criticalChunkScripts = Array.from(allCriticalChunkIds)
+        .map(id => chunkScript(chunks.get(id)))
+        .join('');
 
       return [
         '<!doctype html>',
@@ -69,7 +91,7 @@ const SSRBodyTemplate = createPlugin({
         `<head>`,
         `<meta charset="utf-8" />`,
         `<title>${safeTitle}</title>`,
-        `${bundleSplittingBootstrap}${safeHead}`,
+        `${coreGlobals}${criticalChunkScripts}${safeHead}`,
         `</head>`,
         `<body${safeBodyAttrs}>${ctx.rendered}${safeBody}</body>`,
         '</html>',
@@ -80,35 +102,11 @@ const SSRBodyTemplate = createPlugin({
 
 export {SSRBodyTemplate};
 
-function getUrls({chunkUrlMap}, chunks) {
-  return [...new Set(chunks)].map(id => {
-    let url = chunkUrlMap.get(id).get('es5');
-    return {id, url};
-  });
-}
+function chunkScript(url) {
+  // cross origin is needed to get meaningful errors in window.onerror
+  const crossOrigin = url.startsWith('https://')
+    ? ' crossorigin="anonymous"'
+    : '';
 
-function getChunkScripts(ctx) {
-  const sync = getUrls(ctx, ctx.syncChunks).map(({url}) => {
-    // cross origin is needed to get meaningful errors in window.onerror
-    const crossOrigin = url.startsWith('https://')
-      ? ' crossorigin="anonymous"'
-      : '';
-
-    return `<script nonce="${
-      ctx.nonce
-    }" defer${crossOrigin} src="${url}"></script>`;
-  });
-  const preloaded = getUrls(
-    ctx,
-    ctx.preloadChunks.filter(item => !ctx.syncChunks.includes(item))
-  ).map(({id, url}) => {
-    // cross origin is needed to get meaningful errors in window.onerror
-    const crossOrigin = url.startsWith('https://')
-      ? ' crossorigin="anonymous"'
-      : '';
-    return `<script nonce="${
-      ctx.nonce
-    }" defer${crossOrigin} src="${url}"></script>`;
-  });
-  return [...preloaded, ...sync].join('');
+  return `<script defer src="${url}"${crossOrigin}></script>`;
 }

@@ -7413,6 +7413,10 @@ webpack-hot-middleware@^2.24.0:
     querystring "^0.2.0"
     strip-ansi "^3.0.0"
 
+webpack-plugin-hash-output@^3.1.0:
+  version "3.1.0"
+  resolved "https://registry.yarnpkg.com/webpack-plugin-hash-output/-/webpack-plugin-hash-output-3.1.0.tgz#160bb42dd5b3d6f6e05201a722cf553c3687f95c"
+
 webpack-sources@^1.0.1, webpack-sources@^1.1.0, webpack-sources@^1.2.0:
   version "1.2.0"
   resolved "https://registry.yarnpkg.com/webpack-sources/-/webpack-sources-1.2.0.tgz#18181e0d013fce096faf6f8e6d41eeffffdceac2"

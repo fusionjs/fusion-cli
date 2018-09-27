@@ -14,6 +14,7 @@ const path = require('path');
 const webpack = require('webpack');
 const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
 const ProgressBarPlugin = require('progress-bar-webpack-plugin');
+const HashOutputPlugin = require('webpack-plugin-hash-output');
 const webpackDevMiddleware = require('../lib/simple-webpack-dev-middleware');
 const CaseSensitivePathsPlugin = require('case-sensitive-paths-webpack-plugin');
 const {
@@ -207,10 +208,6 @@ function getConfig({target, env, dir, watch, state}) {
       // This is the recommended default.
       // See https://webpack.js.org/configuration/output/#output-sourcemapfilename
       sourceMapFilename: `[file].map`,
-      chunkFilename:
-        env === 'production' && target === 'web'
-          ? '[id]-[chunkhash].js'
-          : '[id].js',
       // We will set __webpack_public_path__ at runtime, so this should be set to undefined
       publicPath: void 0,
       crossOriginLoading: 'anonymous',
@@ -326,6 +323,8 @@ function getConfig({target, env, dir, watch, state}) {
       },
     },
     plugins: [
+      target === 'node' &&
+        new webpack.optimize.LimitChunkCountPlugin({maxChunks: 1}),
       new ProgressBarPlugin(),
       target === 'web'
         ? new ClientChunkMetadataStateHydratorPlugin(state.clientChunkMetadata)
@@ -388,6 +387,8 @@ function getConfig({target, env, dir, watch, state}) {
           banner: nodeEnvBanner,
         }),
       new webpack.EnvironmentPlugin({NODE_ENV: nodeEnv}),
+      // webpack chunkhash doesn't take into account uglify. This uses exact md5 hashing
+      target === 'web' && env === 'production' && new HashOutputPlugin(),
     ].filter(Boolean),
     optimization: {
       minimizer:
@@ -413,6 +414,9 @@ function getConfig({target, env, dir, watch, state}) {
             ]
           : undefined,
       sideEffects: true,
+      runtimeChunk: target === 'web' && {
+        name: 'runtime',
+      },
       splitChunks: target === 'web' && {
         // See https://webpack.js.org/guides/code-splitting/
         // See https://gist.github.com/sokra/1522d586b8e5c0f5072d7565c2bee693
@@ -432,10 +436,6 @@ function getConfig({target, env, dir, watch, state}) {
           vendor: {
             test: /[\\/]node_modules[\\/]/,
             name: 'vendor',
-            filename:
-              env === 'production' && target === 'web'
-                ? `${name}-[name]-[chunkhash].js`
-                : `${name}-[name].js`,
             chunks: 'initial',
             enforce: true,
           },
