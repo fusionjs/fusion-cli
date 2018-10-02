@@ -129,7 +129,16 @@ function getChunkInfo(compilation, chunks) {
 
 function criticalChunkInfo(compilation, chunks) {
   const mainEntrypoint = compilation.entrypoints.get('main');
-  const chunkIds = mainEntrypoint.chunks.map(c => c.id);
+  let chunkIds = [];
+  for (const chunk of mainEntrypoint.chunks) {
+    const id = chunk.id;
+    if (chunk.hasRuntime()) {
+      // Ensure runtime chunk is always last
+      chunkIds.push(id);
+    } else {
+      chunkIds.unshift(id);
+    }
+  }
   const chunkPaths = mainEntrypoint.chunks.map(c => c.files[0]);
   return {
     criticalIds: chunkIds,
