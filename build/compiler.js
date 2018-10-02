@@ -68,11 +68,6 @@ function getConfig({target, env, dir, watch, state}) {
 
   const fusionConfig = loadFusionRC(dir);
 
-  const configPath = path.join(dir, 'package.json');
-  // $FlowFixMe
-  const configData = fs.existsSync(configPath) ? require(configPath) : {};
-  const {pragma, clientHotLoaderEntry, node, alias} = configData;
-
   const name = {node: 'server', web: 'client'}[target];
   const appBase = path.resolve(dir);
   const appSrcDir = path.resolve(dir, 'src');
@@ -96,7 +91,6 @@ function getConfig({target, env, dir, watch, state}) {
   const babelConfig = fusionConfig.experimentalCompile
     ? getBabelConfig({
         dev: env === 'development',
-        jsx: {pragma},
         fusionTransforms: true,
         assumeNoImportSideEffects: fusionConfig.assumeNoImportSideEffects,
         runtime: target === 'node' ? 'node-bundled' : 'browser-legacy',
@@ -127,7 +121,6 @@ function getConfig({target, env, dir, watch, state}) {
     ? {}
     : getBabelConfig({
         dev: env === 'development',
-        jsx: {pragma},
         fusionTransforms: true,
         assumeNoImportSideEffects: fusionConfig.assumeNoImportSideEffects,
         runtime: target === 'node' ? 'node-bundled' : 'browser-legacy',
@@ -160,11 +153,6 @@ function getConfig({target, env, dir, watch, state}) {
       main: [
         target === 'web' && clientPublicPathEntry,
         target === 'node' && serverPublicPathEntry,
-        env === 'development' &&
-          target === 'web' &&
-          watch &&
-          clientHotLoaderEntry &&
-          resolveFrom(appBase, clientHotLoaderEntry),
         env === 'development' &&
           watch &&
           target !== 'node' &&
@@ -226,7 +214,7 @@ function getConfig({target, env, dir, watch, state}) {
       hints: false,
     },
     context: dir,
-    node: Object.assign(getNodeConfig(target, env), node),
+    node: getNodeConfig(target, env),
     module: {
       /**
        * Compile-time error for importing a non-existent export
@@ -303,14 +291,11 @@ function getConfig({target, env, dir, watch, state}) {
     ].filter(Boolean),
     resolve: {
       aliasFields: [target === 'web' && 'browser'].filter(Boolean),
-      alias: Object.assign(
-        {
-          // we replace need to set the path to user application at build-time
-          __FRAMEWORK_SHARED_ENTRY__: path.resolve(dir, main),
-          __ENV__: env,
-        },
-        alias
-      ),
+      alias: Object.assign({
+        // we replace need to set the path to user application at build-time
+        __FRAMEWORK_SHARED_ENTRY__: path.resolve(dir, main),
+        __ENV__: env,
+      }),
     },
     resolveLoader: {
       alias: {
