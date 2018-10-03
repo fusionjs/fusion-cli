@@ -68,6 +68,22 @@ function getConfig({target, env, dir, watch, state}) {
 
   const fusionConfig = loadFusionRC(dir);
 
+  const configPath = path.join(dir, 'package.json');
+  // $FlowFixMe
+  const configData = fs.existsSync(configPath) ? require(configPath) : {};
+  const {node} = configData;
+
+  if (typeof node !== 'undefined') {
+    // eslint-disable-next-line no-console
+    console.warn(
+      [
+        `Warning: using a top-level "node" field in your app package.json to override node built-in shimming is deprecated.`,
+        `Please use the "nodeBuiltins" field in .fusionrc.js instead.`,
+        `See: https://github.com/fusionjs/fusion-cli/blob/master/docs/fusionrc.md#nodebuiltins`,
+      ].join(' ')
+    );
+  }
+
   const name = {node: 'server', web: 'client'}[target];
   const appBase = path.resolve(dir);
   const appSrcDir = path.resolve(dir, 'src');
@@ -214,7 +230,11 @@ function getConfig({target, env, dir, watch, state}) {
       hints: false,
     },
     context: dir,
-    node: getNodeConfig(target, env),
+    node: Object.assign(
+      getNodeConfig(target, env),
+      node,
+      fusionConfig.nodeBuiltins
+    ),
     module: {
       /**
        * Compile-time error for importing a non-existent export
@@ -291,11 +311,11 @@ function getConfig({target, env, dir, watch, state}) {
     ].filter(Boolean),
     resolve: {
       aliasFields: [target === 'web' && 'browser'].filter(Boolean),
-      alias: Object.assign({
+      alias: {
         // we replace need to set the path to user application at build-time
         __FRAMEWORK_SHARED_ENTRY__: path.resolve(dir, main),
         __ENV__: env,
-      }),
+      },
     },
     resolveLoader: {
       alias: {
