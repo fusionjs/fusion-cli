@@ -10,7 +10,7 @@ This configuration object supports the following fields:
 
 For example, to add your own Babel plugins/preset:
 
-```
+```js
 module.exports = {
   babel: {
     presets: ["some-babel-preset"],
@@ -40,3 +40,11 @@ In the future, it is possible that some form of this behavior may be turned on b
 ## `nodeBuiltins`
 
 This is an optional property that can be used to override the Fusion.js defaults for https://webpack.js.org/configuration/node/ in the browser bundle.
+
+```js
+module.exports = {
+  nodeBuiltins: {
+    Buffer: true
+  }
+};
+```
