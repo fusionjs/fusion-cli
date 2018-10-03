@@ -24,7 +24,7 @@ type FusionRC = {
 };
 */
 
-module.exports = function validateConfig(dir /*: any */) /*: FusionRC */ {
+module.exports = function validateConfig(dir /*: string */) /*: FusionRC */ {
   const configPath = path.join(dir, '.fusionrc.js');
   let config;
   if (fs.existsSync(configPath)) {
