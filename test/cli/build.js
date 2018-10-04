@@ -411,6 +411,7 @@ test('`fusion start` does not throw error on client when using route prefix', as
   await browser.close();
 
   proc.kill();
+  t.pass('did not error');
   t.end();
 });
 
