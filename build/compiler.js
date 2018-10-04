@@ -40,7 +40,7 @@ const {DeferredState} = require('./shared-state-containers.js');
 const {
   translationsManifestContextKey,
   clientChunkMetadataContextKey,
-  modeKey,
+  devContextKey,
 } = require('./loaders/loader-context.js');
 const ClientChunkMetadataStateHydratorPlugin = require('./plugins/client-chunk-metadata-state-hydrator-plugin.js');
 const InstrumentedImportDependencyTemplatePlugin = require('./plugins/instrumented-import-dependency-template-plugin');
@@ -322,7 +322,7 @@ function getConfig({target, env, dir, watch, state}) {
       target === 'node' &&
         new webpack.optimize.LimitChunkCountPlugin({maxChunks: 1}),
       new ProgressBarPlugin(),
-      new LoaderContextProviderPlugin(modeKey, env),
+      new LoaderContextProviderPlugin(devContextKey, env !== 'production'),
       target === 'web'
         ? new ClientChunkMetadataStateHydratorPlugin(state.clientChunkMetadata)
         : new LoaderContextProviderPlugin(

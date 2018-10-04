@@ -36,4 +36,7 @@ exports.translationsDiscoveryKey = Symbol(
   'loader context key for translations discovery'
 );
 
-exports.modeKey = Symbol('mode');
+/*::
+export type DevContext = boolean;
+*/
+exports.devContextKey = Symbol('loader context key for __DEV__ state');
