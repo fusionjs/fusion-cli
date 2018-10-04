@@ -10,6 +10,7 @@
 const path = require('path');
 const fs = require('fs');
 const loaderUtils = require('loader-utils');
+const {modeKey} = require('../loaders/loader-context.js');
 
 module.exports = function fileLoader(content /*: string */) {
   const done = assetContents => {
@@ -19,7 +20,11 @@ module.exports = function fileLoader(content /*: string */) {
     });
 
     // Assets should always go into client dist directory, regardless of source
-    const outputPath = path.posix.join('../client', url);
+    const outputPath = path.posix.join(
+      // memory-fs runs at `/`, so can't have path starting w/ `..` in dev
+      this[modeKey] === 'development' ? '/' : '../client',
+      url
+    );
     this.emitFile(outputPath, assetContents);
     return `module.exports = __webpack_public_path__ + ${JSON.stringify(url)};`;
   };

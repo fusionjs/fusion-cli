@@ -35,3 +35,5 @@ export type TranslationsDiscoveryContext = TranslationsManifest;
 exports.translationsDiscoveryKey = Symbol(
   'loader context key for translations discovery'
 );
+
+exports.modeKey = Symbol('mode');
