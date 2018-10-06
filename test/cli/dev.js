@@ -486,7 +486,8 @@ test('`fusion dev` proxy gracefully recovers from cached SSR errors', async t =>
   const dir = path.resolve(__dirname, '../fixtures/server-startup-control');
 
   async function waitForCompileToStart() {
-    // Should figure out a better heuristic for this.
+    // Once the Fusion.js application renders SSR error pages in the app
+    // we should leverage module.hot.addStatusHandler.
     await new Promise(resolve => setTimeout(resolve, 1000));
   }
 
