@@ -880,7 +880,11 @@ acorn-jsx@^4.1.1:
   dependencies:
     acorn "^5.0.3"
 
-acorn@>=2.5.2, acorn@^5.0.0, acorn@^5.0.3, acorn@^5.5.3, acorn@^5.6.0, acorn@^5.6.2:
+"acorn@>= 2.5.2 <= 5.7.3":
+  version "5.7.3"
+  resolved "https://registry.yarnpkg.com/acorn/-/acorn-5.7.3.tgz#67aa231bf8812974b85235a96771eb6bd07ea279"
+
+acorn@^5.0.0, acorn@^5.0.3, acorn@^5.5.3, acorn@^5.6.0, acorn@^5.6.2:
   version "5.7.2"
   resolved "https://registry.yarnpkg.com/acorn/-/acorn-5.7.2.tgz#91fa871883485d06708800318404e72bfb26dcc5"
 
@@ -2941,11 +2945,11 @@ extsprintf@^1.2.0:
   version "1.4.0"
   resolved "https://registry.yarnpkg.com/extsprintf/-/extsprintf-1.4.0.tgz#e2689f8f356fad62cca65a3a91c5df5f9551692f"
 
-fast-async@^6.3.7:
-  version "6.3.7"
-  resolved "https://registry.yarnpkg.com/fast-async/-/fast-async-6.3.7.tgz#b4a406f2c59890b8b1b4c8468a36bd7f1a57e47f"
+fast-async@^6.3.8:
+  version "6.3.8"
+  resolved "https://registry.yarnpkg.com/fast-async/-/fast-async-6.3.8.tgz#031b9e1d5a84608b117b3e7c999ad477ed2b08a2"
   dependencies:
-    nodent-compiler "^3.2.4"
+    nodent-compiler "^3.2.10"
     nodent-runtime ">=3.2.1"
 
 fast-deep-equal@^1.0.0:
@@ -5307,11 +5311,11 @@ node-releases@^1.0.0-alpha.11:
   dependencies:
     semver "^5.3.0"
 
-nodent-compiler@^3.2.4:
-  version "3.2.9"
-  resolved "https://registry.yarnpkg.com/nodent-compiler/-/nodent-compiler-3.2.9.tgz#24daa5558045f53ceaf55f0efd1f65d80c41ef95"
+nodent-compiler@^3.2.10:
+  version "3.2.11"
+  resolved "https://registry.yarnpkg.com/nodent-compiler/-/nodent-compiler-3.2.11.tgz#8f4bc703d7d8d0e563f5e09ea22efdce04dbaf9b"
   dependencies:
-    acorn ">=2.5.2"
+    acorn ">= 2.5.2 <= 5.7.3"
     acorn-es7-plugin "^1.1.7"
     nodent-transform "^3.2.9"
     source-map "^0.5.7"
