@@ -65,6 +65,36 @@ test('`fusion build` works', async t => {
   t.end();
 });
 
+test.only('`fusion build` transpiles async middleware', async t => {
+  const dir = path.resolve(__dirname, '../fixtures/transpile-async-plugin');
+  const serverEntryPath = path.resolve(
+    dir,
+    `.fusion/dist/production/server/server-main.js`
+  );
+  const serverMapPath = path.resolve(
+    dir,
+    `.fusion/dist/production/server/server-main.js.map`
+  );
+  await cmd(`build --dir=${dir} --production`);
+  const clientFiles = await readdir(
+    path.resolve(dir, '.fusion/dist/production/client')
+  );
+  t.ok(
+    clientFiles.some(f => /client-main-(.*?).js$/.test(f)),
+    'includes a versioned client-main.js file'
+  );
+  t.ok(
+    clientFiles.some(f => /client-vendor-(.*?).js$/.test(f)),
+    'includes a versioned client-vendor.js file'
+  );
+  t.ok(await exists(serverEntryPath), 'Server Entry file gets compiled');
+  t.ok(
+    await exists(serverMapPath),
+    'Server Entry file sourcemap gets compiled'
+  );
+  t.end();
+});
+
 test('`fusion build` works in production with a CDN_URL', async t => {
   const dir = path.resolve(__dirname, '../fixtures/noop');
   const serverEntryPath = path.resolve(
