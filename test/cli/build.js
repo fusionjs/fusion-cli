@@ -65,7 +65,7 @@ test('`fusion build` works', async t => {
   t.end();
 });
 
-test.only('`fusion build` transpiles async middleware', async t => {
+test('`fusion build` transpiles async middleware', async t => {
   const dir = path.resolve(__dirname, '../fixtures/transpile-async-plugin');
   const serverEntryPath = path.resolve(
     dir,
