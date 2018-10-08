@@ -29,7 +29,7 @@
     "core-js": "^2.5.7",
     "enzyme-adapter-react-16": "^1.5.0",
     "enzyme-to-json": "^3.3.4",
-    "fast-async": "^6.3.8",
+    "fast-async": "7.0.6",
     "fusion-plugin-universal-events": "^1.2.0",
     "get-port": "^4.0.0",
     "http-proxy": "^1.17.0",
@@ -56,7 +56,7 @@
     "rimraf": "^2.6.2",
     "sade": "^1.4.1",
     "source-map-support": "^0.5.9",
-    "uglifyjs-webpack-plugin": "^1.3.0",
+    "uglifyjs-webpack-plugin": "^2.0.1",
     "webpack": "4.20.2",
     "webpack-hot-middleware": "^2.24.2",
     "winston": "^3.1.0"

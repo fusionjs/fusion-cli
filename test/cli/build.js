@@ -12,6 +12,7 @@ const fs = require('fs');
 const path = require('path');
 const test = require('tape');
 const {promisify} = require('util');
+const babel = require('@babel/core');
 const request = require('request-promise');
 const puppeteer = require('puppeteer');
 
@@ -76,9 +77,8 @@ test('`fusion build` transpiles async middleware', async t => {
     `.fusion/dist/production/server/server-main.js.map`
   );
   await cmd(`build --dir=${dir} --production`);
-  const clientFiles = await readdir(
-    path.resolve(dir, '.fusion/dist/production/client')
-  );
+  const distPath = path.resolve(dir, '.fusion/dist/production/client');
+  const clientFiles = await readdir(distPath);
   t.ok(
     clientFiles.some(f => /client-main-(.*?).js$/.test(f)),
     'includes a versioned client-main.js file'
@@ -92,6 +92,35 @@ test('`fusion build` transpiles async middleware', async t => {
     await exists(serverMapPath),
     'Server Entry file sourcemap gets compiled'
   );
+
+  clientFiles.filter(file => path.extname(file) === '.js').forEach(file => {
+    babel.transformFileSync(path.join(distPath, file), {
+      plugins: [
+        () => {
+          return {
+            visitor: {
+              FunctionDeclaration: path => {
+                if (path.node.async) {
+                  t.fail(`bundle has untranspiled async function`);
+                }
+              },
+              ArrowFunctionExpression: path => {
+                if (path.node.async) {
+                  t.fail('bundle has untranspiled async function');
+                }
+              },
+              FunctionExpression: path => {
+                if (path.node.async) {
+                  t.fail('bundle has untranspiled async function');
+                }
+              },
+            },
+          };
+        },
+      ],
+    });
+  });
+
   t.end();
 });
 
