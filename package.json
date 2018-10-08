@@ -30,7 +30,7 @@
     "enzyme-adapter-react-16": "^1.5.0",
     "enzyme-to-json": "^3.3.4",
     "fast-async": "^6.3.7",
-    "fusion-plugin-universal-events": "^1.1.0",
+    "fusion-plugin-universal-events": "^1.2.0",
     "get-port": "^4.0.0",
     "http-proxy": "^1.17.0",
     "iltorb": "^2.4.0",
