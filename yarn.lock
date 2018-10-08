@@ -1177,9 +1177,9 @@ babel-core@^7.0.0-bridge.0:
   version "7.0.0-bridge.0"
   resolved "https://registry.yarnpkg.com/babel-core/-/babel-core-7.0.0-bridge.0.tgz#95a492ddd90f9b4e9a4a1da14eb335b87b634ece"
 
-babel-eslint@9.0.0:
-  version "9.0.0"
-  resolved "https://registry.yarnpkg.com/babel-eslint/-/babel-eslint-9.0.0.tgz#7d9445f81ed9f60aff38115f838970df9f2b6220"
+babel-eslint@10.0.1:
+  version "10.0.1"
+  resolved "https://registry.yarnpkg.com/babel-eslint/-/babel-eslint-10.0.1.tgz#919681dc099614cd7d31d45c8908695092a1faed"
   dependencies:
     "@babel/code-frame" "^7.0.0"
     "@babel/parser" "^7.0.0"
@@ -2615,9 +2615,9 @@ eslint-plugin-cup@2.0.0:
   dependencies:
     globals "^11.5.0"
 
-eslint-plugin-flowtype@^2.50.0:
-  version "2.50.0"
-  resolved "https://registry.yarnpkg.com/eslint-plugin-flowtype/-/eslint-plugin-flowtype-2.50.0.tgz#953e262fa9b5d0fa76e178604892cf60dfb916da"
+eslint-plugin-flowtype@^2.50.3:
+  version "2.50.3"
+  resolved "https://registry.yarnpkg.com/eslint-plugin-flowtype/-/eslint-plugin-flowtype-2.50.3.tgz#61379d6dce1d010370acd6681740fd913d68175f"
   dependencies:
     lodash "^4.17.10"
 
@@ -2636,16 +2636,15 @@ eslint-plugin-import@^2.14.0:
     read-pkg-up "^2.0.0"
     resolve "^1.6.0"
 
-eslint-plugin-jest@^21.22.0:
-  version "21.22.0"
-  resolved "https://registry.yarnpkg.com/eslint-plugin-jest/-/eslint-plugin-jest-21.22.0.tgz#1b9e49b3e5ce9a3d0a51af4579991d517f33726e"
+eslint-plugin-jest@^21.24.1:
+  version "21.24.1"
+  resolved "https://registry.yarnpkg.com/eslint-plugin-jest/-/eslint-plugin-jest-21.24.1.tgz#aaf3c34e816f07add83d1e9c20696fdc31fac8dc"
 
-eslint-plugin-prettier@2.6.2:
-  version "2.6.2"
-  resolved "https://registry.yarnpkg.com/eslint-plugin-prettier/-/eslint-plugin-prettier-2.6.2.tgz#71998c60aedfa2141f7bfcbf9d1c459bf98b4fad"
+eslint-plugin-prettier@3.0.0:
+  version "3.0.0"
+  resolved "https://registry.yarnpkg.com/eslint-plugin-prettier/-/eslint-plugin-prettier-3.0.0.tgz#f6b823e065f8c36529918cdb766d7a0e975ec30c"
   dependencies:
-    fast-diff "^1.1.1"
-    jest-docblock "^21.0.0"
+    prettier-linter-helpers "^1.0.0"
 
 eslint-plugin-react@^7.11.1:
   version "7.11.1"
@@ -2679,15 +2678,15 @@ eslint-visitor-keys@^1.0.0:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/eslint-visitor-keys/-/eslint-visitor-keys-1.0.0.tgz#3f3180fb2e291017716acb4c9d6d5b5c34a6a81d"
 
-eslint@5.5.0:
-  version "5.5.0"
-  resolved "https://registry.yarnpkg.com/eslint/-/eslint-5.5.0.tgz#8557fcceab5141a8197da9ffd9904f89f64425c6"
+eslint@5.6.1:
+  version "5.6.1"
+  resolved "https://registry.yarnpkg.com/eslint/-/eslint-5.6.1.tgz#348134e32ccc09abb2df1bf282b3f6eed8c7b480"
   dependencies:
     "@babel/code-frame" "^7.0.0"
     ajv "^6.5.3"
     chalk "^2.1.0"
     cross-spawn "^6.0.5"
-    debug "^3.1.0"
+    debug "^4.0.1"
     doctrine "^2.1.0"
     eslint-scope "^4.0.0"
     eslint-utils "^1.3.1"
@@ -2960,9 +2959,9 @@ fast-deep-equal@^2.0.1:
   version "2.0.1"
   resolved "https://registry.yarnpkg.com/fast-deep-equal/-/fast-deep-equal-2.0.1.tgz#7b05218ddf9667bf7f370bf7fdb2cb15fdd0aa49"
 
-fast-diff@^1.1.1:
-  version "1.1.2"
-  resolved "https://registry.yarnpkg.com/fast-diff/-/fast-diff-1.1.2.tgz#4b62c42b8e03de3f848460b639079920695d0154"
+fast-diff@^1.1.2:
+  version "1.2.0"
+  resolved "https://registry.yarnpkg.com/fast-diff/-/fast-diff-1.2.0.tgz#73ee11982d86caaf7959828d519cfe927fac5f03"
 
 fast-glob@^2.0.2:
   version "2.2.2"
@@ -3132,9 +3131,9 @@ flat-cache@^1.2.1:
     graceful-fs "^4.1.2"
     write "^0.2.1"
 
-flow-bin@0.80.0:
-  version "0.80.0"
-  resolved "https://registry.yarnpkg.com/flow-bin/-/flow-bin-0.80.0.tgz#04cc1ee626a6f50786f78170c92ebe1745235403"
+flow-bin@0.82.0:
+  version "0.82.0"
+  resolved "https://registry.yarnpkg.com/flow-bin/-/flow-bin-0.82.0.tgz#fbec84c0d6cab7877565eca8214d655f3aefb8db"
 
 flush-write-stream@^1.0.0:
   version "1.0.3"
@@ -3255,23 +3254,24 @@ fusion-core@1.7.0:
     ua-parser-js "^0.7.17"
     uuid "^3.2.1"
 
-fusion-plugin-i18n-react@^1.0.4:
-  version "1.0.4"
-  resolved "https://registry.yarnpkg.com/fusion-plugin-i18n-react/-/fusion-plugin-i18n-react-1.0.4.tgz#4e32bd0d9baf42cdd5ed99ee5d780310828c0436"
+fusion-plugin-i18n-react@^1.1.0:
+  version "1.1.0"
+  resolved "https://registry.yarnpkg.com/fusion-plugin-i18n-react/-/fusion-plugin-i18n-react-1.1.0.tgz#a5198dcef8866d4c6ae08e3cce82b63aab12c101"
   dependencies:
-    fusion-plugin-i18n "^1.0.5"
-    prop-types "^15.6.1"
+    fusion-plugin-i18n "^1.1.1"
+    prop-types "^15.6.2"
 
-fusion-plugin-i18n@^1.0.5:
-  version "1.0.6"
-  resolved "https://registry.yarnpkg.com/fusion-plugin-i18n/-/fusion-plugin-i18n-1.0.6.tgz#eae8db836f48d0bd8d9358170c2f29deea21dc27"
+fusion-plugin-i18n@^1.1.1:
+  version "1.1.2"
+  resolved "https://registry.yarnpkg.com/fusion-plugin-i18n/-/fusion-plugin-i18n-1.1.2.tgz#351e712ebc4c55b3d5c9cc99dc884f1764fd188f"
   dependencies:
+    eslint-plugin-jest "^21.24.1"
     locale "^0.1.0"
-    rollup "^0.59.2"
+    rollup "^0.66.2"
 
-fusion-plugin-react-router@^1.3.0:
-  version "1.3.0"
-  resolved "https://registry.yarnpkg.com/fusion-plugin-react-router/-/fusion-plugin-react-router-1.3.0.tgz#02cf37519112f5d44b4b12cb1f4aad04c53f8a8b"
+fusion-plugin-react-router@^1.4.0:
+  version "1.4.0"
+  resolved "https://registry.yarnpkg.com/fusion-plugin-react-router/-/fusion-plugin-react-router-1.4.0.tgz#c7a79dc28300a94f2a602512d5d8d5aa6fb8e525"
   dependencies:
     history "^4.7.2"
     prop-types "^15.6.2"
@@ -3283,16 +3283,16 @@ fusion-plugin-universal-events@^1.2.0:
   dependencies:
     koa-bodyparser "4.2.1"
 
-fusion-react@1.3.0-0:
-  version "1.3.0-0"
-  resolved "https://registry.yarnpkg.com/fusion-react/-/fusion-react-1.3.0-0.tgz#4b81628045e9b99a621d24af75b8d5394663774e"
+fusion-react@1.3.0:
+  version "1.3.0"
+  resolved "https://registry.yarnpkg.com/fusion-react/-/fusion-react-1.3.0.tgz#5be3a32f82d71b2323d3c074d43a8beac0a9ca94"
   dependencies:
     prop-types "^15.6.2"
     react-is "^16.4.2"
 
-fusion-test-utils@^1.2.2:
-  version "1.2.2"
-  resolved "https://registry.yarnpkg.com/fusion-test-utils/-/fusion-test-utils-1.2.2.tgz#f1c72156012d4e0731875cd9b52d4ad426994a9b"
+fusion-test-utils@^1.2.3:
+  version "1.2.3"
+  resolved "https://registry.yarnpkg.com/fusion-test-utils/-/fusion-test-utils-1.2.3.tgz#b48fe0adc7896163bf9d05c6bf51d3e6cfd4e8aa"
   dependencies:
     assert "^1.4.1"
     koa "^2.4.1"
@@ -4299,10 +4299,6 @@ jest-diff@^23.6.0:
     diff "^3.2.0"
     jest-get-type "^22.1.0"
     pretty-format "^23.6.0"
-
-jest-docblock@^21.0.0:
-  version "21.2.0"
-  resolved "https://registry.yarnpkg.com/jest-docblock/-/jest-docblock-21.2.0.tgz#51529c3b30d5fd159da60c27ceedc195faf8d414"
 
 jest-docblock@^23.2.0:
   version "23.2.0"
@@ -5839,9 +5835,15 @@ preserve@^0.2.0:
   version "0.2.0"
   resolved "https://registry.yarnpkg.com/preserve/-/preserve-0.2.0.tgz#815ed1f6ebc65926f865b310c0713bcb3315ce4b"
 
-prettier@1.14.2:
-  version "1.14.2"
-  resolved "https://registry.yarnpkg.com/prettier/-/prettier-1.14.2.tgz#0ac1c6e1a90baa22a62925f41963c841983282f9"
+prettier-linter-helpers@^1.0.0:
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/prettier-linter-helpers/-/prettier-linter-helpers-1.0.0.tgz#d23d41fe1375646de2d0104d3454a3008802cf7b"
+  dependencies:
+    fast-diff "^1.1.2"
+
+prettier@1.14.3:
+  version "1.14.3"
+  resolved "https://registry.yarnpkg.com/prettier/-/prettier-1.14.3.tgz#90238dd4c0684b7edce5f83b0fb7328e48bd0895"
 
 pretty-format@^23.6.0:
   version "23.6.0"
@@ -6109,26 +6111,22 @@ react-dev-utils@^6.0.4:
     strip-ansi "4.0.0"
     text-table "0.2.0"
 
-react-dom@^16.5.1:
-  version "16.5.1"
-  resolved "https://registry.yarnpkg.com/react-dom/-/react-dom-16.5.1.tgz#29d0c5a01ed3b6b4c14309aa91af6ec4eb4f292c"
+react-dom@^16.5.2:
+  version "16.5.2"
+  resolved "https://registry.yarnpkg.com/react-dom/-/react-dom-16.5.2.tgz#b69ee47aa20bab5327b2b9d7c1fe2a30f2cfa9d7"
   dependencies:
     loose-envify "^1.1.0"
     object-assign "^4.1.1"
     prop-types "^15.6.2"
-    schedule "^0.4.0"
+    schedule "^0.5.0"
 
 react-error-overlay@^5.0.4:
   version "5.0.4"
   resolved "https://registry.yarnpkg.com/react-error-overlay/-/react-error-overlay-5.0.4.tgz#39cf184d770f98b65a2ee59a779d03b8d092b69e"
 
-react-is@^16.4.2:
+react-is@^16.4.2, react-is@^16.5.2:
   version "16.5.2"
   resolved "https://registry.yarnpkg.com/react-is/-/react-is-16.5.2.tgz#e2a7b7c3f5d48062eb769fcb123505eb928722e3"
-
-react-is@^16.5.1:
-  version "16.5.1"
-  resolved "https://registry.yarnpkg.com/react-is/-/react-is-16.5.1.tgz#c6e8734fd548a22e1cef4fd0833afbeb433b85ee"
 
 react-router-dom@^4.3.1:
   version "4.3.1"
@@ -6162,23 +6160,23 @@ react-test-renderer@^16.0.0-0:
     prop-types "^15.6.0"
     react-is "^16.4.2"
 
-react-test-renderer@^16.5.1:
-  version "16.5.1"
-  resolved "https://registry.yarnpkg.com/react-test-renderer/-/react-test-renderer-16.5.1.tgz#17f020fb0cf884cadebb5240d9d9c23452f18299"
+react-test-renderer@^16.5.2:
+  version "16.5.2"
+  resolved "https://registry.yarnpkg.com/react-test-renderer/-/react-test-renderer-16.5.2.tgz#92e9d2c6f763b9821b2e0b22f994ee675068b5ae"
   dependencies:
     object-assign "^4.1.1"
     prop-types "^15.6.2"
-    react-is "^16.5.1"
-    schedule "^0.4.0"
+    react-is "^16.5.2"
+    schedule "^0.5.0"
 
-react@^16.5.1:
-  version "16.5.1"
-  resolved "https://registry.yarnpkg.com/react/-/react-16.5.1.tgz#8cb8e9f8cdcb4bde41c9a138bfbf907e66132372"
+react@^16.5.2:
+  version "16.5.2"
+  resolved "https://registry.yarnpkg.com/react/-/react-16.5.2.tgz#19f6b444ed139baa45609eee6dc3d318b3895d42"
   dependencies:
     loose-envify "^1.1.0"
     object-assign "^4.1.1"
     prop-types "^15.6.2"
-    schedule "^0.4.0"
+    schedule "^0.5.0"
 
 read-pkg-up@^2.0.0:
   version "2.0.0"
@@ -6482,9 +6480,9 @@ ripemd160@^2.0.0, ripemd160@^2.0.1:
     hash-base "^3.0.0"
     inherits "^2.0.1"
 
-rollup@^0.59.2:
-  version "0.59.4"
-  resolved "https://registry.yarnpkg.com/rollup/-/rollup-0.59.4.tgz#6f80f7017c22667ff1bf3e62adf8624a44cc44aa"
+rollup@^0.66.2:
+  version "0.66.4"
+  resolved "https://registry.yarnpkg.com/rollup/-/rollup-0.66.4.tgz#8067b9638af82873b7fd644af9c3d72108ca4bab"
   dependencies:
     "@types/estree" "0.0.39"
     "@types/node" "*"
@@ -6562,9 +6560,9 @@ sax@^1.2.4, sax@~1.2.4:
   version "1.2.4"
   resolved "https://registry.yarnpkg.com/sax/-/sax-1.2.4.tgz#2816234e2378bddc4e5354fab5caa895df7100d9"
 
-schedule@^0.4.0:
-  version "0.4.0"
-  resolved "https://registry.yarnpkg.com/schedule/-/schedule-0.4.0.tgz#fa20cfd0bfbf91c47d02272fd7096780d3170bbb"
+schedule@^0.5.0:
+  version "0.5.0"
+  resolved "https://registry.yarnpkg.com/schedule/-/schedule-0.5.0.tgz#c128fffa0b402488b08b55ae74bb9df55cc29cc8"
   dependencies:
     object-assign "^4.1.1"
 
