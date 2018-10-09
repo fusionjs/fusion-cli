@@ -14,7 +14,6 @@ const path = require('path');
 const webpack = require('webpack');
 const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
 const ProgressBarPlugin = require('progress-bar-webpack-plugin');
-const HashOutputPlugin = require('webpack-plugin-hash-output');
 const webpackDevMiddleware = require('../lib/simple-webpack-dev-middleware');
 const CaseSensitivePathsPlugin = require('case-sensitive-paths-webpack-plugin');
 const {
@@ -41,6 +40,7 @@ const {DeferredState} = require('./shared-state-containers.js');
 const {
   translationsManifestContextKey,
   clientChunkMetadataContextKey,
+  devContextKey,
 } = require('./loaders/loader-context.js');
 const ClientChunkMetadataStateHydratorPlugin = require('./plugins/client-chunk-metadata-state-hydrator-plugin.js');
 const InstrumentedImportDependencyTemplatePlugin = require('./plugins/instrumented-import-dependency-template-plugin');
@@ -222,10 +222,6 @@ function getConfig({target, env, dir, watch, state}) {
           : path.resolve(appBase, info.absoluteResourcePath);
       },
     },
-    devServer: {
-      contentBase: '.',
-      hot: true,
-    },
     performance: {
       hints: false,
     },
@@ -331,6 +327,7 @@ function getConfig({target, env, dir, watch, state}) {
       target === 'node' &&
         new webpack.optimize.LimitChunkCountPlugin({maxChunks: 1}),
       new ProgressBarPlugin(),
+      new LoaderContextProviderPlugin(devContextKey, env !== 'production'),
       target === 'web'
         ? new ClientChunkMetadataStateHydratorPlugin(state.clientChunkMetadata)
         : new LoaderContextProviderPlugin(
@@ -392,8 +389,6 @@ function getConfig({target, env, dir, watch, state}) {
           banner: nodeEnvBanner,
         }),
       new webpack.EnvironmentPlugin({NODE_ENV: nodeEnv}),
-      // webpack chunkhash doesn't take into account uglify. This uses exact md5 hashing
-      target === 'web' && env === 'production' && new HashOutputPlugin(),
     ].filter(Boolean),
     optimization: {
       minimizer:

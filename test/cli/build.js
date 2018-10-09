@@ -12,6 +12,7 @@ const fs = require('fs');
 const path = require('path');
 const test = require('tape');
 const {promisify} = require('util');
+const babel = require('@babel/core');
 const request = require('request-promise');
 const puppeteer = require('puppeteer');
 
@@ -62,6 +63,64 @@ test('`fusion build` works', async t => {
     await exists(clientMainVendorMap),
     'Client vendor file sourcemap gets compiled'
   );
+  t.end();
+});
+
+test('`fusion build` transpiles async middleware', async t => {
+  const dir = path.resolve(__dirname, '../fixtures/transpile-async-plugin');
+  const serverEntryPath = path.resolve(
+    dir,
+    `.fusion/dist/production/server/server-main.js`
+  );
+  const serverMapPath = path.resolve(
+    dir,
+    `.fusion/dist/production/server/server-main.js.map`
+  );
+  await cmd(`build --dir=${dir} --production`);
+  const distPath = path.resolve(dir, '.fusion/dist/production/client');
+  const clientFiles = await readdir(distPath);
+  t.ok(
+    clientFiles.some(f => /client-main-(.*?).js$/.test(f)),
+    'includes a versioned client-main.js file'
+  );
+  t.ok(
+    clientFiles.some(f => /client-vendor-(.*?).js$/.test(f)),
+    'includes a versioned client-vendor.js file'
+  );
+  t.ok(await exists(serverEntryPath), 'Server Entry file gets compiled');
+  t.ok(
+    await exists(serverMapPath),
+    'Server Entry file sourcemap gets compiled'
+  );
+
+  clientFiles.filter(file => path.extname(file) === '.js').forEach(file => {
+    babel.transformFileSync(path.join(distPath, file), {
+      plugins: [
+        () => {
+          return {
+            visitor: {
+              FunctionDeclaration: path => {
+                if (path.node.async) {
+                  t.fail(`bundle has untranspiled async function`);
+                }
+              },
+              ArrowFunctionExpression: path => {
+                if (path.node.async) {
+                  t.fail('bundle has untranspiled async function');
+                }
+              },
+              FunctionExpression: path => {
+                if (path.node.async) {
+                  t.fail('bundle has untranspiled async function');
+                }
+              },
+            },
+          };
+        },
+      ],
+    });
+  });
+
   t.end();
 });
 
@@ -354,7 +413,64 @@ test('`fusion build/start with ROUTE_PREFIX and custom routes`', async t => {
     'TEST REQUEST',
     'strips route prefix correctly for deep path requests'
   );
+
+  const tokenRes = await request(
+    `http://localhost:${port}/test-prefix/server-token`
+  );
+  t.equal(tokenRes, '/test-prefix', 'server-side RoutePrefixToken is set');
+
+  const browser = await puppeteer.launch({
+    args: ['--no-sandbox', '--disable-setuid-sandbox'],
+  });
+  const page = await browser.newPage();
+  await page.goto(`http://localhost:${port}/test-prefix/ssr`, {
+    waitUntil: 'load',
+  });
+
+  const clientRoutePrefixTokenValue = await page.evaluate(() => {
+    // eslint-disable-next-line
+    return window.__client_route_prefix_token_value__;
+  });
+  t.equal(
+    clientRoutePrefixTokenValue,
+    '/test-prefix',
+    'RoutePrefixToken hydrated on client'
+  );
+
+  await browser.close();
+
   proc.kill();
+  t.end();
+});
+
+test('`fusion start` does not throw error on client when using route prefix', async t => {
+  const dir = path.resolve(__dirname, '../fixtures/noop');
+  await cmd(`build --dir=${dir} --production`);
+  const {proc, port} = await start(`--dir=${dir}`, {
+    env: Object.assign({}, process.env, {ROUTE_PREFIX: '/test-prefix'}),
+  });
+
+  const browser = await puppeteer.launch({
+    args: ['--no-sandbox', '--disable-setuid-sandbox'],
+  });
+  const page = await browser.newPage();
+
+  page.on('error', err => {
+    t.fail(`Client-side error: ${err}`);
+  });
+
+  page.on('pageerror', err => {
+    t.fail(`Client-side error: ${err}`);
+  });
+
+  await page.goto(`http://localhost:${port}/test-prefix/`, {
+    waitUntil: 'networkidle0',
+  });
+
+  await browser.close();
+
+  proc.kill();
+  t.pass('did not error');
   t.end();
 });
 
@@ -394,6 +510,16 @@ test('`fusion build` works in production', async t => {
     res.includes('src="/_static/client-vendor'),
     'includes a script reference to client-vendor'
   );
+
+  clientFiles.forEach(file => {
+    if (file.endsWith('.map')) {
+      t.ok(
+        clientFiles.includes(path.basename(file, '.map')),
+        'source map filename has same base as regular file'
+      );
+    }
+  });
+
   proc.kill();
   t.end();
 });
