@@ -398,8 +398,7 @@ test('`fusion build` works in production with default asset path and supplied RO
 test('`fusion build --production` works with gql', async t => {
   const dir = path.resolve(__dirname, '../fixtures/gql');
   let browser;
-  await 
-  await cmd(`build --dir=${dir} --production`);
+  await await cmd(`build --dir=${dir} --production`);
   const {proc, port} = await start(`--dir=${dir}`, {
     env: Object.assign({}, process.env, {NODE_ENV: 'production'}),
   });
