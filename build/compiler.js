@@ -18,7 +18,7 @@ const rimraf = require('rimraf');
 const {getEnv} = require('fusion-core');
 
 const webpackDevMiddleware = require('../lib/simple-webpack-dev-middleware');
-const getConfig = require('./get-webpack-config.js');
+const getWebpackConfig = require('./get-webpack-config.js');
 const {DeferredState} = require('./shared-state-containers.js');
 const loadFusionRC = require('./load-fusionrc.js');
 
@@ -90,15 +90,20 @@ function Compiler(
     clientChunkMetadata: new DeferredState(),
     i18nManifest: new DeferredState(),
   };
-
   const root = path.resolve(dir);
-
   const fusionConfig = loadFusionRC(root);
+  const appPkgJsonPath = path.join(root, 'package.json');
+  const legacyPkgConfig = fs.existsSync(appPkgJsonPath)
+    ? // $FlowFixMe
+      require(appPkgJsonPath)
+    : {};
+
+  const sharedOpts = {dir: root, watch, state, fusionConfig, legacyPkgConfig};
 
   const profiles = envs.map(env => {
     return [
-      getConfig({target: 'web', env, dir: root, watch, state, fusionConfig}),
-      getConfig({target: 'node', env, dir: root, watch, state, fusionConfig}),
+      getWebpackConfig({target: 'web', env, ...sharedOpts}),
+      getWebpackConfig({target: 'node', env, ...sharedOpts}),
     ];
   });
   const flattened = [].concat(...profiles);

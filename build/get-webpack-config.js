@@ -64,21 +64,29 @@ type WebpackConfigOpts = {
     i18nManifest: TranslationsManifestState,
   },
   fusionConfig: FusionRC,
+  legacyPkgConfig?: {
+    node?: Object
+  }
 };
 */
 
 function getWebpackConfig(opts /*: WebpackConfigOpts */) {
-  const {target, env, dir, watch, state, fusionConfig} = opts;
+  const {
+    target,
+    env,
+    dir,
+    watch,
+    state,
+    fusionConfig,
+    legacyPkgConfig = {},
+  } = opts;
   const main = 'src/main.js';
 
   if (!fs.existsSync(path.resolve(dir, main))) {
     throw new Error(`Project directory must contain a ${main} file`);
   }
 
-  const configPath = path.join(dir, 'package.json');
-  // $FlowFixMe
-  const configData = fs.existsSync(configPath) ? require(configPath) : {};
-  const {node} = configData;
+  const {node} = legacyPkgConfig;
 
   if (typeof node !== 'undefined') {
     // eslint-disable-next-line no-console
