@@ -19,8 +19,6 @@ const CaseSensitivePathsPlugin = require('case-sensitive-paths-webpack-plugin');
 const {
   zopfliWebpackPlugin,
   brotliWebpackPlugin,
-  //pngquantWebpackPlugin,
-  //guetzliWebpackPlugin,
   svgoWebpackPlugin,
 } = require('../lib/compression');
 const resolveFrom = require('resolve-from');
@@ -335,12 +333,9 @@ function getConfig({target, env, dir, watch, state}) {
             translationsManifestContextKey,
             state.i18nManifest
           ),
-      env === 'production' && zopfliWebpackPlugin, // gzip
-      // generate compressed files
-      env === 'production' && brotliWebpackPlugin, // brotli
-      // target === 'web' && env === 'production' && pngquantWebpackPlugin, // png TODO(#10): production server requires libpng-dev installed to use this
-      // target === 'web' && env === 'production' && guetzliWebpackPlugin, // jpg TODO(#10): guetzli also depends on libpng-dev for some reason
-      env === 'production' && svgoWebpackPlugin, // svg
+      env === 'production' && zopfliWebpackPlugin,
+      env === 'production' && brotliWebpackPlugin,
+      env === 'production' && svgoWebpackPlugin,
       // In development, skip the emitting phase on errors to ensure there are
       // no assets emitted that include errors. This fixes an issue with hot reloading
       // server side code and recovering from errors correctly. We only want to do this
