@@ -41,7 +41,6 @@ const {
 const ClientChunkMetadataStateHydratorPlugin = require('./plugins/client-chunk-metadata-state-hydrator-plugin.js');
 const InstrumentedImportDependencyTemplatePlugin = require('./plugins/instrumented-import-dependency-template-plugin');
 const I18nDiscoveryPlugin = require('./plugins/i18n-discovery-plugin.js');
-const loadFusionRC = require('./load-fusionrc.js');
 
 module.exports = getWebpackConfig;
 
@@ -50,6 +49,10 @@ import type {
   ClientChunkMetadataState,
   TranslationsManifestState,
 } from "./types.js";
+
+import type {
+  FusionRC
+} from "./load-fusionrc.js";
 
 type WebpackConfigOpts = {
   target: "node" | "web",
@@ -60,11 +63,12 @@ type WebpackConfigOpts = {
     clientChunkMetadata: ClientChunkMetadataState,
     i18nManifest: TranslationsManifestState,
   },
+  fusionConfig: FusionRC,
 };
 */
 
 function getWebpackConfig(opts /*: WebpackConfigOpts */) {
-  const {target, env, dir, watch, state} = opts;
+  const {target, env, dir, watch, state, fusionConfig} = opts;
   const main = 'src/main.js';
 
   if (target !== 'node' && target !== 'web') {
@@ -76,8 +80,6 @@ function getWebpackConfig(opts /*: WebpackConfigOpts */) {
   if (!fs.existsSync(path.resolve(dir, main))) {
     throw new Error(`Project directory must contain a ${main} file`);
   }
-
-  const fusionConfig = loadFusionRC(dir);
 
   const configPath = path.join(dir, 'package.json');
   // $FlowFixMe

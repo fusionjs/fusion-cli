@@ -12,15 +12,15 @@ const fs = require('fs');
 const path = require('path');
 
 const webpack = require('webpack');
-
-const webpackDevMiddleware = require('../lib/simple-webpack-dev-middleware');
-
-const getConfig = require('./get-webpack-config.js');
-const {DeferredState} = require('./shared-state-containers.js');
 const chalk = require('chalk');
 const webpackHotMiddleware = require('webpack-hot-middleware');
 const rimraf = require('rimraf');
 const {getEnv} = require('fusion-core');
+
+const webpackDevMiddleware = require('../lib/simple-webpack-dev-middleware');
+const getConfig = require('./get-webpack-config.js');
+const {DeferredState} = require('./shared-state-containers.js');
+const loadFusionRC = require('./load-fusionrc.js');
 
 const {assetPath} = getEnv();
 
@@ -93,10 +93,12 @@ function Compiler(
 
   const root = path.resolve(dir);
 
+  const fusionConfig = loadFusionRC(root);
+
   const profiles = envs.map(env => {
     return [
-      getConfig({target: 'web', env, dir: root, watch, state}),
-      getConfig({target: 'node', env, dir: root, watch, state}),
+      getConfig({target: 'web', env, dir: root, watch, state, fusionConfig}),
+      getConfig({target: 'node', env, dir: root, watch, state, fusionConfig}),
     ];
   });
   const flattened = [].concat(...profiles);
