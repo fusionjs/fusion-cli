@@ -7,7 +7,7 @@
  */
 /* eslint-env node */
 
-module.exports = function fileLoader(content /*: string */) {
+module.exports = function gqlLoader(content /*: string */) {
   // NOTE: For now, we are simply loading queries and schemas as strings.
   // However, we may wish to load a pre-parsed graphql AST, similar to how https://github.com/samsarahq/graphql-loader works.
   const result = `module.exports = ${JSON.stringify(content.toString())};`;
