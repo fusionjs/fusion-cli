@@ -71,12 +71,6 @@ function getWebpackConfig(opts /*: WebpackConfigOpts */) {
   const {target, env, dir, watch, state, fusionConfig} = opts;
   const main = 'src/main.js';
 
-  if (target !== 'node' && target !== 'web') {
-    throw new Error('Invalid target: must be `node` or `web`');
-  }
-  if (env !== 'production' && env !== 'development') {
-    throw new Error('Invalid name: must be `production` or `dev`');
-  }
   if (!fs.existsSync(path.resolve(dir, main))) {
     throw new Error(`Project directory must contain a ${main} file`);
   }
