@@ -411,7 +411,6 @@ test('`fusion build --production` works with gql', async t => {
       expectedSchema,
       'loads schema on server'
     );
-    // Spin up puppeteer to make runtime assertions on assetURLs
     browser = await puppeteer.launch({
       args: ['--no-sandbox', '--disable-setuid-sandbox'],
     });
