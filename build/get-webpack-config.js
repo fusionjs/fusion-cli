@@ -315,7 +315,7 @@ function getWebpackConfig(opts /*: WebpackConfigOpts */) {
       aliasFields: [target === 'web' && 'browser'].filter(Boolean),
       alias: {
         // we replace need to set the path to user application at build-time
-        __FRAMEWORK_SHARED_ENTRY__: path.resolve(dir, main),
+        __FUSION_ENTRY_PATH__: path.resolve(dir, main),
         __ENV__: env,
       },
     },
