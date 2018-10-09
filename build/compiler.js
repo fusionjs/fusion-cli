@@ -143,8 +143,6 @@ function getConfig({target, env, dir, watch, state}) {
         specOnly: false,
       });
 
-  const whitelist = ['fusion-cli/entries'];
-
   // NODE_ENV should be built as 'production' for everything except 'development'
   // and 'production' entries should both map to NODE_ENV='production'
   const nodeEnv = env === 'development' ? 'development' : 'production';
@@ -289,10 +287,7 @@ function getConfig({target, env, dir, watch, state}) {
     externals: [
       target === 'node' &&
         ((context, request, callback) => {
-          // bundle whitelisted packages
-          if (new RegExp(`^(${whitelist.join('|')})`).test(request)) {
-            return callback();
-          } else if (/^[@a-z\-0-9]+/.test(request)) {
+          if (/^[@a-z\-0-9]+/.test(request)) {
             // do not bundle external packages and those not whitelisted
             const absolutePath = resolveFrom.silent(context, request);
             if (absolutePath === null) {
