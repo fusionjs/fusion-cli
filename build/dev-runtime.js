@@ -27,6 +27,7 @@ function Lifecycle() {
   return {
     start: () => {
       state.started = true;
+      state.error = undefined;
       emitter.emit('started');
     },
     stop: () => {

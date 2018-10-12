@@ -12,6 +12,7 @@ const fs = require('fs');
 const path = require('path');
 const test = require('tape');
 const {promisify} = require('util');
+const babel = require('@babel/core');
 const request = require('request-promise');
 const puppeteer = require('puppeteer');
 
@@ -62,6 +63,64 @@ test('`fusion build` works', async t => {
     await exists(clientMainVendorMap),
     'Client vendor file sourcemap gets compiled'
   );
+  t.end();
+});
+
+test('`fusion build` transpiles async middleware', async t => {
+  const dir = path.resolve(__dirname, '../fixtures/transpile-async-plugin');
+  const serverEntryPath = path.resolve(
+    dir,
+    `.fusion/dist/production/server/server-main.js`
+  );
+  const serverMapPath = path.resolve(
+    dir,
+    `.fusion/dist/production/server/server-main.js.map`
+  );
+  await cmd(`build --dir=${dir} --production`);
+  const distPath = path.resolve(dir, '.fusion/dist/production/client');
+  const clientFiles = await readdir(distPath);
+  t.ok(
+    clientFiles.some(f => /client-main-(.*?).js$/.test(f)),
+    'includes a versioned client-main.js file'
+  );
+  t.ok(
+    clientFiles.some(f => /client-vendor-(.*?).js$/.test(f)),
+    'includes a versioned client-vendor.js file'
+  );
+  t.ok(await exists(serverEntryPath), 'Server Entry file gets compiled');
+  t.ok(
+    await exists(serverMapPath),
+    'Server Entry file sourcemap gets compiled'
+  );
+
+  clientFiles.filter(file => path.extname(file) === '.js').forEach(file => {
+    babel.transformFileSync(path.join(distPath, file), {
+      plugins: [
+        () => {
+          return {
+            visitor: {
+              FunctionDeclaration: path => {
+                if (path.node.async) {
+                  t.fail(`bundle has untranspiled async function`);
+                }
+              },
+              ArrowFunctionExpression: path => {
+                if (path.node.async) {
+                  t.fail('bundle has untranspiled async function');
+                }
+              },
+              FunctionExpression: path => {
+                if (path.node.async) {
+                  t.fail('bundle has untranspiled async function');
+                }
+              },
+            },
+          };
+        },
+      ],
+    });
+  });
+
   t.end();
 });
 
@@ -332,6 +391,39 @@ test('`fusion build` works in production with default asset path and supplied RO
     res.includes('src="/test-prefix/_static/client-vendor'),
     'includes a script reference to client-vendor'
   );
+  proc.kill();
+  t.end();
+});
+
+test('`fusion build --production` works with gql', async t => {
+  const dir = path.resolve(__dirname, '../fixtures/gql');
+  let browser;
+  await await cmd(`build --dir=${dir} --production`);
+  const {proc, port} = await start(`--dir=${dir}`, {
+    env: Object.assign({}, process.env, {NODE_ENV: 'production'}),
+  });
+  try {
+    const expectedSchema = fs
+      .readFileSync(path.resolve(dir, 'src/schema.gql'))
+      .toString();
+    t.equal(
+      await request(`http://localhost:${port}/schema`),
+      expectedSchema,
+      'loads schema on server'
+    );
+    browser = await puppeteer.launch({
+      args: ['--no-sandbox', '--disable-setuid-sandbox'],
+    });
+    const page = await browser.newPage();
+    await page.goto(`http://localhost:${port}/`, {waitUntil: 'load'});
+    const browserSchema = await page.evaluate(() => {
+      return typeof window !== undefined && window.schema; //eslint-disable-line
+    });
+    t.equal(browserSchema, expectedSchema, 'loads schema in the browser');
+  } catch (e) {
+    t.iferror(e);
+  }
+  await (browser && browser.close());
   proc.kill();
   t.end();
 });

@@ -6,7 +6,7 @@
  * @flow
  */
 
-/* eslint-env node */
+/* eslint-env node, browser */
 
 const fs = require('fs');
 const path = require('path');
@@ -49,6 +49,36 @@ test('`fusion dev --dir` works w/ relative dir', async t => {
   });
   proc.stderr.destroy(); // disconnect the piped socket to prevent the Node process from hanging
   proc.kill();
+});
+
+test('`fusion dev` works with gql', async t => {
+  const dir = path.resolve(__dirname, '../fixtures/gql');
+  let browser;
+  const {proc, port} = await dev(`--dir=${dir}`);
+  try {
+    const expectedSchema = fs
+      .readFileSync(path.resolve(dir, 'src/schema.gql'))
+      .toString();
+    t.equal(
+      await request(`http://localhost:${port}/schema`),
+      expectedSchema,
+      'loads schema on server'
+    );
+    browser = await puppeteer.launch({
+      args: ['--no-sandbox', '--disable-setuid-sandbox'],
+    });
+    const page = await browser.newPage();
+    await page.goto(`http://localhost:${port}/`, {waitUntil: 'load'});
+    const browserSchema = await page.evaluate(() => {
+      return typeof window !== undefined && window.schema; //eslint-disable-line
+    });
+    t.equal(browserSchema, expectedSchema, 'loads schema in the browser');
+  } catch (e) {
+    t.iferror(e);
+  }
+  await (browser && browser.close());
+  proc.kill();
+  t.end();
 });
 
 test('`fusion dev` works with assets', async t => {
@@ -147,6 +177,38 @@ test('`fusion dev` works with assetUrl and JSON assets', async t => {
       jsonDynamicContent,
       'success|success',
       'both assetURL and imported JSON works'
+    );
+  } catch (e) {
+    t.iferror(e);
+  }
+  await (browser && browser.close());
+  proc.kill();
+  t.end();
+});
+
+test('`fusion dev` works with fusionRC', async t => {
+  const dir = path.resolve(__dirname, '../fixtures/fusionrc');
+  let browser;
+  const {proc, port} = await dev(`--dir=${dir}`);
+
+  try {
+    browser = await puppeteer.launch({
+      args: ['--no-sandbox', '--disable-setuid-sandbox'],
+    });
+    const page = await browser.newPage();
+    await page.goto(`http://localhost:${port}/`, {
+      waitUntil: 'load',
+    });
+
+    const browserBufferContents = await page.evaluate(
+      // $FlowFixMe
+      () => window.__browser_buffer_test__ // eslint-disable-line
+    );
+
+    t.equal(
+      browserBufferContents,
+      'buffer',
+      'Buffer shim override in browser works'
     );
   } catch (e) {
     t.iferror(e);
@@ -495,6 +557,81 @@ test('`fusion dev` app with split translations integration (cached)', async t =>
     'renders first  split translation'
   );
 
+  await browser.close();
+  proc.kill();
+
+  t.end();
+});
+
+test('`fusion dev` proxy gracefully recovers from cached SSR errors', async t => {
+  const dir = path.resolve(__dirname, '../fixtures/server-startup-control');
+
+  async function waitForCompileToStart() {
+    // Once the Fusion.js application renders SSR error pages in the app
+    // we should leverage module.hot.addStatusHandler.
+    await new Promise(resolve => setTimeout(resolve, 1000));
+  }
+
+  // Startup the server and load the page
+  let {proc, port} = await dev(`--dir=${dir}`, {cwd: dir});
+  const browser = await puppeteer.launch({
+    args: ['--no-sandbox', '--disable-setuid-sandbox'],
+  });
+  const page = await browser.newPage();
+  await page.goto(`http://localhost:${port}/`, {waitUntil: 'load'});
+  let content = await page.content();
+  t.ok(content.includes('<div>HOME</div>'), 'app content exists');
+
+  // Introduce error
+  const homeFilePath = `${dir}/src/home.js`;
+  const homeFileContents = String(fs.readFileSync(homeFilePath));
+  const homeFileContentsWithError = `${homeFileContents}
+    HERE_IS_SSR_ERROR();`;
+  fs.writeFileSync(homeFilePath, homeFileContentsWithError);
+
+  // Reload page after compile, see redbox
+  await waitForCompileToStart();
+  await page.reload();
+  content = await page.content();
+  t.ok(content.includes('HERE_IS_SSR_ERROR is not defined'));
+
+  // Fix error, reload page. Ensure working state.
+  fs.writeFileSync(homeFilePath, homeFileContents);
+  await waitForCompileToStart();
+  await page.reload();
+  content = await page.content();
+  t.ok(
+    !content.includes('HERE_IS_SSR_ERROR is not defined'),
+    'Should not see error after fixing broken state'
+  );
+  t.ok(content.includes('<div>HOME</div>', 'Finds home content'));
+
+  // We should pause compilation here and explicitly restart it, possibly using babel & IPC.
+  // For now just make a non breaking change.
+  const nonBreakingContent = homeFileContents.replace(
+    'HOME',
+    'TRIGGER-BABEL-DELAY'
+  );
+  fs.writeFileSync(homeFilePath, nonBreakingContent);
+
+  // Reload page, ensure we don't get a redbox, and page is loading.
+  await waitForCompileToStart();
+  await page.reload();
+  content = await page.content();
+  t.ok(
+    !content.includes('HERE_IS_SSR_ERROR'),
+    'Should not find error content after reloading'
+  );
+
+  // Unpause compilation, ensure page loads.
+  await waitForCompileToStart();
+  t.ok(
+    content.includes('<div>TRIGGER-BABEL-DELAY</div>'),
+    'page should contain updated content'
+  );
+
+  // Restore files and clean-up
+  fs.writeFileSync(homeFilePath, homeFileContents);
   await browser.close();
   proc.kill();
 
