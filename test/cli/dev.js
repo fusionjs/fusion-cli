@@ -32,11 +32,12 @@ test('`fusion dev` works', async t => {
   t.end();
 });
 
-test.only('`fusion dev --dir` works w/ relative dir', async t => {
+test('`fusion dev --dir` works w/ relative dir', async t => {
   const dir = 'test/fixtures/noop'; // relative path to be tested
   const entryPath = `.fusion/dist/development/server/server-main.js`;
   const entry = path.resolve(dir, entryPath);
 
+  // $FlowFixMe
   const {proc, promise} = await dev(`--dir=${dir}`, {
     stdio: ['inherit', 'inherit', 'pipe'],
   });
