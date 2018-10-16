@@ -246,11 +246,11 @@ function getConfig({target, env, dir, watch, state}) {
           test: /\.jsx?$/,
           exclude: [
             // Blacklist mapbox-gl package because of issues with babel-loader and its AMD bundle
-            /node_modules\/mapbox-gl(\/.*?)*$/,
+            /node_modules\/mapbox-gl\//,
             // Blacklist known ES5 packages for build performance
-            /node_modules\/react-dom(\/.*?)*$/,
-            /node_modules\/react(\/.*?)*$/,
-            /node_modules\/core-js(\/.*?)*$/,
+            /node_modules\/react-dom\//,
+            /node_modules\/react\//,
+            /node_modules\/core-js\//,
           ],
           use: [
             {
@@ -497,18 +497,18 @@ function getStatsLogger({dir, logger, envs}) {
   };
 }
 
-/*::
 type CompilerType = {
   on: (type: any, callback: any) => any,
   start: (callback: any) => any,
   getMiddleware: () => any,
   clean: () => any,
 };
-*/
-
-function Compiler(
-  {dir = '.', envs = [], watch = false, logger = console} /*: any */
-) /*: CompilerType */ {
+function Compiler({
+  dir = '.',
+  envs = [],
+  watch = false,
+  logger = console,
+} /*: any */) /*: CompilerType */ {
   const state = {
     clientChunkMetadata: new DeferredState(),
     i18nManifest: new DeferredState(),
