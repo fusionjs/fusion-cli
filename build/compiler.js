@@ -497,18 +497,18 @@ function getStatsLogger({dir, logger, envs}) {
   };
 }
 
+/*::
 type CompilerType = {
   on: (type: any, callback: any) => any,
   start: (callback: any) => any,
   getMiddleware: () => any,
   clean: () => any,
 };
-function Compiler({
-  dir = '.',
-  envs = [],
-  watch = false,
-  logger = console,
-} /*: any */) /*: CompilerType */ {
+*/
+
+function Compiler(
+  {dir = '.', envs = [], watch = false, logger = console} /*: any */
+) /*: CompilerType */ {
   const state = {
     clientChunkMetadata: new DeferredState(),
     i18nManifest: new DeferredState(),
