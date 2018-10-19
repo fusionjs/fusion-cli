@@ -138,11 +138,7 @@ function getLoaderScript(ctx, {legacyUrls, modernUrls}) {
     var script = document.createElement('script');
     script.src = src;
     script.setAttribute("nonce", ${JSON.stringify(ctx.nonce)});
-    if (!window.__NOMODULE__) {
-      script.type = "module";
-    } else {
-      script.defer = true;
-    }
+    script.defer = true;
     if (script.src.indexOf(window.location.origin + '/') !== 0) {
       script.crossorigin = "anonymous";
     }
