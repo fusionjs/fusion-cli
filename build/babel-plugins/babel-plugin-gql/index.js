@@ -89,7 +89,7 @@ module.exports = function gqlPlugin(babel /*: Object */, state /*: Object */) {
         );
       } else {
         return t.callExpression(t.identifier('require'), [
-          t.stringLiteral(`__SECRET_GQL_LOADER__!${args[0].node.value}`),
+          t.stringLiteral(`__SECRET_GQL_LOADER__!${args[0].value}`),
         ]);
       }
     }
