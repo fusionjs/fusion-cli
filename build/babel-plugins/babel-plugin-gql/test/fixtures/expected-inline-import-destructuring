@@ -1,9 +1,0 @@
-import { gql } from 'fusion-apollo';
-import { gql as gqlOther } from 'gql';
-const path = './test';
-
-require("graphql-tag")(require("fs").readFileSync("/Users/giancarloanemone/dev/fusion-cli/build/babel-plugins/babel-plugin-gql/test/fixtures/file.graphql").toString());
-
-gqlOther(path);
-
-require("graphql-tag")(require("fs").readFileSync("/Users/giancarloanemone/dev/fusion-cli/build/babel-plugins/babel-plugin-gql/test/fixtures/file.graphql").toString());
