@@ -96,8 +96,8 @@ module.exports = function getBabelConfig(opts /*: BabelConfigOpts */) {
       esmodules: true,
     };
     envPresetOpts.include = [
+      // Classes must be transpiled due to the following bugs in Edge:
       // https://github.com/Microsoft/ChakraCore/issues/5030
-      'transform-shorthand-properties',
       // https://github.com/Microsoft/ChakraCore/issues/4663
       // https://github.com/babel/babel/issues/8019
       'transform-classes',
