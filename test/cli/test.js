@@ -228,12 +228,18 @@ test('`fusion test` coverage', async t => {
 
   const cmd = `require('${runnerPath}').run('node ${runnerPath} ${args}')`;
   const response = await exec(`node -e "${cmd}"`);
+
   t.equal(countTests(response.stderr), 2, 'ran 2 tests');
 
   // Look for something like coverage
   t.ok(response.stdout.includes('Uncovered Line #s'));
 
+  // This file is outside of src and should not be included in coverage
   t.ok(!response.stdout.includes('should-not-count-for-coverage.js'));
+
+  // Ignores generated files
+  t.ok(!response.stdout.includes('generated-file.js'));
+
   t.end();
 });
 

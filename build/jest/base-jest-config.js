@@ -50,5 +50,6 @@ module.exports = {
     '!**/__integration__/**',
     '!**/node_modules/**',
   ],
+  coveragePathIgnorePatterns: ['src/.*generated.*'],
   testResultsProcessor: require.resolve('./results-processor.js'),
 };
