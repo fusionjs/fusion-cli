@@ -81,7 +81,7 @@ test('`fusion dev` works with gql', async t => {
   t.end();
 });
 
-test.only('`fusion dev` works with assets', async t => {
+test('`fusion dev` works with assets', async t => {
   const dir = path.resolve(__dirname, '../fixtures/assets');
   const entryPath = path.resolve(
     dir,
