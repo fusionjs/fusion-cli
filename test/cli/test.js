@@ -105,13 +105,25 @@ test('`fusion test --testFolder=integration` runs correct tests', async t => {
   t.end();
 });
 
-test('`fusion test --testMatch=["**/__foo__/**.*js"]` runs correct tests', async t => {
+test('`fusion test --testMatch=**/__foo__/**/*js` runs correct tests', async t => {
   const dir = path.resolve(__dirname, '../fixtures/test-jest-app');
   const args = `test --dir=${dir} --configPath=../../../build/jest/jest-config.js --env=node --testMatch=**/__foo__/**/*.js`;
 
   const cmd = `require('${runnerPath}').run('node ${runnerPath} ${args}')`;
   const response = await exec(`node -e "${cmd}"`);
   t.equal(countTests(response.stderr), 1, 'ran 1 test');
+
+  t.end();
+});
+
+test('`fusion test --testMatch=**/__foo__/**/*js,**/__integration__/**/*.js` runs correct tests', async t => {
+  const dir = path.resolve(__dirname, '../fixtures/test-jest-app');
+  const args = `test --dir=${dir} --configPath=../../../build/jest/jest-config.js --env=node --testMatch=**/__foo__/**/*.js,**/__integration__/**/*.js`;
+
+  const cmd = `require('${runnerPath}').run('node ${runnerPath} ${args}')`;
+  const response = await exec(`node -e "${cmd}"`);
+
+  t.equal(countTests(response.stderr), 2, 'ran 2 tests');
 
   t.end();
 });

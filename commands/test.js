@@ -39,11 +39,7 @@ exports.run = async function(
     }
   });
 
-  if (
-    (testFolder !== '' && testMatch !== '') ||
-    (testFolder !== '' && testRegex !== '') ||
-    (testMatch !== '' && testRegex !== '')
-  ) {
+  if ([testFolder, testMatch, testRegex].filter(t => t !== '').length > 1) {
     throw new Error(
       'Only one of testMatch, testRegex and testFolder can be defined at one time'
     );
