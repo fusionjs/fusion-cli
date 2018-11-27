@@ -410,9 +410,9 @@ test('`fusion dev` CHUNK_ID instrumentation', async t => {
   const resA = await request(`http://localhost:${port}/test-a`);
   const resB = await request(`http://localhost:${port}/test-b`);
   const res = await request(`http://localhost:${port}/test`);
-  t.deepLooseEqual(JSON.parse(res), [2]);
-  t.deepLooseEqual(JSON.parse(resA), [0, 2]);
-  t.deepLooseEqual(JSON.parse(resB), [1, 2]);
+  t.deepLooseEqual(JSON.parse(res), [0]);
+  t.deepLooseEqual(JSON.parse(resA), [0, 1]);
+  t.deepLooseEqual(JSON.parse(resB), [0, 2]);
   proc.kill();
   t.end();
 });

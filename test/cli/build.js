@@ -195,7 +195,7 @@ test('`fusion build` app with dynamic imports chunk hashing', async t => {
   const dir = path.resolve(__dirname, '../fixtures/dynamic-import-app');
   await cmd(`build --dir=${dir} --production`);
 
-  const splitChunkId = 0;
+  const splitChunkId = 1;
   const distFiles = await getDistFiles(dir);
   const dynamicFileBundlePath = path.resolve(
     dir,
@@ -825,7 +825,7 @@ test('`fusion build` with dynamic imports', async t => {
   );
   t.deepEqual(
     testContent.chunkIds,
-    [[10002, 1], [10001, 0]],
+    [[10003, 0], [10004, 1]],
     'Chunk IDs are populated'
   );
 
@@ -851,8 +851,8 @@ test('`fusion build` with dynamic imports and group chunks', async t => {
   const resB = await request(`http://localhost:${port}/test-b`);
   const res = await request(`http://localhost:${port}/test`);
   t.deepLooseEqual(JSON.parse(res), [10003, 3]);
-  t.deepLooseEqual(JSON.parse(resA), [10001, 10003, 1, 3]);
-  t.deepLooseEqual(JSON.parse(resB), [10002, 10003, 2, 3]);
+  t.deepLooseEqual(JSON.parse(resA), [10003, 10004, 3, 4]);
+  t.deepLooseEqual(JSON.parse(resB), [10003, 10005, 3, 5]);
   proc.kill();
   t.end();
 });

@@ -52,8 +52,8 @@
     "sade": "^1.4.1",
     "source-map-support": "^0.5.9",
     "terser-webpack-plugin": "^1.1.0",
-    "webpack": "4.20.2",
-    "webpack-hot-middleware": "^2.24.2",
+    "webpack": "4.26.1",
+    "webpack-hot-middleware": "^2.24.3",
     "winston": "^3.1.0"
   },
   "devDependencies": {
