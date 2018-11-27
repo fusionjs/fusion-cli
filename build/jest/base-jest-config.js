@@ -8,30 +8,43 @@
 
 /* eslint-env node */
 
+const child_process = require('child_process');
+
 const matchField = process.env.TEST_REGEX ? 'testRegex' : 'testMatch';
 const matchValue = process.env.TEST_FOLDER
   ? [`**/${process.env.TEST_FOLDER || '__tests__'}/**/*.js`]
   : process.env.TEST_REGEX ||
     (process.env.TEST_MATCH || '**/__tests__/**/*.js').split(',');
 
-function getReactVersion() {
-  // $FlowFixMe
-  const meta = require(process.cwd() + '/package.json');
-  const react =
-    (meta.dependencies && meta.dependencies.react) ||
-    (meta.devDependencies && meta.devDependencies.react) ||
-    (meta.peerDependencies && meta.peerDependencies.react);
-  return react
-    .split('.')
-    .shift()
-    .match(/\d+/);
+function getGitRootDirectory() {
+  return child_process.execSync('git rev-parse --show-toplevel').toString().trim();
 }
-function getReactSetup() {
+
+function getReactVersion(packageDirectory) {
   try {
-    return [require.resolve(`./jest-framework-setup-${getReactVersion()}.js`)];
+    // $FlowFixMe
+    const meta = require(`${packageDirectory}/package.json`);
+    const react =
+      (meta.dependencies && meta.dependencies.react) ||
+      (meta.devDependencies && meta.devDependencies.react) ||
+      (meta.peerDependencies && meta.peerDependencies.react);
+    return react
+      .split('.')
+      .shift()
+      .match(/\d+/);
   } catch (e) {
-    return [];
+    return null;
   }
+}
+
+function getReactSetup() {
+  // Support monorepos by checking the local package file first and falling back to
+  // the git-root directory.
+  const reactVersion = getReactVersion(process.cwd()) || getReactVersion(getGitRootDirectory());
+  if (reactVersion) {
+    return [require.resolve(`./jest-framework-setup-${reactVersion}.js`)];
+  }
+  return [];
 }
 
 const reactSetup = getReactSetup();
