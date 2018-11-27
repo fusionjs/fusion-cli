@@ -96,33 +96,35 @@ test('`fusion build` transpiles async middleware', async t => {
   );
 
   const legacyFiles = clientFiles.filter(f => /client-legacy/.test(f));
-  legacyFiles.filter(file => path.extname(file) === '.js').forEach(file => {
-    babel.transformFileSync(path.join(distPath, file), {
-      plugins: [
-        () => {
-          return {
-            visitor: {
-              FunctionDeclaration: path => {
-                if (path.node.async) {
-                  t.fail(`bundle has untranspiled async function`);
-                }
+  legacyFiles
+    .filter(file => path.extname(file) === '.js')
+    .forEach(file => {
+      babel.transformFileSync(path.join(distPath, file), {
+        plugins: [
+          () => {
+            return {
+              visitor: {
+                FunctionDeclaration: path => {
+                  if (path.node.async) {
+                    t.fail(`bundle has untranspiled async function`);
+                  }
+                },
+                ArrowFunctionExpression: path => {
+                  if (path.node.async) {
+                    t.fail('bundle has untranspiled async function');
+                  }
+                },
+                FunctionExpression: path => {
+                  if (path.node.async) {
+                    t.fail('bundle has untranspiled async function');
+                  }
+                },
               },
-              ArrowFunctionExpression: path => {
-                if (path.node.async) {
-                  t.fail('bundle has untranspiled async function');
-                }
-              },
-              FunctionExpression: path => {
-                if (path.node.async) {
-                  t.fail('bundle has untranspiled async function');
-                }
-              },
-            },
-          };
-        },
-      ],
+            };
+          },
+        ],
+      });
     });
-  });
 
   t.end();
 });
@@ -473,7 +475,7 @@ test('`fusion build` app with split translations integration', async t => {
   await page.goto(`http://localhost:${port}/`, {waitUntil: 'load'});
   const content = await page.content();
   t.ok(
-    content.includes('<span>__MAIN_TRANSLATED__</span>'),
+    content.includes('__MAIN_TRANSLATED__'),
     'app content contains translated main chunk'
   );
   t.ok(

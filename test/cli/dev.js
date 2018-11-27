@@ -456,7 +456,7 @@ test('`fusion dev` app with split translations integration', async t => {
   await page.goto(`http://localhost:${port}/`, {waitUntil: 'load'});
   const content = await page.content();
   t.ok(
-    content.includes('<span>__MAIN_TRANSLATED__</span>'),
+    content.includes('__MAIN_TRANSLATED__'),
     'app content contains translated main chunk'
   );
   t.ok(
@@ -543,7 +543,7 @@ test('`fusion dev` app with split translations integration (cached)', async t =>
   await page.goto(`http://localhost:${port}/`, {waitUntil: 'load'});
   const content = await page.content();
   t.ok(
-    content.includes('<span>__MAIN_TRANSLATED__</span>'),
+    content.includes('__MAIN_TRANSLATED__'),
     'app content contains translated main chunk'
   );
 
