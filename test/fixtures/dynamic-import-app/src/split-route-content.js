@@ -2,8 +2,8 @@
 
 import React from 'react';
 
-const SplitRouteContent = function() {
-  return <div>split-route-content</div>;
+const SplitRouteContent = function({text}) {
+  return <div>{text}</div>;
 };
 
 export default SplitRouteContent;

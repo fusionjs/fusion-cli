@@ -7,7 +7,7 @@ import SplitRouteContent from './split-route-content';
 
 class SplitRoute extends Component<*, *> {
   render() {
-    return <SplitRouteContent />;
+    return <SplitRouteContent text={this.props.translate('some.translation')} />;
   }
 }
 

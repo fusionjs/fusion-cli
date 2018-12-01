@@ -1,0 +1,10 @@
+import React from 'react';
+import {withTranslations} from 'fusion-plugin-i18n-react';
+
+class MyClass extends React.Component {
+  render() {
+    return this.props.translate('some.translation')
+  }
+}
+
+export default withTranslations([])(MyClass);
