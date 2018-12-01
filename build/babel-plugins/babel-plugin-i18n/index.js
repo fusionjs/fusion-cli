@@ -21,12 +21,32 @@ type PluginOpts = {translationIds: Set<string>}
 
 function i18nPlugin(babel /*: Object */, {translationIds} /*: PluginOpts */) {
   const t /*: Object */ = babel.types;
-  const visitor = createModuleVisitor(
+  const moduleVisitor = createModuleVisitor(
     t,
     COMPONENT_IDENTIFIER,
     PACKAGE_NAME,
     refsHandler
   );
+
+  const propVisitor = {
+    CallExpression(path, state) {
+      const {callee} = path.node;
+
+      if (callee.name === 'translate' || (callee.property && callee.property.name === 'translate')) {
+
+        const errorMessage = 'The translate function must be called with a string literal';
+
+        const element = path.node.arguments[0];
+
+        if (!t.isStringLiteral(element)) {
+          throw new Error(errorMessage);
+        }
+
+        translationIds.add(element.value);
+        return;
+      }
+    }
+  };
 
   function refsHandler(t, context, refs = [], specifierName) {
     refs.forEach(refPath => {
@@ -75,5 +95,5 @@ function i18nPlugin(babel /*: Object */, {translationIds} /*: PluginOpts */) {
     });
   }
 
-  return {visitor};
+  return {visitor: {...moduleVisitor, ...propVisitor}};
 }
