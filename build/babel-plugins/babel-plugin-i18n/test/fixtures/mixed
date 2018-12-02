@@ -1,9 +1,21 @@
 import React from 'react';
-import {withTranslations} from 'fusion-plugin-i18n-react';
+import {withTranslations, Translate} from 'fusion-plugin-i18n-react';
 
 class MyClass extends React.Component {
+  renderSubFn({translate}) {
+    return (
+      <div>{translate('subfn.translation')}</div>
+    )
+  }
   render() {
-    return this.props.translate('prop.translation');
+    const {translate} = this.props;
+    return (
+      <div>
+        {this.props.translate('prop.translation')}
+        {this.renderSubFn({translate})}
+        <Translate id="jsx.translation" />
+      </div>
+    );
   }
 }
 

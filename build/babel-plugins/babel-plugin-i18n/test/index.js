@@ -14,33 +14,33 @@ const {transformFileSync} = require('@babel/core');
 
 const plugin = require('../');
 
- test('withTranslations string array', t => {
-   const translationIds = new Set();
-   const output = transformFileSync(
-     __dirname + '/fixtures/string-array',
-     {
-       plugins: [[plugin, {translationIds}]],
-     }
-   );
-   const expected = new Set([
-     'some.translation'
-   ]);
-   t.deepEqual(translationIds, expected, 'parsed string list');
-   t.end();
- });
+test('withTranslations string array', t => {
+  const translationIds = new Set();
+  const output = transformFileSync(
+    __dirname + '/fixtures/string-array',
+    {
+      plugins: ['@babel/transform-react-jsx', [plugin, {translationIds}]],
+    }
+  );
+  const expected = [
+    'some.translation'
+  ];
+  t.deepEqual(Array.from(translationIds), expected);
+  t.end();
+});
 
 test('translate prop', t => {
   const translationIds = new Set();
   const output = transformFileSync(
     __dirname + '/fixtures/translate-prop',
     {
-      plugins: [[plugin, {translationIds}]],
+      plugins: ['@babel/transform-react-jsx', [plugin, {translationIds}]],
     }
   );
-  const expected = new Set([
+  const expected = [
     'some.translation'
-  ]);
-  t.deepEqual(translationIds, expected, 'parsed string list');
+  ];
+  t.deepEqual(Array.from(translationIds), expected);
   t.end();
 });
 
@@ -49,39 +49,41 @@ test('translate prop destructured', t => {
   const output = transformFileSync(
     __dirname + '/fixtures/destructured',
     {
-      plugins: [[plugin, {translationIds}]],
+      plugins: ['@babel/transform-react-jsx', [plugin, {translationIds}]],
     }
   );
-  const expected = new Set([
+  const expected = [
     'some.translation'
-  ]);
-  t.deepEqual(translationIds, expected, 'parsed string list');
+  ];
+  t.deepEqual(Array.from(translationIds), expected);
   t.end();
 });
 
- test('mixed', t => {
-   const translationIds = new Set();
-   const output = transformFileSync(
-     __dirname + '/fixtures/mixed',
-     {
-       plugins: [[plugin, {translationIds}]],
-     }
-   );
-   const expected = new Set([
-     'prop.translation',
-     'array.translation',
-   ]);
-   t.deepEqual(translationIds, expected, 'parsed string list');
-   t.end();
- });
+test('mixed', t => {
+  const translationIds = new Set();
+  const output = transformFileSync(
+    __dirname + '/fixtures/mixed',
+    {
+      plugins: ['@babel/transform-react-jsx', [plugin, {translationIds}]],
+    }
+  );
+  const expected = [
+    'array.translation',
+    'jsx.translation',
+    'prop.translation',
+    'subfn.translation'
+  ];
+  t.deepEqual(Array.from(translationIds).sort(), expected);
+  t.end();
+});
 
- test('non-string arg', t => {
+test('non-string arg', t => {
   const translationIds = new Set();
   function output () {
     transformFileSync(
       __dirname + '/fixtures/non-string-arg',
       {
-        plugins: [[plugin, {translationIds}]],
+        plugins: ['@babel/transform-react-jsx', [plugin, {translationIds}]],
       }
     );
   };

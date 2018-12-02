@@ -21,32 +21,12 @@ type PluginOpts = {translationIds: Set<string>}
 
 function i18nPlugin(babel /*: Object */, {translationIds} /*: PluginOpts */) {
   const t /*: Object */ = babel.types;
-  const moduleVisitor = createModuleVisitor(
+  const visitor = createModuleVisitor(
     t,
     COMPONENT_IDENTIFIER,
     PACKAGE_NAME,
     refsHandler
   );
-
-  const propVisitor = {
-    CallExpression(path, state) {
-      const {callee} = path.node;
-
-      if (callee.name === 'translate' || (callee.property && callee.property.name === 'translate')) {
-
-        const errorMessage = 'The translate function must be called with a string literal';
-
-        const element = path.node.arguments[0];
-
-        if (!t.isStringLiteral(element)) {
-          throw new Error(errorMessage);
-        }
-
-        translationIds.add(element.value);
-        return;
-      }
-    }
-  };
 
   function refsHandler(t, context, refs = [], specifierName) {
     refs.forEach(refPath => {
@@ -56,14 +36,33 @@ function i18nPlugin(babel /*: Object */, {translationIds} /*: PluginOpts */) {
           const errorMessage =
             'The withTranslations hoc must be called with an array of string literal translation keys';
           if (!t.isArrayExpression(firstArg)) {
-            throw new Error(errorMessage);
+            throw refPath.buildCodeFrameError(errorMessage);
           }
           const elements = firstArg.elements;
           elements.forEach(element => {
             if (!t.isStringLiteral(element)) {
-              throw new Error(errorMessage);
+              throw refPath.buildCodeFrameError(errorMessage);
             }
             translationIds.add(element.value);
+          });
+          refPath.scope.path.traverse({
+            CallExpression(callPath) {
+              const {callee} = callPath.node;
+
+              if (callee.name === 'translate' || (callee.property && callee.property.name === 'translate')) {
+
+                const errorMessage = 'The translate function must be called with a string literal';
+
+                const element = callPath.node.arguments[0];
+
+                if (!t.isStringLiteral(element)) {
+                  throw callPath.buildCodeFrameError(errorMessage);
+                }
+
+                translationIds.add(element.value);
+                return;
+              }
+            }
           });
         }
         return;
@@ -85,7 +84,7 @@ function i18nPlugin(babel /*: Object */, {translationIds} /*: PluginOpts */) {
           return;
         }
         if (!t.isStringLiteral(attr.value)) {
-          throw new Error(
+          throw attr.buildCodeFrameError(
             'The translate component must have props.id be a string literal.'
           );
         }
@@ -95,5 +94,5 @@ function i18nPlugin(babel /*: Object */, {translationIds} /*: PluginOpts */) {
     });
   }
 
-  return {visitor: {...moduleVisitor, ...propVisitor}};
+  return {visitor};
 }
