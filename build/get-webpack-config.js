@@ -546,6 +546,7 @@ function getWebpackConfig(opts /*: WebpackConfigOpts */) {
                 cache: true, // default from webpack
                 parallel: true, // default from webpack
                 terserOptions: {
+                  safari10: true, // work around safari 10/11 bugs
                   compress: {
                     // typeofs: true (default) transforms typeof foo == "undefined" into foo === void 0.
                     // This mangles mapbox-gl creating an error when used alongside with window global mangling:
