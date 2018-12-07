@@ -28,7 +28,7 @@ declare var __webpack_public_path__: string;
 */
 
 /* eslint-disable-next-line */
-const SSRBodyTemplate = createPlugin/*:: <SSRBodyTemplateDepsType,SSRBodyTemplateType> */(
+const SSRBodyTemplate = createPlugin /*:: <SSRBodyTemplateDepsType,SSRBodyTemplateType> */(
   {
     deps: {
       criticalChunkIds: CriticalChunkIdsToken.optional,
@@ -119,9 +119,7 @@ const SSRBodyTemplate = createPlugin/*:: <SSRBodyTemplateDepsType,SSRBodyTemplat
             `<link rel="preload" href="${url}"${crossoriginAttr} as="script"/>`
           );
           criticalChunkScripts.push(
-            `<script defer src="${url}" nonce="${
-              ctx.nonce
-            }"${crossoriginAttr}></script>`
+            `<script src="${url}" nonce="${ctx.nonce}"${crossoriginAttr}></script>`
           );
         }
 
