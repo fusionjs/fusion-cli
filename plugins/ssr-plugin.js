@@ -115,9 +115,6 @@ const SSRBodyTemplate = createPlugin /*:: <SSRBodyTemplateDepsType,SSRBodyTempla
           const crossoriginAttr = url.startsWith(__webpack_public_path__)
             ? ''
             : ' crossorigin="anonymous"';
-          preloadHints.push(
-            `<link rel="preload" href="${url}"${crossoriginAttr} as="script"/>`
-          );
           criticalChunkScripts.push(
             `<script src="${url}" nonce="${ctx.nonce}"${crossoriginAttr}></script>`
           );
