@@ -1,6 +1,6 @@
 # Progressively enhanced bundles
 
-Fusion compiles two client bundles, an ES2015+ build for modern browsers and an ES5 build for legacy browsers.
+Fusion compiles two client bundles, an ES2015+ build for modern browsers and an ES5 build for legacy browsers. This allows for a lightweight build with fewer polyfills and transpilation artifacts to be served to browsers that support those features, improving load, parse, and execution performance.
 
 Based on user agent, Fusion serves the browser the appropriate build.
 
