@@ -1,4 +1,5 @@
 /* @flow */
+/* eslint-env node */
 
 // Based off https://labs.contactually.com/parallelizing-jest-across-multiple-ci-containers-551e7d3e4cb0
 
