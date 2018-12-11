@@ -42,70 +42,70 @@ steps:
         run: fusion-cli-node-last
     agents:
       queue: workers
-  - name: ':node: :white_check_mark:' worker 0
+  - name: ':node: :white_check_mark: worker 0'
     command: .buildkite/nodeTests 0
     plugins:
       'docker-compose#v1.7.0':
         run: fusion-cli
     agents:
       queue: workers
-  - name: ':node: :white_check_mark: node8' worker 0
+  - name: ':node: :white_check_mark: node8 worker 0'
     command: .buildkite/nodeTests 0
     plugins:
       'docker-compose#v1.7.0':
         run: fusion-cli-node-last
     agents:
       queue: workers
-  - name: ':node: :white_check_mark:' worker 1
+  - name: ':node: :white_check_mark: worker 1'
     command: .buildkite/nodeTests 1
     plugins:
       'docker-compose#v1.7.0':
         run: fusion-cli
     agents:
       queue: workers
-  - name: ':node: :white_check_mark: node8' worker 1
+  - name: ':node: :white_check_mark: node8 worker 1'
     command: .buildkite/nodeTests 1
     plugins:
       'docker-compose#v1.7.0':
         run: fusion-cli-node-last
     agents:
       queue: workers
-  - name: ':node: :white_check_mark:' worker 2
+  - name: ':node: :white_check_mark: worker 2'
     command: .buildkite/nodeTests 2
     plugins:
       'docker-compose#v1.7.0':
         run: fusion-cli
     agents:
       queue: workers
-  - name: ':node: :white_check_mark: node8' worker 2
+  - name: ':node: :white_check_mark: node8 worker 2'
     command: .buildkite/nodeTests 2
     plugins:
       'docker-compose#v1.7.0':
         run: fusion-cli-node-last
     agents:
       queue: workers
-  - name: ':node: :white_check_mark:' worker 3
+  - name: ':node: :white_check_mark: worker 3'
     command: .buildkite/nodeTests 3
     plugins:
       'docker-compose#v1.7.0':
         run: fusion-cli
     agents:
       queue: workers
-  - name: ':node: :white_check_mark: node8' worker 3
+  - name: ':node: :white_check_mark: node8 worker 3'
     command: .buildkite/nodeTests 3
     plugins:
       'docker-compose#v1.7.0':
         run: fusion-cli-node-last
     agents:
       queue: workers
-  - name: ':node: :white_check_mark:' worker 4
+  - name: ':node: :white_check_mark: worker 4'
     command: .buildkite/nodeTests 4
     plugins:
       'docker-compose#v1.7.0':
         run: fusion-cli
     agents:
       queue: workers
-  - name: ':node: :white_check_mark: node8' worker 4
+  - name: ':node: :white_check_mark: node8 worker 4'
     command: .buildkite/nodeTests 4
     plugins:
       'docker-compose#v1.7.0':
