@@ -12,4 +12,4 @@ test('`fusion dev` server render error', async () => {
   const {res, proc} = await dev(`--dir=${dir}`);
   t.ok(res.includes('server-render-error'));
   proc.kill();
-});
+}, 60000);
