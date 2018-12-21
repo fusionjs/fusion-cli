@@ -72,6 +72,8 @@ function getCompiler(opts) {
   config.output.filename = SW_OUTPUT_FILENAME;
   // $FlowFixMe
   config.output.library = SW_IDENTIFIER;
+  // $FlowFixMe
+  config.output.libraryExport = 'default';
   config.output.path = '/';
   // $FlowFixMe
   config.entry = './src/sw.js';
@@ -82,5 +84,7 @@ function getCompiler(opts) {
 
 // Second-order templating function
 function getSWTemplateFnSource(swBundle) {
-  return `module.exports = (...params) => \`${swBundle};${SW_IDENTIFIER}(...\${JSON.stringify(params)})\``;
+  return `module.exports = (...params) => "${JSON.stringify(
+    swBundle.toString()
+  ).slice(1, -1)};${SW_IDENTIFIER}(..." + JSON.stringify(params) + ")"`;
 }
