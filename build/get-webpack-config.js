@@ -231,8 +231,8 @@ function getWebpackConfig(opts /*: WebpackConfigOpts */) {
         runtime === 'server'
           ? 'server-main.js'
           : dev
-            ? 'client-[name].js'
-            : 'client-[name]-[chunkhash].js',
+          ? 'client-[name].js'
+          : 'client-[name]-[chunkhash].js',
       libraryTarget: runtime === 'server' ? 'commonjs2' : 'var',
       // This is the recommended default.
       // See https://webpack.js.org/configuration/output/#output-sourcemapfilename
@@ -284,6 +284,7 @@ function getWebpackConfig(opts /*: WebpackConfigOpts */) {
                       // Explictly only transpile user source code as well as fusion-cli entry files
                       path.join(dir, 'src'),
                       /fusion-cli\/entries/,
+                      /fusion-cli\/plugins/,
                     ],
                     ...babelOverrides,
                   },
@@ -313,6 +314,7 @@ function getWebpackConfig(opts /*: WebpackConfigOpts */) {
                       // Explictly only transpile user source code as well as fusion-cli entry files
                       path.join(dir, 'src'),
                       /fusion-cli\/entries/,
+                      /fusion-cli\/plugins/,
                     ],
                     ...babelOverrides,
                   },
@@ -342,6 +344,7 @@ function getWebpackConfig(opts /*: WebpackConfigOpts */) {
                       // Explictly only transpile user source code as well as fusion-cli entry files
                       path.join(dir, 'src'),
                       /fusion-cli\/entries/,
+                      /fusion-cli\/plugins/,
                     ],
                     ...legacyBabelOverrides,
                   },
@@ -445,7 +448,7 @@ function getWebpackConfig(opts /*: WebpackConfigOpts */) {
       new InstrumentedImportDependencyTemplatePlugin(
         runtime !== 'client'
           ? // Server
-            state.clientChunkMetadata
+            state.mergedClientChunkMetadata
           : /**
              * Client
              * Don't wait for the client manifest on the client.

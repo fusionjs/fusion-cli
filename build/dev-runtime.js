@@ -81,12 +81,13 @@ module.exports.DevelopmentRuntime = function(
     server: null,
     proc: null,
     proxy: null,
-    childPortP: getPort(),
   };
 
   this.run = async function reloadProc() {
-    const childPort = await state.childPortP;
+    const childPort = await getPort();
     const command = `
+      process.on('SIGTERM', () => process.exit());
+
       const fs = require('fs');
       const path = require('path');
       const chalk = require('chalk');
@@ -133,10 +134,19 @@ module.exports.DevelopmentRuntime = function(
     return new Promise((resolve, reject) => {
       function handleChildServerCrash(err) {
         lifecycle.stop();
+        killProc();
         reject(err);
       }
       const args = ['-e', command];
       if (debug) args.push('--inspect-brk');
+
+      state.proxy = httpProxy.createProxyServer({
+        target: {
+          host: 'localhost',
+          port: childPort,
+        },
+      });
+
       // $FlowFixMe
       state.proc = spawn('node', args, {
         cwd: path.resolve(process.cwd(), dir),
@@ -170,18 +180,13 @@ module.exports.DevelopmentRuntime = function(
       state.proc.kill();
       state.proc = null;
     }
+    if (state.proxy) {
+      state.proxy.close();
+      state.proxy = null;
+    }
   }
 
   this.start = async function start() {
-    const childPort = await state.childPortP;
-
-    state.proxy = httpProxy.createProxyServer({
-      target: {
-        host: 'localhost',
-        port: childPort,
-      },
-    });
-
     // $FlowFixMe
     state.server = http.createServer((req, res) => {
       middleware(req, res, async () => {
@@ -234,10 +239,6 @@ module.exports.DevelopmentRuntime = function(
     if (state.server) {
       state.server.close();
       state.server = null; // ensure we can call .run() again after stopping
-    }
-    if (state.proxy) {
-      state.proxy.close();
-      state.proxy = null;
     }
   };
 
