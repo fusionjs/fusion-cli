@@ -84,7 +84,7 @@ function getCompiler(opts) {
 
 // Second-order templating function
 function getSWTemplateFnSource(swBundle) {
-  return `module.exports = (...params) => "${JSON.stringify(
+  return `export const swTemplate = (...params) => "${JSON.stringify(
     swBundle.toString()
   ).slice(1, -1)};${SW_IDENTIFIER}(..." + JSON.stringify(params) + ")"`;
 }
