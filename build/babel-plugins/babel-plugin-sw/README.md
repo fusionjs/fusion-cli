@@ -2,11 +2,11 @@
 
 Before:
 ```
-import {syncChunkPaths} from 'framework';
-syncChunkPaths();
+import {swTemplate} from 'fusion-cli/sw';
+swTemplate();
 ```
 After:
 ```
-import {syncChunkPaths} from 'framework';
-syncChunkPaths(require('__SECRET_SYNC_CHUNK_PATHS_LOADER__!'));
+import {swTemplate} from '__SECRET_SW_LOADER__!';
+swTemplate();
 ```
