@@ -42,7 +42,7 @@ exports.run = async function(
   await new Promise((resolve, reject) => {
     compiler.start((err, stats) => {
       if (err || stats.hasErrors()) {
-        return reject(err || new Error('Compiler stats included errors.'));
+        return reject(err || new Error(`Compiler stats included errors.\n${stats.toJson('verbose')}`));
       }
       return resolve();
     });
