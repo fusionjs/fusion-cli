@@ -22,7 +22,6 @@ const {
   svgoWebpackPlugin,
 } = require('../lib/compression');
 const resolveFrom = require('resolve-from');
-const getBabelConfig = require('./get-babel-config.js');
 const LoaderContextProviderPlugin = require('./plugins/loader-context-provider-plugin.js');
 const ChildCompilationPlugin = require('./plugins/child-compilation-plugin.js');
 const {
@@ -105,84 +104,6 @@ function getWebpackConfig(opts /*: WebpackConfigOpts */) {
 
   const runtime = COMPILATIONS[id];
   const env = dev ? 'development' : 'production';
-
-  const babelConfig = fusionConfig.experimentalCompile
-    ? getBabelConfig({
-        dev: dev,
-        fusionTransforms: true,
-        assumeNoImportSideEffects: fusionConfig.assumeNoImportSideEffects,
-        target: runtime === 'server' ? 'node-bundled' : 'browser-modern',
-        specOnly: false,
-        plugins:
-          fusionConfig.babel && fusionConfig.babel.plugins
-            ? fusionConfig.babel.plugins
-            : [],
-        presets:
-          fusionConfig.babel && fusionConfig.babel.presets
-            ? fusionConfig.babel.presets
-            : [],
-      })
-    : getBabelConfig({
-        target: runtime === 'server' ? 'node-bundled' : 'browser-modern',
-        specOnly: true,
-        plugins:
-          fusionConfig.babel && fusionConfig.babel.plugins
-            ? fusionConfig.babel.plugins
-            : [],
-        presets:
-          fusionConfig.babel && fusionConfig.babel.presets
-            ? fusionConfig.babel.presets
-            : [],
-      });
-
-  const babelOverrides = fusionConfig.experimentalCompile
-    ? {}
-    : getBabelConfig({
-        dev: dev,
-        fusionTransforms: true,
-        assumeNoImportSideEffects: fusionConfig.assumeNoImportSideEffects,
-        target: runtime === 'server' ? 'node-bundled' : 'browser-modern',
-        specOnly: false,
-      });
-
-  const legacyBabelConfig = fusionConfig.experimentalCompile
-    ? getBabelConfig({
-        dev: dev,
-        fusionTransforms: true,
-        assumeNoImportSideEffects: fusionConfig.assumeNoImportSideEffects,
-        target: runtime === 'server' ? 'node-bundled' : 'browser-legacy',
-        specOnly: false,
-        plugins:
-          fusionConfig.babel && fusionConfig.babel.plugins
-            ? fusionConfig.babel.plugins
-            : [],
-        presets:
-          fusionConfig.babel && fusionConfig.babel.presets
-            ? fusionConfig.babel.presets
-            : [],
-      })
-    : getBabelConfig({
-        target: runtime === 'server' ? 'node-bundled' : 'browser-legacy',
-        specOnly: true,
-        plugins:
-          fusionConfig.babel && fusionConfig.babel.plugins
-            ? fusionConfig.babel.plugins
-            : [],
-        presets:
-          fusionConfig.babel && fusionConfig.babel.presets
-            ? fusionConfig.babel.presets
-            : [],
-      });
-
-  const legacyBabelOverrides = fusionConfig.experimentalCompile
-    ? {}
-    : getBabelConfig({
-        dev: dev,
-        fusionTransforms: true,
-        assumeNoImportSideEffects: fusionConfig.assumeNoImportSideEffects,
-        target: runtime === 'server' ? 'node-bundled' : 'browser-legacy',
-        specOnly: false,
-      });
 
   return {
     name: runtime,
@@ -275,21 +196,14 @@ function getWebpackConfig(opts /*: WebpackConfigOpts */) {
             {
               loader: babelLoader.path,
               options: {
-                ...babelConfig,
-                /**
-                 * Fusion-specific transforms (not applied to node_modules)
-                 */
-                overrides: [
-                  {
-                    include: [
-                      // Explictly only transpile user source code as well as fusion-cli entry files
-                      path.join(dir, 'src'),
-                      /fusion-cli\/entries/,
-                      /fusion-cli\/plugins/,
-                    ],
-                    ...babelOverrides,
-                  },
-                ],
+                legacy: false,
+                dir,
+                experimentalCompile: fusionConfig.experimentalCompile,
+                assumeNoImportSideEffects:
+                  fusionConfig.assumeNoImportSideEffects,
+                dev,
+                runtime,
+                fusionBabelConfig: fusionConfig.babel,
               },
             },
           ],
@@ -305,21 +219,14 @@ function getWebpackConfig(opts /*: WebpackConfigOpts */) {
             {
               loader: babelLoader.path,
               options: {
-                ...babelConfig,
-                /**
-                 * Fusion-specific transforms (not applied to node_modules)
-                 */
-                overrides: [
-                  {
-                    include: [
-                      // Explictly only transpile user source code as well as fusion-cli entry files
-                      path.join(dir, 'src'),
-                      /fusion-cli\/entries/,
-                      /fusion-cli\/plugins/,
-                    ],
-                    ...babelOverrides,
-                  },
-                ],
+                legacy: false,
+                dir,
+                experimentalCompile: fusionConfig.experimentalCompile,
+                assumeNoImportSideEffects:
+                  fusionConfig.assumeNoImportSideEffects,
+                dev,
+                runtime,
+                fusionBabelConfig: fusionConfig.babel,
               },
             },
           ],
@@ -335,21 +242,14 @@ function getWebpackConfig(opts /*: WebpackConfigOpts */) {
             {
               loader: babelLoader.path,
               options: {
-                ...legacyBabelConfig,
-                /**
-                 * Fusion-specific transforms (not applied to node_modules)
-                 */
-                overrides: [
-                  {
-                    include: [
-                      // Explictly only transpile user source code as well as fusion-cli entry files
-                      path.join(dir, 'src'),
-                      /fusion-cli\/entries/,
-                      /fusion-cli\/plugins/,
-                    ],
-                    ...legacyBabelOverrides,
-                  },
-                ],
+                legacy: true,
+                dir,
+                experimentalCompile: fusionConfig.experimentalCompile,
+                assumeNoImportSideEffects:
+                  fusionConfig.assumeNoImportSideEffects,
+                dev,
+                runtime,
+                fusionBabelConfig: fusionConfig.babel,
               },
             },
           ],

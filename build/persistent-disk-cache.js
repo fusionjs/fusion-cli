@@ -26,7 +26,7 @@ module.exports = class PersistentDiskCache /*::<T>*/ {
   constructor(cacheDirectory /*:string*/) {
     this.cacheDirectory = cacheDirectory;
   }
-  async get(cacheKey /*: string*/, thunk /*: () => T */) {
+  async get(cacheKey /*: string*/, thunk /*: () => Promise<T> */) {
     const filepath = getFilePath(this.cacheDirectory, cacheKey);
 
     try {
@@ -35,7 +35,7 @@ module.exports = class PersistentDiskCache /*::<T>*/ {
       // Simply ignore cache if read fails
     }
 
-    const result = thunk();
+    const result = await thunk();
 
     try {
       await makeDir(this.cacheDirectory);
