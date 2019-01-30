@@ -54,19 +54,40 @@ async function loader(
 ) {
   if (!cleanup) {
     cleanup = true;
+
     this._compiler.hooks.done.tap('babel-loader', () => {
+      // console.log('DONE!!');
       if (worker) {
+        // console.log('ending worker');
         worker.end();
         worker = void 0;
       }
       // console.log('clear worker');
     });
+    this._compilation.hooks.finishModules.tap('babel-loader', () => {
+      // console.log('finishModules');
+      // console.log('clear worker');
+    });
   }
 
   if (!worker) {
-    worker = new Worker(require.resolve('./babel-worker.js'));
-    worker.getStdout().pipe(process.stdout);
-    worker.getStderr().pipe(process.stderr);
+    worker = new Worker(require.resolve('./babel-worker.js'), {
+      numWorkers: 1,
+      computeWorkerKey: (method, source, optionsA, query) => {
+        return optionsA.filename;
+      },
+    });
+    // console.log('test!!');
+    let out = worker.getStdout();
+    // out.on('data', () => {
+    //   console.log('data');
+    // });
+    out.pipe(process.stderr);
+    let err = worker.getStderr();
+    // err.on('data', () => {
+    //   console.log('err data');
+    // });
+    err.pipe(process.stderr);
   }
 
   const filename = this.resourcePath;
@@ -99,8 +120,14 @@ async function loader(
 
   const result = await diskCache.get(cacheKey, async () => {
     // console.log('before');
+
     // $FlowFixMe
+    // if (optionsA.filename.includes('es2017')) {
+    //   console.log('\n' + optionsA.filename + ' [REQUEST]');
+    // }
+
     const workerResult = await worker.transform(source, optionsA, this.query);
+    // console.log('\n' + optionsA.filename + ' [COMPLETE]');
     // console.log('DONE!!');
     return workerResult;
   });
@@ -112,8 +139,11 @@ async function loader(
       discoveryState.set(filename, new Set(metadata.translationIds));
     }
 
+    // console.log(filename, 'DONE');
     return [code, map];
   }
+
+  // console.log(filename, 'DONE');
 
   // If the file was ignored, pass through the original content.
   return [source, inputSourceMap];

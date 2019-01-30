@@ -18,6 +18,8 @@ const TranslationsExtractor = require('../babel-plugins/babel-plugin-i18n');
 import type {TranslationsDiscoveryContext} from "./loader-context.js";
 */
 
+const cache = {};
+
 class LoaderError extends Error {
   /*::
   hideStack: boolean
@@ -32,12 +34,17 @@ class LoaderError extends Error {
   }
 }
 
+// let isRightWorker = false;
+
 exports.transform = function transform(
   source /*: string */,
   optionsA /*: any */,
   query /*: any */
 ) {
   let metadata /*: {translationIds?: Array<string>} */ = {};
+
+  // console.log('HEY!!!');
+  // process.stdout.write('yoo');
 
   const loaderOptions = loaderUtils.getOptions({query});
 
@@ -72,9 +79,27 @@ exports.transform = function transform(
 };
 
 function transform2(source, options) {
+  const filename = options.filename;
+
+  // if (filename.includes('es2017')) {
+  //   console.log('inner', filename);
+  // }
+
+  let ast;
+
+  // console.log(filename);
+  if (cache[filename]) {
+    ast = cache[filename];
+    // console.log('cache HIT! ' + filename);
+  } else {
+    ast = babel.parseSync(source, options);
+    cache[filename] = ast;
+    // console.log('cache miss' + filename);
+  }
+
   let result;
   try {
-    result = babel.transformSync(source, options);
+    result = babel.transformFromAstSync(ast, source, options);
   } catch (err) {
     throw err.message && err.codeFrame ? new LoaderError(err) : err;
   }
