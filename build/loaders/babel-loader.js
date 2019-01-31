@@ -72,7 +72,7 @@ async function loader(
 
   if (!worker) {
     worker = new Worker(require.resolve('./babel-worker.js'), {
-      numWorkers: 1,
+      // numWorkers: 1,
       computeWorkerKey: (method, source, optionsA, query) => {
         return optionsA.filename;
       },
@@ -123,11 +123,21 @@ async function loader(
 
     // $FlowFixMe
     // if (optionsA.filename.includes('es2017')) {
-    //   console.log('\n' + optionsA.filename + ' [REQUEST]');
+    //   console.log(
+    //     '\n' + optionsA.filename + ' [REQUEST ' + this._compilation.name + ']'
+    //   );
+    //   // console.log();
     // }
 
-    const workerResult = await worker.transform(source, optionsA, this.query);
-    // console.log('\n' + optionsA.filename + ' [COMPLETE]');
+    const workerResult = await worker.transform(
+      source,
+      optionsA,
+      this.query
+      // Date.now()
+    );
+    // if (optionsA.filename.includes('es2017')) {
+    //   console.log('\n' + optionsA.filename + ' [COMPLETE]');
+    // }
     // console.log('DONE!!');
     return workerResult;
   });

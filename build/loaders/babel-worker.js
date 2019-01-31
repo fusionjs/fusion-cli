@@ -34,7 +34,9 @@ class LoaderError extends Error {
   }
 }
 
-// let isRightWorker = false;
+let isRightWorker = false;
+
+// let filenames = [];
 
 exports.transform = function transform(
   source /*: string */,
@@ -43,10 +45,37 @@ exports.transform = function transform(
 ) {
   let metadata /*: {translationIds?: Array<string>} */ = {};
 
-  // console.log('HEY!!!');
+  let isFile = false;
+
+  // filenames.push(optionsA.filename);
+
+  // if (optionsA.filename.includes('es2017')) {
+  //   setTimeout(() => {
+  //     console.log(process.env.JEST_WORKER_ID, filenames);
+  //   }, 10000);
+  //
+  //   console.log(process.env.JEST_WORKER_ID);
+  //   isRightWorker = true;
+  //   isFile = true;
+  // } else {
+  //   // console.log('ELSE', optionsA.filename);
+  // }
+
+  // if (isRightWorker) {
+  //   console.log(
+  //     optionsA.filename,
+  //     process.env.JEST_WORKER_ID,
+  //     '[START WORKER]'
+  //   );
+  // }
+
   // process.stdout.write('yoo');
 
+  // isFile && console.log('here00');
+
   const loaderOptions = loaderUtils.getOptions({query});
+
+  // isFile && console.log('here0');
 
   // const stuff = {...loaderOptions, ...yo};
   // console.log('partialconfig', stuff.overrides);
@@ -54,6 +83,8 @@ exports.transform = function transform(
     ...optionsA,
     ...babelStuff(loaderOptions),
   });
+
+  // isFile && console.log('here1');
 
   const options = config.options;
 
@@ -70,6 +101,10 @@ exports.transform = function transform(
   if (translationIds.size > 0) {
     metadata.translationIds = Array.from(translationIds.values());
   }
+  //
+  // if (optionsA.filename.includes('es2017')) {
+  //   console.log('\n[RETURN]', optionsA.filename);
+  // }
 
   if (!transformed) {
     return null;
