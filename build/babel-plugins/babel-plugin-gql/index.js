@@ -41,8 +41,6 @@ module.exports = function gqlPlugin(babel /*: Object */, state /*: Object */) {
         parentPath.replaceWith(getReplacementPath(args));
       }
     });
-    throw new Error('fail');
-
     function validateArgs(args, parentPath) {
       if (args.length !== 1) {
         throw parentPath.buildCodeFrameError(
