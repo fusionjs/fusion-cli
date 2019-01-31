@@ -18,6 +18,8 @@ const TranslationsExtractor = require('../babel-plugins/babel-plugin-i18n');
 
 const {translationsDiscoveryKey} = require('./loader-context.js');
 
+let astCache = {};
+
 /*::
 import type {TranslationsDiscoveryContext} from "./loader-context.js";
 */
@@ -58,6 +60,8 @@ function getCache(cacheDir) {
   return cache;
 }
 
+let once = false;
+
 async function loader(
   source,
   inputSourceMap,
@@ -65,6 +69,16 @@ async function loader(
 ) {
   const filename = this.resourcePath;
   const loaderOptions = loaderUtils.getOptions(this);
+
+  if (!once) {
+    this._compiler.hooks.done.tap('babel-loader', filename => {
+      astCache = {}; // GC when done
+    });
+    this._compiler.hooks.invalid.tap('babel-loader', filename => {
+      astCache[filename] = void 0;
+    });
+    once = true;
+  }
 
   const config = babel.loadPartialConfig({
     ...loaderOptions,
@@ -132,9 +146,19 @@ async function loader(
 }
 
 function transform(source, options) {
+  let ast;
+
+  const filename = options.filename;
+  if (astCache[filename]) {
+    ast = astCache[filename];
+  } else {
+    ast = babel.parseSync(source, options);
+    astCache[filename] = ast;
+  }
+
   let result;
   try {
-    result = babel.transformSync(source, options);
+    result = babel.transformFromAstSync(ast, source, options);
   } catch (err) {
     throw err.message && err.codeFrame ? new LoaderError(err) : err;
   }
