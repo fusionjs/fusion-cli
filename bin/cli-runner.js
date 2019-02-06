@@ -9,6 +9,7 @@
 /* eslint-env node */
 
 process.on('unhandledRejection', e => {
+  console.log('Unhandled promise rejection caught by Fusion. The error will be rethrown.');
   throw e;
 });
 
