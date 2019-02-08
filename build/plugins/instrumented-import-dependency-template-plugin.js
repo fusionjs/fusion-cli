@@ -19,17 +19,17 @@ const ImportDependencyTemplate = require('webpack/lib/dependencies/ImportDepende
 /**
  * We create an extension to the original ImportDependency template
  * that adds an extra property to the promise returned by import()
- * that has the chunkId.
+ * that has the corresponding chunkId and module id.
  *
- * At a high level, if module `foo` was in chunk with id 5, we turn:
+ * At a high level, if module `foo.js` had module id "abc" and was in chunk with id 5, we turn:
  *
- * import('foo')
+ * import('./foo.js')
  * // Returns a promise
  *
  * into:
  *
- * Object.defineProperty(import('foo'), {__CHUNK_IDS: [5]})
- * // Also returns a promise, but with an extra non-enumerable property
+ * Object.defineProperties(import('./foo.js'), {__CHUNK_IDS: [5], __MODULE_ID: "abc"})
+ * // Also returns a promise, but with extra non-enumerable properties
  */
 
 class InstrumentedImportDependencyTemplate extends ImportDependencyTemplate {
@@ -42,8 +42,8 @@ class InstrumentedImportDependencyTemplate extends ImportDependencyTemplate {
     }
   }
   /**
-   * TODO(#15): Possibly figure out cleaner implementation by extending `super` to avoid duplicating code
-   * For now, we'll just override this method entirely with a modified version
+   * It may be possible to avoid duplicating code by extending `super`, but
+   * for now, we'll just override this method entirely with a modified version
    * Based on https://github.com/webpack/webpack/blob/5e38646f589b5b6325556f3127e7b61df33d3cb9/lib/dependencies/ImportDependency.js
    */
   apply(dep /*: any */, source /*: any */, runtime /*: any */) {
