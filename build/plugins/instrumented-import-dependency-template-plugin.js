@@ -18,8 +18,8 @@ const ImportDependencyTemplate = require('webpack/lib/dependencies/ImportDepende
 
 /**
  * We create an extension to the original ImportDependency template
- * that adds an extra property to the promise returned by import()
- * that has the corresponding chunkId and module id.
+ * that adds extra properties to the promise returned by import()
+ * for its corresponding chunkId and module id.
  *
  * At a high level, if module `foo.js` had module id "abc" and was in chunk with id 5, we turn:
  *
