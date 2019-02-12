@@ -25,20 +25,13 @@ test('`fusion dev` works with gql', async () => {
   await app.setup();
   const url = app.url();
   try {
-    const expectedSchema = fs
-      .readFileSync(path.resolve(dir, 'src/schema.gql'))
-      .toString();
-    t.equal(
-      await request(`${url}/schema`),
-      expectedSchema,
-      'loads schema on server'
-    );
+    expect(await request(`${url}/schema`)).toMatchSnapshot();
     const page = await app.browser().newPage();
     await page.goto(`${url}/`, {waitUntil: 'load'});
     const browserSchema = await page.evaluate(() => {
       return typeof window !== undefined && window.schema; //eslint-disable-line
     });
-    t.equal(browserSchema, expectedSchema, 'loads schema in the browser');
+    expect(browserSchema).toMatchSnapshot();
   } catch (e) {
     t.ifError(e);
   }
@@ -52,14 +45,7 @@ test('`fusion build --production` works with gql', async () => {
     env: Object.assign({}, process.env, {NODE_ENV: 'production'}),
   });
   try {
-    const expectedSchema = fs
-      .readFileSync(path.resolve(dir, 'src/schema.gql'))
-      .toString();
-    t.equal(
-      await request(`http://localhost:${port}/schema`),
-      expectedSchema,
-      'loads schema on server'
-    );
+    expect(await request(`http://localhost:${port}/schema`)).toMatchSnapshot();
     browser = await puppeteer.launch({
       args: ['--no-sandbox', '--disable-setuid-sandbox'],
     });
@@ -68,7 +54,7 @@ test('`fusion build --production` works with gql', async () => {
     const browserSchema = await page.evaluate(() => {
       return typeof window !== undefined && window.schema; //eslint-disable-line
     });
-    t.equal(browserSchema, expectedSchema, 'loads schema in the browser');
+    expect(browserSchema).toMatchSnapshot();
   } catch (e) {
     t.ifError(e);
   }
