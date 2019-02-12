@@ -4,7 +4,6 @@
 const t = require('assert');
 const path = require('path');
 const request = require('request-promise');
-const fs = require('fs');
 
 const puppeteer = require('puppeteer');
 
