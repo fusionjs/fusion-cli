@@ -48,6 +48,7 @@ module.exports = function getBabelConfig(opts /*: BabelConfigOpts */) {
         require.resolve('@rtsao/plugin-proposal-class-properties'),
         {loose: false},
       ],
+      require.resolve('babel-plugin-transform-styletron-display-name'),
     ],
     presets: [[require.resolve('@babel/preset-env'), envPresetOpts]],
     babelrc: false,
