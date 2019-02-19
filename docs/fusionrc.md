@@ -4,6 +4,21 @@ Fusion supports a `.fusionrc.js` in the root directory of your application. This
 
 This configuration object supports the following fields:
 
+## `jsExtPattern`
+
+By default this is `/\.jsx?$/`
+
+For example, this enables to handle typescript files with addition to Babel plugins/preset:
+
+```js
+module.exports = {
+  jsExtPattern: \[jt]sx?$\,
+  babel: {
+    presets: ["@babel/preset-typescript"],
+  }
+};
+```
+
 ## `babel`
 
 ### Adding plugins/presets
