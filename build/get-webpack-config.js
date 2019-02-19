@@ -99,6 +99,9 @@ function getWebpackConfig(opts /*: WebpackConfigOpts */) {
   const {id, dev, dir, watch, state, fusionConfig, legacyPkgConfig = {}} = opts;
   const main = 'src/main.js';
 
+  const jsExtPattern = fusionConfig.jsExtPattern || JS_EXT_PATTERN;
+
+
   if (!fs.existsSync(path.join(dir, main))) {
     throw new Error(`Project directory must contain a ${main} file`);
   }
@@ -269,7 +272,7 @@ function getWebpackConfig(opts /*: WebpackConfigOpts */) {
          */
         runtime === 'server' && {
           compiler: id => id === 'server',
-          test: JS_EXT_PATTERN,
+          test: jsExtPattern,
           exclude: EXCLUDE_TRANSPILATION_PATTERNS,
           use: [
             {
@@ -299,7 +302,7 @@ function getWebpackConfig(opts /*: WebpackConfigOpts */) {
          */
         (runtime === 'client' || runtime === 'sw') && {
           compiler: id => id === 'client' || id === 'sw',
-          test: JS_EXT_PATTERN,
+          test: jsExtPattern,
           exclude: EXCLUDE_TRANSPILATION_PATTERNS,
           use: [
             {
@@ -329,7 +332,7 @@ function getWebpackConfig(opts /*: WebpackConfigOpts */) {
          */
         runtime === 'client' && {
           compiler: id => id === 'client-legacy',
-          test: JS_EXT_PATTERN,
+          test: jsExtPattern,
           exclude: EXCLUDE_TRANSPILATION_PATTERNS,
           use: [
             {
