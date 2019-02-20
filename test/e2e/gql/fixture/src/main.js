@@ -17,6 +17,9 @@ export default (async function() {
       if (ctx.url === '/schema') {
         ctx.body = schema;
       }
+      if (ctx.url === '/query') {
+        ctx.body = query;
+      }
       return next();
     });
 
