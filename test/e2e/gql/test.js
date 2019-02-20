@@ -4,6 +4,8 @@
 const t = require('assert');
 const path = require('path');
 const request = require('request-promise');
+const {printSchema, buildASTSchema} = require('graphql/utilities');
+const {validate} = require('graphql/validation');
 
 const puppeteer = require('puppeteer');
 
@@ -30,7 +32,21 @@ test('`fusion dev` works with gql', async () => {
     const browserSchema = await page.evaluate(() => {
       return typeof window !== undefined && window.schema; //eslint-disable-line
     });
-    expect(browserSchema).toMatchSnapshot();
+    const astSchema = buildASTSchema(browserSchema);
+    const query = await page.evaluate(() => {
+      return typeof window !== undefined && window.query; //eslint-disable-line
+    });
+    expect(validate(astSchema, query)).toHaveLength(0);
+    expect(printSchema(astSchema)).toMatchInlineSnapshot(`
+"type Query {
+  user: User
+}
+
+type User {
+  firstName: String
+}
+"
+`);
   } catch (e) {
     t.ifError(e);
   }
@@ -53,7 +69,21 @@ test('`fusion build --production` works with gql', async () => {
     const browserSchema = await page.evaluate(() => {
       return typeof window !== undefined && window.schema; //eslint-disable-line
     });
-    expect(browserSchema).toMatchSnapshot();
+    const astSchema = buildASTSchema(browserSchema);
+    const query = await page.evaluate(() => {
+      return typeof window !== undefined && window.query; //eslint-disable-line
+    });
+    expect(validate(astSchema, query)).toHaveLength(0);
+    expect(printSchema(astSchema)).toMatchInlineSnapshot(`
+"type Query {
+  user: User
+}
+
+type User {
+  firstName: String
+}
+"
+`);
   } catch (e) {
     t.ifError(e);
   }
