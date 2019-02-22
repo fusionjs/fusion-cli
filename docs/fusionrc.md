@@ -19,6 +19,16 @@ module.exports = {
 };
 ```
 
+## `resolveExtensions`
+
+By default this is webpack default witch is: `['.wasm', '.mjs', '.js', '.json']`
+
+```js
+module.exports = {
+  resolveExtensions: ['.wasm', '.mjs', '.js', '.json', '.ts', '.tsx'],
+};
+```
+
 ## `babel`
 
 ### Adding plugins/presets
