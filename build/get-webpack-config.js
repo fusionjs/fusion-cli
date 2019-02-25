@@ -469,9 +469,11 @@ function getWebpackConfig(opts /*: WebpackConfigOpts */) {
           raw: true,
           entryOnly: false,
           // source-map-support is a dep of framework, so we need to resolve this path
-          banner: `require('${require.resolve(
-            'source-map-support'
-          )}').install();`,
+          banner: `require('${require
+            .resolve('source-map-support')
+            // replace windows backslashes since this is generated code (#461)
+            .split(path.sep)
+            .join('/')}').install();`,
         }),
       runtime === 'server' &&
         new webpack.BannerPlugin({
