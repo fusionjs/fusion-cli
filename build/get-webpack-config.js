@@ -34,6 +34,7 @@ const {
   syncChunkIdsLoader,
   syncChunkPathsLoader,
   swLoader,
+  workerLoader,
 } = require('./loaders/index.js');
 const {
   translationsManifestContextKey,
@@ -45,13 +46,14 @@ const InstrumentedImportDependencyTemplatePlugin = require('./plugins/instrument
 const I18nDiscoveryPlugin = require('./plugins/i18n-discovery-plugin.js');
 
 /*::
-type Runtime = "server" | "client" | "sw";
+type Runtime = "server" | "client" | "sw" | "worker";
 */
 
 const COMPILATIONS /*: {[string]: Runtime} */ = {
   server: 'server',
   'client-modern': 'client',
   sw: 'sw',
+  worker: 'worker',
 };
 const EXCLUDE_TRANSPILATION_PATTERNS = [
   /node_modules\/mapbox-gl\//,
@@ -182,10 +184,15 @@ function getWebpackConfig(opts /*: WebpackConfigOpts */) {
         target: runtime === 'server' ? 'node-bundled' : 'browser-legacy',
         specOnly: false,
       });
-
+  console.log('--runtime is: ' + runtime);
   return {
     name: runtime,
-    target: {server: 'node', client: 'web', sw: 'webworker'}[runtime],
+    target: {
+      server: 'node',
+      client: 'web',
+      sw: 'webworker',
+      worker: 'webworker',
+    }[runtime],
     entry: {
       main: [
         runtime === 'client' &&
@@ -222,7 +229,7 @@ function getWebpackConfig(opts /*: WebpackConfigOpts */) {
      */
     // TODO(#6): what about node v8 inspector?
     devtool:
-      (runtime === 'client' && !dev) || runtime === 'sw'
+      (runtime === 'client' && !dev) || runtime === 'sw' || runtime === 'worker'
         ? 'hidden-source-map'
         : 'cheap-module-source-map',
     output: {
@@ -296,8 +303,8 @@ function getWebpackConfig(opts /*: WebpackConfigOpts */) {
         /**
          * Global transforms (including ES2017+ transpilations)
          */
-        (runtime === 'client' || runtime === 'sw') && {
-          compiler: id => id === 'client' || id === 'sw',
+        (runtime === 'client' || runtime === 'sw' || runtime === 'worker') && {
+          compiler: id => id === 'client' || id === 'sw' || id === 'worker',
           test: JS_EXT_PATTERN,
           exclude: EXCLUDE_TRANSPILATION_PATTERNS,
           use: [
@@ -414,6 +421,7 @@ function getWebpackConfig(opts /*: WebpackConfigOpts */) {
         [chunkUrlMapLoader.alias]: chunkUrlMapLoader.path,
         [i18nManifestLoader.alias]: i18nManifestLoader.path,
         [swLoader.alias]: swLoader.path,
+        [workerLoader.alias]: workerLoader.path,
       },
     },
     plugins: [
