@@ -46,14 +46,13 @@ const InstrumentedImportDependencyTemplatePlugin = require('./plugins/instrument
 const I18nDiscoveryPlugin = require('./plugins/i18n-discovery-plugin.js');
 
 /*::
-type Runtime = "server" | "client" | "sw" | "worker";
+type Runtime = "server" | "client" | "sw";
 */
 
 const COMPILATIONS /*: {[string]: Runtime} */ = {
   server: 'server',
   'client-modern': 'client',
   sw: 'sw',
-  worker: 'worker',
 };
 const EXCLUDE_TRANSPILATION_PATTERNS = [
   /node_modules\/mapbox-gl\//,
@@ -184,14 +183,12 @@ function getWebpackConfig(opts /*: WebpackConfigOpts */) {
         target: runtime === 'server' ? 'node-bundled' : 'browser-legacy',
         specOnly: false,
       });
-  console.log('--runtime is: ' + runtime);
   return {
     name: runtime,
     target: {
       server: 'node',
       client: 'web',
       sw: 'webworker',
-      worker: 'webworker',
     }[runtime],
     entry: {
       main: [
@@ -229,11 +226,13 @@ function getWebpackConfig(opts /*: WebpackConfigOpts */) {
      */
     // TODO(#6): what about node v8 inspector?
     devtool:
-      (runtime === 'client' && !dev) || runtime === 'sw' || runtime === 'worker'
+      (runtime === 'client' && !dev) || runtime === 'sw'
         ? 'hidden-source-map'
         : 'cheap-module-source-map',
     output: {
       path: path.join(dir, `.fusion/dist/${env}/${runtime}`),
+      // It's necessary to use self for web workers
+      globalObject: "(typeof self!='undefined'?self:global)",
       filename:
         runtime === 'server'
           ? 'server-main.js'
@@ -303,8 +302,8 @@ function getWebpackConfig(opts /*: WebpackConfigOpts */) {
         /**
          * Global transforms (including ES2017+ transpilations)
          */
-        (runtime === 'client' || runtime === 'sw' || runtime === 'worker') && {
-          compiler: id => id === 'client' || id === 'sw' || id === 'worker',
+        (runtime === 'client' || runtime === 'sw') && {
+          compiler: id => id === 'client' || id === 'sw',
           test: JS_EXT_PATTERN,
           exclude: EXCLUDE_TRANSPILATION_PATTERNS,
           use: [

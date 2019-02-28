@@ -7,93 +7,130 @@
  */
 /* eslint-env node */
 
+const path = require('path');
 const loaderUtils = require('loader-utils');
-const webpack = require('webpack');
-const MemoryFileSystem = require('memory-fs');
 
-/*::
-import type {WebpackConfigOpts} from "../get-webpack-config.js";
-*/
+const NodeTargetPlugin = require('webpack/lib/node/NodeTargetPlugin');
+const SingleEntryPlugin = require('webpack/lib/SingleEntryPlugin');
+const WebWorkerTemplatePlugin = require('webpack/lib/webworker/WebWorkerTemplatePlugin');
 
-module.exports = loader;
+class WorkerLoaderError extends Error {
+  constructor(err) {
+    super(err);
 
-const instances = {};
-
-function getCompiler(opts, resourcePath, filename) {
-  if (instances[filename]) {
-    return instances[filename];
+    this.name = err.name || 'Loader Error';
+    this.message = `${err.name}\n\n${err.message}\n`;
+    /* $FlowFixMe */
+    this.stack = false;
   }
-  const getWebpackConfig = require('../get-webpack-config.js');
-
-  const config = getWebpackConfig({
-    ...opts,
-    id: 'worker',
-  });
-  config.output.filename = filename;
-
-  // $FlowFixMe
-  config.output.libraryExport = 'default';
-  config.output.path = '/';
-  // $FlowFixMe
-  config.entry = resourcePath;
-  const instance = webpack(config);
-  instance.outputFileSystem = new MemoryFileSystem();
-
-  instances[filename] = instance;
-
-  return instance;
 }
 
-function loader() {
-  if (!this['optsContext']) {
-    return '// not supported';
+const getWorker = (file, content, options) => {
+  const publicPath = options.publicPath
+    ? JSON.stringify(options.publicPath)
+    : '__webpack_public_path__';
+
+  const publicWorkerPath = `${publicPath} + ${JSON.stringify(file)}`;
+
+  if (options.inline) {
+    const InlineWorkerPath = JSON.stringify(
+      `!!${path.join(__dirname, 'InlineWorker.js')}`
+    );
+
+    const fallbackWorkerPath =
+      options.fallback === false ? 'null' : publicWorkerPath;
+
+    return `require(${InlineWorkerPath})(${JSON.stringify(
+      content
+    )}, ${fallbackWorkerPath})`;
+  }
+  return `${publicWorkerPath}`;
+};
+
+module.exports = function loader() {};
+
+module.exports.pitch = function(request /* : any*/) {
+  const options = loaderUtils.getOptions(this) || {};
+
+  if (!this.webpack) {
+    throw new WorkerLoaderError({
+      name: 'Worker Loader',
+      message: 'This loader is only usable with webpack',
+    });
   }
 
   this.cacheable(false);
-  const callback = this.async();
-  const opts /*: WebpackConfigOpts*/ = this['optsContext'];
 
-  // TODO: Better way of getting the filename?
-  const filename = this.resourcePath
-    .replace(/\\/g, '/')
-    .split('/')
-    .pop();
+  const cb = this.async();
 
-  const compiler = getCompiler(opts, this.resourcePath, filename);
+  const filename = loaderUtils.interpolateName(
+    this,
+    options.name || '[hash].worker.js',
+    {
+      context: options.context || this.rootContext || this.options.context,
+      regExp: options.regExp,
+    }
+  );
 
-  compiler.run((err, stats) => {
-    if (err || stats.hasErrors()) {
-      const info = stats.toJson();
+  const worker = {};
 
-      for (let err of info.errors) {
-        return void callback(new Error(err));
+  worker.options = {
+    filename,
+    chunkFilename: `[id].${filename}`,
+    namedChunkFilename: null,
+  };
+
+  worker.compiler = this._compilation.createChildCompiler(
+    'worker',
+    worker.options
+  );
+
+  // Tapable.apply is deprecated in tapable@1.0.0-x.
+  // The plugins should now call apply themselves.
+  new WebWorkerTemplatePlugin(worker.options).apply(worker.compiler);
+
+  if (this.target !== 'webworker' && this.target !== 'web') {
+    new NodeTargetPlugin().apply(worker.compiler);
+  }
+
+  new SingleEntryPlugin(this.context, `!!${request}`, 'main').apply(
+    worker.compiler
+  );
+
+  const subCache = `subcache ${__dirname} ${request}`;
+
+  worker.compilation = compilation => {
+    if (compilation.cache) {
+      if (!compilation.cache[subCache]) {
+        compilation.cache[subCache] = {};
       }
+
+      compilation.cache = compilation.cache[subCache];
+    }
+  };
+
+  const plugin = {name: 'WorkerLoader'};
+  worker.compiler.hooks.compilation.tap(plugin, worker.compilation);
+
+  worker.compiler.runAsChild((err, entries, compilation) => {
+    if (err) return cb(err);
+
+    if (entries[0]) {
+      worker.file = entries[0].files[0];
+
+      worker.factory = getWorker(
+        worker.file,
+        compilation.assets[worker.file].source(),
+        options
+      );
+
+      if (options.fallback === false) {
+        delete this._compilation.assets[worker.file];
+      }
+
+      return cb(null, `module.exports = ${worker.factory};\n`);
     }
 
-    // Let loader know about compilation dependencies so re-builds are triggered appropriately
-    for (let fileDep of stats.compilation.fileDependencies) {
-      this.addDependency(fileDep);
-    }
-    for (let contextDep of stats.compilation.contextDependencies) {
-      this.addContextDependency(contextDep);
-    }
-    for (let missingDep of stats.compilation.missingDependencies) {
-      this.addDependency(missingDep);
-      this.addContextDependency(missingDep);
-    }
-
-    const assetContents = compiler.outputFileSystem.readFileSync(
-      '/' + filename
-    );
-
-    const url = loaderUtils.interpolateName(this, '[hash].[ext]', {
-      context: this.rootContext,
-      content: assetContents,
-    });
-
-    const source = `module.exports = __webpack_public_path__ + ${JSON.stringify(
-      url
-    )};`;
-    callback(null, source);
+    return cb(null, null);
   });
-}
+};
