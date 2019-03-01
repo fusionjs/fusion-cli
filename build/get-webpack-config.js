@@ -231,8 +231,6 @@ function getWebpackConfig(opts /*: WebpackConfigOpts */) {
         : 'cheap-module-source-map',
     output: {
       path: path.join(dir, `.fusion/dist/${env}/${runtime}`),
-      // It's necessary to use self for web workers
-      globalObject: "(typeof self!='undefined'?self:global)",
       filename:
         runtime === 'server'
           ? 'server-main.js'

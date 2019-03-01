@@ -10,7 +10,6 @@
 const path = require('path');
 const loaderUtils = require('loader-utils');
 
-const NodeTargetPlugin = require('webpack/lib/node/NodeTargetPlugin');
 const SingleEntryPlugin = require('webpack/lib/SingleEntryPlugin');
 const WebWorkerTemplatePlugin = require('webpack/lib/webworker/WebWorkerTemplatePlugin');
 
@@ -77,6 +76,7 @@ module.exports.pitch = function(request /* : any*/) {
   worker.options = {
     filename,
     chunkFilename: `[id].${filename}`,
+    globalObject: 'self',
     namedChunkFilename: null,
   };
 
@@ -85,13 +85,7 @@ module.exports.pitch = function(request /* : any*/) {
     worker.options
   );
 
-  // Tapable.apply is deprecated in tapable@1.0.0-x.
-  // The plugins should now call apply themselves.
   new WebWorkerTemplatePlugin(worker.options).apply(worker.compiler);
-
-  if (this.target !== 'webworker' && this.target !== 'web') {
-    new NodeTargetPlugin().apply(worker.compiler);
-  }
 
   new SingleEntryPlugin(this.context, `!!${request}`, 'main').apply(
     worker.compiler
