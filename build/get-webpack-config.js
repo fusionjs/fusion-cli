@@ -185,11 +185,7 @@ function getWebpackConfig(opts /*: WebpackConfigOpts */) {
       });
   return {
     name: runtime,
-    target: {
-      server: 'node',
-      client: 'web',
-      sw: 'webworker',
-    }[runtime],
+    target: {server: 'node', client: 'web', sw: 'webworker'}[runtime],
     entry: {
       main: [
         runtime === 'client' &&
