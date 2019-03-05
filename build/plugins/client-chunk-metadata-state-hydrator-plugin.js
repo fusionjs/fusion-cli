@@ -57,7 +57,7 @@ function chunkIndexFromWebpackChunks(chunks) {
 
     const files = [];
 
-    // Iterate of groups this chunk belongs to, adding the files of the other chunks in that group as well
+    // Iterate through the groups this chunk belongs to, adding the files of the other chunks in that group as well
     for (const g of c.groupsIterable) {
       for (const cc of g.chunks) {
         for (const m of cc.modulesIterable) {
