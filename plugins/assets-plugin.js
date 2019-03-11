@@ -16,28 +16,29 @@ import path from 'path';
 import mount from 'koa-mount';
 import serve from 'koa-static';
 
+/* eslint-disable no-console */
 export default function(dir /*: string */) {
   /* eslint-disable-next-line */
-  return createPlugin/*:: <AssetsDepsType, AssetsType> */(
-    {
-      middleware: () => {
-        const {baseAssetPath, env} = getEnv();
-        // setting defer here tells the `serve` middleware to `await next` first before
-        // setting the response. This allows composition with user middleware
-        return mount(
-          baseAssetPath,
-          serve(path.resolve(dir, `.fusion/dist/${env}/client`), {
-            defer: true,
-            setHeaders: res => {
-              // $FlowFixMe
-              if (!module.hot) {
-                res.setHeader('Cache-Control', 'public, max-age=31536000');
-              }
-              res.setHeader('Timing-Allow-Origin', '*');
-            },
-          })
-        );
-      },
-    }
-  );
+  return createPlugin /*:: <AssetsDepsType, AssetsType> */({
+    middleware: () => {
+      const {baseAssetPath, env} = getEnv();
+      // setting defer here tells the `serve` middleware to `await next` first before
+      // setting the response. This allows composition with user middleware
+      console.log('assets-plugin request', Date.now());
+      return mount(
+        baseAssetPath,
+        serve(path.resolve(dir, `.fusion/dist/${env}/client`), {
+          defer: true,
+          setHeaders: res => {
+            // $FlowFixMe
+            if (!module.hot) {
+              res.setHeader('Cache-Control', 'public, max-age=31536000');
+            }
+            console.log('assets-plugin response', Date.now());
+            res.setHeader('Timing-Allow-Origin', '*');
+          },
+        })
+      );
+    },
+  });
 }
