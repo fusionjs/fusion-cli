@@ -97,7 +97,16 @@ export type WebpackConfigOpts = {|
 module.exports = getWebpackConfig;
 
 function getWebpackConfig(opts /*: WebpackConfigOpts */) {
-  const {id, dev, dir, hmr, watch, state, fusionConfig, legacyPkgConfig = {}} = opts;
+  const {
+    id,
+    dev,
+    dir,
+    hmr,
+    watch,
+    state,
+    fusionConfig,
+    legacyPkgConfig = {},
+  } = opts;
   const main = 'src/main.js';
 
   if (!fs.existsSync(path.join(dir, main))) {
