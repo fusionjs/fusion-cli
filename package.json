@@ -11,15 +11,16 @@
     "test": "git clean -Xfd test/fixtures && jest --maxWorkers 1"
   },
   "files": [
+    "README.md",
+    "LICENSE",
+    "get-compilation-metadata.js",
     "bin/",
     "build/",
     "commands/",
     "entries/",
     "lib/",
     "plugins/",
-    "get-compilation-metadata.js",
-    "README.md",
-    "LICENSE"
+    "!**/test/"
   ],
   "dependencies": {
     "@babel/core": "^7.1.6",
