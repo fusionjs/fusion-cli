@@ -21,7 +21,7 @@ const dev = require('../setup.js');
 
 const dir = path.resolve(__dirname, './fixture');
 
-jest.setTimeout(100000)
+jest.setTimeout(100000);
 
 test('`fusion dev` works with gql', async () => {
   const app = dev(dir);
