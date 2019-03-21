@@ -91,12 +91,11 @@ test('`fusion dev` works with assets', async () => {
     t.equal(await request(`${url}/filename`), 'src/main.js');
 
     const jsonAssetUrl = await request(`${url}/json`);
-    const jsonAsset = (await request(url + jsonAssetUrl)).replace(/\s/g, '');
-
+    const jsonAsset = await request(url + jsonAssetUrl);
     t.equal(jsonAssetUrl, '/_static/8dc83113b16a107e573e02bd18468b22.json');
-    t.equal(
-      jsonAsset,
-      '{"key":"value","unused_key":""}',
+    t.deepEqual(
+      JSON.parse(jsonAsset),
+      {key: 'value', unused_key: ''},
       'assetUrl saves original json file'
     );
     t.equal(
