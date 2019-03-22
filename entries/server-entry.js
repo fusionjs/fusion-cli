@@ -44,7 +44,6 @@ const initialize = main
 
 export async function start({port, dir = '.'} /*: any */) {
   AssetsPlugin = AssetsFactory(dir);
-  // TODO(#21): support https.createServer(credentials, listener);
   server = http.createServer();
 
   await reload();
