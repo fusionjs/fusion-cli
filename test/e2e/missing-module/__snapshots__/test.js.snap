@@ -1,0 +1,522 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`missing module prod: /Users/giancarloanemone/dev/fusion-cli/test/e2e/missing-module/fixture-production-error 1`] = `
+Array [
+  Array [
+    "(client) ./src/main.js
+Module not found: Error: Can't resolve '__non_existent_module__' in '/Users/giancarloanemone/dev/fusion-cli/test/e2e/missing-module/fixture/src'
+resolve '__non_existent_module__' in '/Users/giancarloanemone/dev/fusion-cli/test/e2e/missing-module/fixture/src'
+  Parsed request is a module
+  using description file: /Users/giancarloanemone/dev/fusion-cli/package.json (relative path: ./test/e2e/missing-module/fixture/src)
+    Field 'browser' doesn't contain a valid alias configuration
+    Field 'es2015' doesn't contain a valid alias configuration
+    Field 'es2017' doesn't contain a valid alias configuration
+    resolve as module
+      /Users/giancarloanemone/dev/fusion-cli/test/e2e/missing-module/fixture/src/node_modules doesn't exist or is not a directory
+      /Users/giancarloanemone/dev/fusion-cli/test/e2e/missing-module/fixture/node_modules doesn't exist or is not a directory
+      /Users/giancarloanemone/dev/fusion-cli/test/e2e/missing-module/node_modules doesn't exist or is not a directory
+      /Users/giancarloanemone/dev/fusion-cli/test/e2e/node_modules doesn't exist or is not a directory
+      /Users/giancarloanemone/dev/fusion-cli/test/node_modules doesn't exist or is not a directory
+      /Users/giancarloanemone/node_modules doesn't exist or is not a directory
+      /Users/node_modules doesn't exist or is not a directory
+      /node_modules doesn't exist or is not a directory
+      looking for modules in /Users/giancarloanemone/dev/fusion-cli/node_modules
+        using description file: /Users/giancarloanemone/dev/fusion-cli/package.json (relative path: ./node_modules)
+          Field 'browser' doesn't contain a valid alias configuration
+          Field 'es2015' doesn't contain a valid alias configuration
+          Field 'es2017' doesn't contain a valid alias configuration
+          using description file: /Users/giancarloanemone/dev/fusion-cli/package.json (relative path: ./node_modules/__non_existent_module__)
+            no extension
+              Field 'browser' doesn't contain a valid alias configuration
+              Field 'es2015' doesn't contain a valid alias configuration
+              Field 'es2017' doesn't contain a valid alias configuration
+      looking for modules in /Users/giancarloanemone/dev/node_modules
+        No description file found
+        Field 'browser' doesn't contain a valid alias configuration
+        Field 'es2015' doesn't contain a valid alias configuration
+        Field 'es2017' doesn't contain a valid alias configuration
+              /Users/giancarloanemone/dev/fusion-cli/node_modules/__non_existent_module__ doesn't exist
+            .wasm
+              Field 'browser' doesn't contain a valid alias configuration
+              Field 'es2015' doesn't contain a valid alias configuration
+              Field 'es2017' doesn't contain a valid alias configuration
+              /Users/giancarloanemone/dev/fusion-cli/node_modules/__non_existent_module__.wasm doesn't exist
+            .mjs
+              Field 'browser' doesn't contain a valid alias configuration
+              Field 'es2015' doesn't contain a valid alias configuration
+              Field 'es2017' doesn't contain a valid alias configuration
+              /Users/giancarloanemone/dev/fusion-cli/node_modules/__non_existent_module__.mjs doesn't exist
+            .js
+              Field 'browser' doesn't contain a valid alias configuration
+              Field 'es2015' doesn't contain a valid alias configuration
+              Field 'es2017' doesn't contain a valid alias configuration
+        No description file found
+        no extension
+          Field 'browser' doesn't contain a valid alias configuration
+          Field 'es2015' doesn't contain a valid alias configuration
+          Field 'es2017' doesn't contain a valid alias configuration
+              /Users/giancarloanemone/dev/fusion-cli/node_modules/__non_existent_module__.js doesn't exist
+            .json
+              Field 'browser' doesn't contain a valid alias configuration
+              Field 'es2015' doesn't contain a valid alias configuration
+              Field 'es2017' doesn't contain a valid alias configuration
+          /Users/giancarloanemone/dev/node_modules/__non_existent_module__ doesn't exist
+        .wasm
+          Field 'browser' doesn't contain a valid alias configuration
+          Field 'es2015' doesn't contain a valid alias configuration
+          Field 'es2017' doesn't contain a valid alias configuration
+              /Users/giancarloanemone/dev/fusion-cli/node_modules/__non_existent_module__.json doesn't exist
+          /Users/giancarloanemone/dev/node_modules/__non_existent_module__.wasm doesn't exist
+        .mjs
+          Field 'browser' doesn't contain a valid alias configuration
+          Field 'es2015' doesn't contain a valid alias configuration
+          Field 'es2017' doesn't contain a valid alias configuration
+            as directory
+              /Users/giancarloanemone/dev/fusion-cli/node_modules/__non_existent_module__ doesn't exist
+          /Users/giancarloanemone/dev/node_modules/__non_existent_module__.mjs doesn't exist
+        .js
+          Field 'browser' doesn't contain a valid alias configuration
+          Field 'es2015' doesn't contain a valid alias configuration
+          Field 'es2017' doesn't contain a valid alias configuration
+          /Users/giancarloanemone/dev/node_modules/__non_existent_module__.js doesn't exist
+        .json
+          Field 'browser' doesn't contain a valid alias configuration
+          Field 'es2015' doesn't contain a valid alias configuration
+          Field 'es2017' doesn't contain a valid alias configuration
+          /Users/giancarloanemone/dev/node_modules/__non_existent_module__.json doesn't exist
+        as directory
+          /Users/giancarloanemone/dev/node_modules/__non_existent_module__ doesn't exist
+[/Users/giancarloanemone/dev/fusion-cli/test/e2e/missing-module/fixture/src/node_modules]
+[/Users/giancarloanemone/dev/fusion-cli/test/e2e/missing-module/fixture/node_modules]
+[/Users/giancarloanemone/dev/fusion-cli/test/e2e/missing-module/node_modules]
+[/Users/giancarloanemone/dev/fusion-cli/test/e2e/node_modules]
+[/Users/giancarloanemone/dev/fusion-cli/test/node_modules]
+[/Users/giancarloanemone/node_modules]
+[/Users/node_modules]
+[/node_modules]
+[/Users/giancarloanemone/dev/node_modules/package.json]
+[/Users/giancarloanemone/dev/fusion-cli/node_modules/__non_existent_module__]
+[/Users/giancarloanemone/dev/fusion-cli/node_modules/__non_existent_module__.wasm]
+[/Users/giancarloanemone/dev/fusion-cli/node_modules/__non_existent_module__.mjs]
+[/Users/giancarloanemone/dev/node_modules/__non_existent_module__/package.json]
+[/Users/giancarloanemone/dev/fusion-cli/node_modules/__non_existent_module__.js]
+[/Users/giancarloanemone/dev/node_modules/__non_existent_module__]
+[/Users/giancarloanemone/dev/fusion-cli/node_modules/__non_existent_module__.json]
+[/Users/giancarloanemone/dev/node_modules/__non_existent_module__.wasm]
+[/Users/giancarloanemone/dev/node_modules/__non_existent_module__.mjs]
+[/Users/giancarloanemone/dev/node_modules/__non_existent_module__.js]
+[/Users/giancarloanemone/dev/node_modules/__non_existent_module__.json]
+ @ ./src/main.js 2:0-33
+ @ /Users/giancarloanemone/dev/fusion-cli/entries/client-entry.js
+ @ multi /Users/giancarloanemone/dev/fusion-cli/entries/client-public-path.js /Users/giancarloanemone/dev/fusion-cli/entries/client-entry.js",
+  ],
+  Array [
+    "(server) ./src/main.js
+Module not found: Error: Can't resolve '__non_existent_module__' in '/Users/giancarloanemone/dev/fusion-cli/test/e2e/missing-module/fixture/src'
+resolve '__non_existent_module__' in '/Users/giancarloanemone/dev/fusion-cli/test/e2e/missing-module/fixture/src'
+  Parsed request is a module
+  using description file: /Users/giancarloanemone/dev/fusion-cli/package.json (relative path: ./test/e2e/missing-module/fixture/src)
+    Field 'es2015' doesn't contain a valid alias configuration
+    Field 'es2017' doesn't contain a valid alias configuration
+    resolve as module
+      /Users/giancarloanemone/dev/fusion-cli/test/e2e/missing-module/fixture/src/node_modules doesn't exist or is not a directory
+      /Users/giancarloanemone/dev/fusion-cli/test/e2e/missing-module/fixture/node_modules doesn't exist or is not a directory
+      /Users/giancarloanemone/dev/fusion-cli/test/e2e/missing-module/node_modules doesn't exist or is not a directory
+      /Users/giancarloanemone/dev/fusion-cli/test/e2e/node_modules doesn't exist or is not a directory
+      /Users/giancarloanemone/dev/fusion-cli/test/node_modules doesn't exist or is not a directory
+      /Users/giancarloanemone/node_modules doesn't exist or is not a directory
+      /Users/node_modules doesn't exist or is not a directory
+      /node_modules doesn't exist or is not a directory
+      looking for modules in /Users/giancarloanemone/dev/fusion-cli/node_modules
+        using description file: /Users/giancarloanemone/dev/fusion-cli/package.json (relative path: ./node_modules)
+          Field 'es2015' doesn't contain a valid alias configuration
+          Field 'es2017' doesn't contain a valid alias configuration
+          using description file: /Users/giancarloanemone/dev/fusion-cli/package.json (relative path: ./node_modules/__non_existent_module__)
+            no extension
+              Field 'es2015' doesn't contain a valid alias configuration
+              Field 'es2017' doesn't contain a valid alias configuration
+      looking for modules in /Users/giancarloanemone/dev/node_modules
+        No description file found
+        Field 'es2015' doesn't contain a valid alias configuration
+        Field 'es2017' doesn't contain a valid alias configuration
+              /Users/giancarloanemone/dev/fusion-cli/node_modules/__non_existent_module__ doesn't exist
+            .wasm
+              Field 'es2015' doesn't contain a valid alias configuration
+              Field 'es2017' doesn't contain a valid alias configuration
+              /Users/giancarloanemone/dev/fusion-cli/node_modules/__non_existent_module__.wasm doesn't exist
+            .mjs
+              Field 'es2015' doesn't contain a valid alias configuration
+              Field 'es2017' doesn't contain a valid alias configuration
+              /Users/giancarloanemone/dev/fusion-cli/node_modules/__non_existent_module__.mjs doesn't exist
+            .js
+              Field 'es2015' doesn't contain a valid alias configuration
+              Field 'es2017' doesn't contain a valid alias configuration
+        No description file found
+        no extension
+          Field 'es2015' doesn't contain a valid alias configuration
+          Field 'es2017' doesn't contain a valid alias configuration
+              /Users/giancarloanemone/dev/fusion-cli/node_modules/__non_existent_module__.js doesn't exist
+            .json
+              Field 'es2015' doesn't contain a valid alias configuration
+              Field 'es2017' doesn't contain a valid alias configuration
+          /Users/giancarloanemone/dev/node_modules/__non_existent_module__ doesn't exist
+        .wasm
+          Field 'es2015' doesn't contain a valid alias configuration
+          Field 'es2017' doesn't contain a valid alias configuration
+              /Users/giancarloanemone/dev/fusion-cli/node_modules/__non_existent_module__.json doesn't exist
+          /Users/giancarloanemone/dev/node_modules/__non_existent_module__.wasm doesn't exist
+        .mjs
+          Field 'es2015' doesn't contain a valid alias configuration
+          Field 'es2017' doesn't contain a valid alias configuration
+            as directory
+              /Users/giancarloanemone/dev/fusion-cli/node_modules/__non_existent_module__ doesn't exist
+          /Users/giancarloanemone/dev/node_modules/__non_existent_module__.mjs doesn't exist
+        .js
+          Field 'es2015' doesn't contain a valid alias configuration
+          Field 'es2017' doesn't contain a valid alias configuration
+          /Users/giancarloanemone/dev/node_modules/__non_existent_module__.js doesn't exist
+        .json
+          Field 'es2015' doesn't contain a valid alias configuration
+          Field 'es2017' doesn't contain a valid alias configuration
+          /Users/giancarloanemone/dev/node_modules/__non_existent_module__.json doesn't exist
+        as directory
+          /Users/giancarloanemone/dev/node_modules/__non_existent_module__ doesn't exist
+[/Users/giancarloanemone/dev/fusion-cli/test/e2e/missing-module/fixture/src/node_modules]
+[/Users/giancarloanemone/dev/fusion-cli/test/e2e/missing-module/fixture/node_modules]
+[/Users/giancarloanemone/dev/fusion-cli/test/e2e/missing-module/node_modules]
+[/Users/giancarloanemone/dev/fusion-cli/test/e2e/node_modules]
+[/Users/giancarloanemone/dev/fusion-cli/test/node_modules]
+[/Users/giancarloanemone/node_modules]
+[/Users/node_modules]
+[/node_modules]
+[/Users/giancarloanemone/dev/node_modules/package.json]
+[/Users/giancarloanemone/dev/fusion-cli/node_modules/__non_existent_module__]
+[/Users/giancarloanemone/dev/fusion-cli/node_modules/__non_existent_module__.wasm]
+[/Users/giancarloanemone/dev/fusion-cli/node_modules/__non_existent_module__.mjs]
+[/Users/giancarloanemone/dev/node_modules/__non_existent_module__/package.json]
+[/Users/giancarloanemone/dev/fusion-cli/node_modules/__non_existent_module__.js]
+[/Users/giancarloanemone/dev/node_modules/__non_existent_module__]
+[/Users/giancarloanemone/dev/fusion-cli/node_modules/__non_existent_module__.json]
+[/Users/giancarloanemone/dev/node_modules/__non_existent_module__.wasm]
+[/Users/giancarloanemone/dev/node_modules/__non_existent_module__.mjs]
+[/Users/giancarloanemone/dev/node_modules/__non_existent_module__.js]
+[/Users/giancarloanemone/dev/node_modules/__non_existent_module__.json]
+ @ ./src/main.js 2:0-33
+ @ /Users/giancarloanemone/dev/fusion-cli/entries/server-entry.js
+ @ multi /Users/giancarloanemone/dev/fusion-cli/entries/server-public-path.js /Users/giancarloanemone/dev/fusion-cli/entries/server-entry.js",
+  ],
+  Array [
+    "./src/main.js
+Module not found: Error: Can't resolve '__non_existent_module__' in '/Users/giancarloanemone/dev/fusion-cli/test/e2e/missing-module/fixture/src'
+resolve '__non_existent_module__' in '/Users/giancarloanemone/dev/fusion-cli/test/e2e/missing-module/fixture/src'
+  Parsed request is a module
+  using description file: /Users/giancarloanemone/dev/fusion-cli/package.json (relative path: ./test/e2e/missing-module/fixture/src)
+    Field 'browser' doesn't contain a valid alias configuration
+    Field 'es2015' doesn't contain a valid alias configuration
+    Field 'es2017' doesn't contain a valid alias configuration
+    resolve as module
+      /Users/giancarloanemone/dev/fusion-cli/test/e2e/missing-module/fixture/src/node_modules doesn't exist or is not a directory
+      /Users/giancarloanemone/dev/fusion-cli/test/e2e/missing-module/fixture/node_modules doesn't exist or is not a directory
+      /Users/giancarloanemone/dev/fusion-cli/test/e2e/missing-module/node_modules doesn't exist or is not a directory
+      /Users/giancarloanemone/dev/fusion-cli/test/e2e/node_modules doesn't exist or is not a directory
+      /Users/giancarloanemone/dev/fusion-cli/test/node_modules doesn't exist or is not a directory
+      /Users/giancarloanemone/node_modules doesn't exist or is not a directory
+      /Users/node_modules doesn't exist or is not a directory
+      /node_modules doesn't exist or is not a directory
+      looking for modules in /Users/giancarloanemone/dev/fusion-cli/node_modules
+        using description file: /Users/giancarloanemone/dev/fusion-cli/package.json (relative path: ./node_modules)
+          Field 'browser' doesn't contain a valid alias configuration
+          Field 'es2015' doesn't contain a valid alias configuration
+          Field 'es2017' doesn't contain a valid alias configuration
+          using description file: /Users/giancarloanemone/dev/fusion-cli/package.json (relative path: ./node_modules/__non_existent_module__)
+            no extension
+              Field 'browser' doesn't contain a valid alias configuration
+              Field 'es2015' doesn't contain a valid alias configuration
+              Field 'es2017' doesn't contain a valid alias configuration
+      looking for modules in /Users/giancarloanemone/dev/node_modules
+        No description file found
+        Field 'browser' doesn't contain a valid alias configuration
+        Field 'es2015' doesn't contain a valid alias configuration
+        Field 'es2017' doesn't contain a valid alias configuration
+              /Users/giancarloanemone/dev/fusion-cli/node_modules/__non_existent_module__ doesn't exist
+            .wasm
+              Field 'browser' doesn't contain a valid alias configuration
+              Field 'es2015' doesn't contain a valid alias configuration
+              Field 'es2017' doesn't contain a valid alias configuration
+              /Users/giancarloanemone/dev/fusion-cli/node_modules/__non_existent_module__.wasm doesn't exist
+            .mjs
+              Field 'browser' doesn't contain a valid alias configuration
+              Field 'es2015' doesn't contain a valid alias configuration
+              Field 'es2017' doesn't contain a valid alias configuration
+              /Users/giancarloanemone/dev/fusion-cli/node_modules/__non_existent_module__.mjs doesn't exist
+            .js
+              Field 'browser' doesn't contain a valid alias configuration
+              Field 'es2015' doesn't contain a valid alias configuration
+              Field 'es2017' doesn't contain a valid alias configuration
+        No description file found
+        no extension
+          Field 'browser' doesn't contain a valid alias configuration
+          Field 'es2015' doesn't contain a valid alias configuration
+          Field 'es2017' doesn't contain a valid alias configuration
+              /Users/giancarloanemone/dev/fusion-cli/node_modules/__non_existent_module__.js doesn't exist
+            .json
+              Field 'browser' doesn't contain a valid alias configuration
+              Field 'es2015' doesn't contain a valid alias configuration
+              Field 'es2017' doesn't contain a valid alias configuration
+          /Users/giancarloanemone/dev/node_modules/__non_existent_module__ doesn't exist
+        .wasm
+          Field 'browser' doesn't contain a valid alias configuration
+          Field 'es2015' doesn't contain a valid alias configuration
+          Field 'es2017' doesn't contain a valid alias configuration
+              /Users/giancarloanemone/dev/fusion-cli/node_modules/__non_existent_module__.json doesn't exist
+          /Users/giancarloanemone/dev/node_modules/__non_existent_module__.wasm doesn't exist
+        .mjs
+          Field 'browser' doesn't contain a valid alias configuration
+          Field 'es2015' doesn't contain a valid alias configuration
+          Field 'es2017' doesn't contain a valid alias configuration
+            as directory
+              /Users/giancarloanemone/dev/fusion-cli/node_modules/__non_existent_module__ doesn't exist
+          /Users/giancarloanemone/dev/node_modules/__non_existent_module__.mjs doesn't exist
+        .js
+          Field 'browser' doesn't contain a valid alias configuration
+          Field 'es2015' doesn't contain a valid alias configuration
+          Field 'es2017' doesn't contain a valid alias configuration
+          /Users/giancarloanemone/dev/node_modules/__non_existent_module__.js doesn't exist
+        .json
+          Field 'browser' doesn't contain a valid alias configuration
+          Field 'es2015' doesn't contain a valid alias configuration
+          Field 'es2017' doesn't contain a valid alias configuration
+          /Users/giancarloanemone/dev/node_modules/__non_existent_module__.json doesn't exist
+        as directory
+          /Users/giancarloanemone/dev/node_modules/__non_existent_module__ doesn't exist
+[/Users/giancarloanemone/dev/fusion-cli/test/e2e/missing-module/fixture/src/node_modules]
+[/Users/giancarloanemone/dev/fusion-cli/test/e2e/missing-module/fixture/node_modules]
+[/Users/giancarloanemone/dev/fusion-cli/test/e2e/missing-module/node_modules]
+[/Users/giancarloanemone/dev/fusion-cli/test/e2e/node_modules]
+[/Users/giancarloanemone/dev/fusion-cli/test/node_modules]
+[/Users/giancarloanemone/node_modules]
+[/Users/node_modules]
+[/node_modules]
+[/Users/giancarloanemone/dev/node_modules/package.json]
+[/Users/giancarloanemone/dev/fusion-cli/node_modules/__non_existent_module__]
+[/Users/giancarloanemone/dev/fusion-cli/node_modules/__non_existent_module__.wasm]
+[/Users/giancarloanemone/dev/fusion-cli/node_modules/__non_existent_module__.mjs]
+[/Users/giancarloanemone/dev/node_modules/__non_existent_module__/package.json]
+[/Users/giancarloanemone/dev/fusion-cli/node_modules/__non_existent_module__.js]
+[/Users/giancarloanemone/dev/node_modules/__non_existent_module__]
+[/Users/giancarloanemone/dev/fusion-cli/node_modules/__non_existent_module__.json]
+[/Users/giancarloanemone/dev/node_modules/__non_existent_module__.wasm]
+[/Users/giancarloanemone/dev/node_modules/__non_existent_module__.mjs]
+[/Users/giancarloanemone/dev/node_modules/__non_existent_module__.js]
+[/Users/giancarloanemone/dev/node_modules/__non_existent_module__.json]
+ @ ./src/main.js 2:0-33
+ @ /Users/giancarloanemone/dev/fusion-cli/entries/client-entry.js
+ @ multi /Users/giancarloanemone/dev/fusion-cli/entries/client-public-path.js /Users/giancarloanemone/dev/fusion-cli/entries/client-entry.js",
+  ],
+  Array [
+    "./src/main.js
+Module not found: Error: Can't resolve '__non_existent_module__' in '/Users/giancarloanemone/dev/fusion-cli/test/e2e/missing-module/fixture/src'
+resolve '__non_existent_module__' in '/Users/giancarloanemone/dev/fusion-cli/test/e2e/missing-module/fixture/src'
+  Parsed request is a module
+  using description file: /Users/giancarloanemone/dev/fusion-cli/package.json (relative path: ./test/e2e/missing-module/fixture/src)
+    Field 'browser' doesn't contain a valid alias configuration
+    Field 'es2015' doesn't contain a valid alias configuration
+    Field 'es2017' doesn't contain a valid alias configuration
+    resolve as module
+      /Users/giancarloanemone/dev/fusion-cli/test/e2e/missing-module/fixture/src/node_modules doesn't exist or is not a directory
+      /Users/giancarloanemone/dev/fusion-cli/test/e2e/missing-module/fixture/node_modules doesn't exist or is not a directory
+      /Users/giancarloanemone/dev/fusion-cli/test/e2e/missing-module/node_modules doesn't exist or is not a directory
+      /Users/giancarloanemone/dev/fusion-cli/test/e2e/node_modules doesn't exist or is not a directory
+      /Users/giancarloanemone/dev/fusion-cli/test/node_modules doesn't exist or is not a directory
+      /Users/giancarloanemone/node_modules doesn't exist or is not a directory
+      /Users/node_modules doesn't exist or is not a directory
+      /node_modules doesn't exist or is not a directory
+      looking for modules in /Users/giancarloanemone/dev/fusion-cli/node_modules
+        using description file: /Users/giancarloanemone/dev/fusion-cli/package.json (relative path: ./node_modules)
+          Field 'browser' doesn't contain a valid alias configuration
+          Field 'es2015' doesn't contain a valid alias configuration
+          Field 'es2017' doesn't contain a valid alias configuration
+          using description file: /Users/giancarloanemone/dev/fusion-cli/package.json (relative path: ./node_modules/__non_existent_module__)
+            no extension
+              Field 'browser' doesn't contain a valid alias configuration
+              Field 'es2015' doesn't contain a valid alias configuration
+              Field 'es2017' doesn't contain a valid alias configuration
+      looking for modules in /Users/giancarloanemone/dev/node_modules
+        No description file found
+        Field 'browser' doesn't contain a valid alias configuration
+        Field 'es2015' doesn't contain a valid alias configuration
+        Field 'es2017' doesn't contain a valid alias configuration
+              /Users/giancarloanemone/dev/fusion-cli/node_modules/__non_existent_module__ doesn't exist
+            .wasm
+              Field 'browser' doesn't contain a valid alias configuration
+              Field 'es2015' doesn't contain a valid alias configuration
+              Field 'es2017' doesn't contain a valid alias configuration
+              /Users/giancarloanemone/dev/fusion-cli/node_modules/__non_existent_module__.wasm doesn't exist
+            .mjs
+              Field 'browser' doesn't contain a valid alias configuration
+              Field 'es2015' doesn't contain a valid alias configuration
+              Field 'es2017' doesn't contain a valid alias configuration
+              /Users/giancarloanemone/dev/fusion-cli/node_modules/__non_existent_module__.mjs doesn't exist
+            .js
+              Field 'browser' doesn't contain a valid alias configuration
+              Field 'es2015' doesn't contain a valid alias configuration
+              Field 'es2017' doesn't contain a valid alias configuration
+        No description file found
+        no extension
+          Field 'browser' doesn't contain a valid alias configuration
+          Field 'es2015' doesn't contain a valid alias configuration
+          Field 'es2017' doesn't contain a valid alias configuration
+              /Users/giancarloanemone/dev/fusion-cli/node_modules/__non_existent_module__.js doesn't exist
+            .json
+              Field 'browser' doesn't contain a valid alias configuration
+              Field 'es2015' doesn't contain a valid alias configuration
+              Field 'es2017' doesn't contain a valid alias configuration
+          /Users/giancarloanemone/dev/node_modules/__non_existent_module__ doesn't exist
+        .wasm
+          Field 'browser' doesn't contain a valid alias configuration
+          Field 'es2015' doesn't contain a valid alias configuration
+          Field 'es2017' doesn't contain a valid alias configuration
+              /Users/giancarloanemone/dev/fusion-cli/node_modules/__non_existent_module__.json doesn't exist
+          /Users/giancarloanemone/dev/node_modules/__non_existent_module__.wasm doesn't exist
+        .mjs
+          Field 'browser' doesn't contain a valid alias configuration
+          Field 'es2015' doesn't contain a valid alias configuration
+          Field 'es2017' doesn't contain a valid alias configuration
+            as directory
+              /Users/giancarloanemone/dev/fusion-cli/node_modules/__non_existent_module__ doesn't exist
+          /Users/giancarloanemone/dev/node_modules/__non_existent_module__.mjs doesn't exist
+        .js
+          Field 'browser' doesn't contain a valid alias configuration
+          Field 'es2015' doesn't contain a valid alias configuration
+          Field 'es2017' doesn't contain a valid alias configuration
+          /Users/giancarloanemone/dev/node_modules/__non_existent_module__.js doesn't exist
+        .json
+          Field 'browser' doesn't contain a valid alias configuration
+          Field 'es2015' doesn't contain a valid alias configuration
+          Field 'es2017' doesn't contain a valid alias configuration
+          /Users/giancarloanemone/dev/node_modules/__non_existent_module__.json doesn't exist
+        as directory
+          /Users/giancarloanemone/dev/node_modules/__non_existent_module__ doesn't exist
+[/Users/giancarloanemone/dev/fusion-cli/test/e2e/missing-module/fixture/src/node_modules]
+[/Users/giancarloanemone/dev/fusion-cli/test/e2e/missing-module/fixture/node_modules]
+[/Users/giancarloanemone/dev/fusion-cli/test/e2e/missing-module/node_modules]
+[/Users/giancarloanemone/dev/fusion-cli/test/e2e/node_modules]
+[/Users/giancarloanemone/dev/fusion-cli/test/node_modules]
+[/Users/giancarloanemone/node_modules]
+[/Users/node_modules]
+[/node_modules]
+[/Users/giancarloanemone/dev/node_modules/package.json]
+[/Users/giancarloanemone/dev/fusion-cli/node_modules/__non_existent_module__]
+[/Users/giancarloanemone/dev/fusion-cli/node_modules/__non_existent_module__.wasm]
+[/Users/giancarloanemone/dev/fusion-cli/node_modules/__non_existent_module__.mjs]
+[/Users/giancarloanemone/dev/node_modules/__non_existent_module__/package.json]
+[/Users/giancarloanemone/dev/fusion-cli/node_modules/__non_existent_module__.js]
+[/Users/giancarloanemone/dev/node_modules/__non_existent_module__]
+[/Users/giancarloanemone/dev/fusion-cli/node_modules/__non_existent_module__.json]
+[/Users/giancarloanemone/dev/node_modules/__non_existent_module__.wasm]
+[/Users/giancarloanemone/dev/node_modules/__non_existent_module__.mjs]
+[/Users/giancarloanemone/dev/node_modules/__non_existent_module__.js]
+[/Users/giancarloanemone/dev/node_modules/__non_existent_module__.json]
+ @ ./src/main.js 2:0-33
+ @ /Users/giancarloanemone/dev/fusion-cli/entries/client-entry.js
+ @ multi /Users/giancarloanemone/dev/fusion-cli/entries/client-public-path.js /Users/giancarloanemone/dev/fusion-cli/entries/client-entry.js",
+  ],
+  Array [
+    "./src/main.js
+Module not found: Error: Can't resolve '__non_existent_module__' in '/Users/giancarloanemone/dev/fusion-cli/test/e2e/missing-module/fixture/src'
+resolve '__non_existent_module__' in '/Users/giancarloanemone/dev/fusion-cli/test/e2e/missing-module/fixture/src'
+  Parsed request is a module
+  using description file: /Users/giancarloanemone/dev/fusion-cli/package.json (relative path: ./test/e2e/missing-module/fixture/src)
+    Field 'es2015' doesn't contain a valid alias configuration
+    Field 'es2017' doesn't contain a valid alias configuration
+    resolve as module
+      /Users/giancarloanemone/dev/fusion-cli/test/e2e/missing-module/fixture/src/node_modules doesn't exist or is not a directory
+      /Users/giancarloanemone/dev/fusion-cli/test/e2e/missing-module/fixture/node_modules doesn't exist or is not a directory
+      /Users/giancarloanemone/dev/fusion-cli/test/e2e/missing-module/node_modules doesn't exist or is not a directory
+      /Users/giancarloanemone/dev/fusion-cli/test/e2e/node_modules doesn't exist or is not a directory
+      /Users/giancarloanemone/dev/fusion-cli/test/node_modules doesn't exist or is not a directory
+      /Users/giancarloanemone/node_modules doesn't exist or is not a directory
+      /Users/node_modules doesn't exist or is not a directory
+      /node_modules doesn't exist or is not a directory
+      looking for modules in /Users/giancarloanemone/dev/fusion-cli/node_modules
+        using description file: /Users/giancarloanemone/dev/fusion-cli/package.json (relative path: ./node_modules)
+          Field 'es2015' doesn't contain a valid alias configuration
+          Field 'es2017' doesn't contain a valid alias configuration
+          using description file: /Users/giancarloanemone/dev/fusion-cli/package.json (relative path: ./node_modules/__non_existent_module__)
+            no extension
+              Field 'es2015' doesn't contain a valid alias configuration
+              Field 'es2017' doesn't contain a valid alias configuration
+      looking for modules in /Users/giancarloanemone/dev/node_modules
+        No description file found
+        Field 'es2015' doesn't contain a valid alias configuration
+        Field 'es2017' doesn't contain a valid alias configuration
+              /Users/giancarloanemone/dev/fusion-cli/node_modules/__non_existent_module__ doesn't exist
+            .wasm
+              Field 'es2015' doesn't contain a valid alias configuration
+              Field 'es2017' doesn't contain a valid alias configuration
+              /Users/giancarloanemone/dev/fusion-cli/node_modules/__non_existent_module__.wasm doesn't exist
+            .mjs
+              Field 'es2015' doesn't contain a valid alias configuration
+              Field 'es2017' doesn't contain a valid alias configuration
+              /Users/giancarloanemone/dev/fusion-cli/node_modules/__non_existent_module__.mjs doesn't exist
+            .js
+              Field 'es2015' doesn't contain a valid alias configuration
+              Field 'es2017' doesn't contain a valid alias configuration
+        No description file found
+        no extension
+          Field 'es2015' doesn't contain a valid alias configuration
+          Field 'es2017' doesn't contain a valid alias configuration
+              /Users/giancarloanemone/dev/fusion-cli/node_modules/__non_existent_module__.js doesn't exist
+            .json
+              Field 'es2015' doesn't contain a valid alias configuration
+              Field 'es2017' doesn't contain a valid alias configuration
+          /Users/giancarloanemone/dev/node_modules/__non_existent_module__ doesn't exist
+        .wasm
+          Field 'es2015' doesn't contain a valid alias configuration
+          Field 'es2017' doesn't contain a valid alias configuration
+              /Users/giancarloanemone/dev/fusion-cli/node_modules/__non_existent_module__.json doesn't exist
+          /Users/giancarloanemone/dev/node_modules/__non_existent_module__.wasm doesn't exist
+        .mjs
+          Field 'es2015' doesn't contain a valid alias configuration
+          Field 'es2017' doesn't contain a valid alias configuration
+            as directory
+              /Users/giancarloanemone/dev/fusion-cli/node_modules/__non_existent_module__ doesn't exist
+          /Users/giancarloanemone/dev/node_modules/__non_existent_module__.mjs doesn't exist
+        .js
+          Field 'es2015' doesn't contain a valid alias configuration
+          Field 'es2017' doesn't contain a valid alias configuration
+          /Users/giancarloanemone/dev/node_modules/__non_existent_module__.js doesn't exist
+        .json
+          Field 'es2015' doesn't contain a valid alias configuration
+          Field 'es2017' doesn't contain a valid alias configuration
+          /Users/giancarloanemone/dev/node_modules/__non_existent_module__.json doesn't exist
+        as directory
+          /Users/giancarloanemone/dev/node_modules/__non_existent_module__ doesn't exist
+[/Users/giancarloanemone/dev/fusion-cli/test/e2e/missing-module/fixture/src/node_modules]
+[/Users/giancarloanemone/dev/fusion-cli/test/e2e/missing-module/fixture/node_modules]
+[/Users/giancarloanemone/dev/fusion-cli/test/e2e/missing-module/node_modules]
+[/Users/giancarloanemone/dev/fusion-cli/test/e2e/node_modules]
+[/Users/giancarloanemone/dev/fusion-cli/test/node_modules]
+[/Users/giancarloanemone/node_modules]
+[/Users/node_modules]
+[/node_modules]
+[/Users/giancarloanemone/dev/node_modules/package.json]
+[/Users/giancarloanemone/dev/fusion-cli/node_modules/__non_existent_module__]
+[/Users/giancarloanemone/dev/fusion-cli/node_modules/__non_existent_module__.wasm]
+[/Users/giancarloanemone/dev/fusion-cli/node_modules/__non_existent_module__.mjs]
+[/Users/giancarloanemone/dev/node_modules/__non_existent_module__/package.json]
+[/Users/giancarloanemone/dev/fusion-cli/node_modules/__non_existent_module__.js]
+[/Users/giancarloanemone/dev/node_modules/__non_existent_module__]
+[/Users/giancarloanemone/dev/fusion-cli/node_modules/__non_existent_module__.json]
+[/Users/giancarloanemone/dev/node_modules/__non_existent_module__.wasm]
+[/Users/giancarloanemone/dev/node_modules/__non_existent_module__.mjs]
+[/Users/giancarloanemone/dev/node_modules/__non_existent_module__.js]
+[/Users/giancarloanemone/dev/node_modules/__non_existent_module__.json]
+ @ ./src/main.js 2:0-33
+ @ /Users/giancarloanemone/dev/fusion-cli/entries/server-entry.js
+ @ multi /Users/giancarloanemone/dev/fusion-cli/entries/server-public-path.js /Users/giancarloanemone/dev/fusion-cli/entries/server-entry.js",
+  ],
+]
+`;
+
+exports[`missing module prod: /Users/giancarloanemone/dev/fusion-cli/test/e2e/missing-module/fixture-production-warn 1`] = `Array []`;
