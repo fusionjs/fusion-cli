@@ -27,18 +27,16 @@ function Lifecycle() {
   return {
     start: () => {
       state.started = true;
-      state.error = undefined;
-      emitter.emit('started');
+      emitter.emit('message');
     },
     stop: () => {
       state.started = false;
     },
     error: error => {
-      state.error = error;
       // The error listener may emit before we call wait.
       // Make sure that we're listening before attempting to emit.
       if (listening) {
-        emitter.emit('error');
+        emitter.emit('message', error);
       }
     },
     wait: () => {
@@ -47,10 +45,13 @@ function Lifecycle() {
         else if (state.error) reject(state.error);
         else {
           listening = true;
-          emitter.once('started', resolve);
-          emitter.once('error', () => {
-            listening = false;
-            reject(state.error);
+          emitter.once('message', (error /*: Error */) => {
+            if (error) {
+              state.error = error;
+              return reject(error);
+            }
+
+            resolve();
           });
         }
       });
