@@ -109,6 +109,16 @@ test('`fusion dev` app with split translations integration', async () => {
     'renders first  split translation'
   );
 
+  await Promise.all([
+    page.click('#split2-link'),
+    page.waitForSelector('#split2-translation'),
+  ]);
+  const content3 = await page.content();
+  t.ok(
+    content3.includes('__SPLIT2_TRANSLATED__'),
+    'renders second split translation'
+  );
+
   const reloaded = page.evaluate(() => {
     return new Promise(resolve => {
       // eslint-disable-next-line
@@ -128,9 +138,9 @@ test('`fusion dev` app with split translations integration', async () => {
     page.click('#split2-link'),
     page.waitForSelector('#split2-translation'),
   ]);
-  const content3 = await page.content();
+  const content4 = await page.content();
   t.ok(
-    content3.includes('__HOT_TRANSLATED__'),
+    content4.includes('__HOT_TRANSLATED__'),
     'renders second, hot split translation'
   );
 
@@ -140,9 +150,9 @@ test('`fusion dev` app with split translations integration', async () => {
     page.click('#split1-link'),
     page.waitForSelector('#split1-translation'),
   ]);
-  const content4 = await page.content();
+  const content5 = await page.content();
   t.ok(
-    content4.includes('__SPLIT1_TRANSLATED__'),
+    content5.includes('__SPLIT1_TRANSLATED__'),
     'renders translation from unmodified file after rebuild'
   );
 
@@ -178,6 +188,16 @@ test('`fusion dev` app with split translations integration (cached)', async () =
   t.ok(
     content2.includes('__SPLIT1_TRANSLATED__'),
     'renders first  split translation'
+  );
+
+  await Promise.all([
+    page.click('#split2-link'),
+    page.waitForSelector('#split2-translation'),
+  ]);
+  const content3 = await page.content();
+  t.ok(
+    content3.includes('__SPLIT2_TRANSLATED__'),
+    'renders second split translation'
   );
 
   app.teardown();

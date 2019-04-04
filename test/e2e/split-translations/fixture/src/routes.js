@@ -21,7 +21,7 @@ export default [
     path: '/split2',
     component: split({
       load() {
-        return import('./split2');
+        return import(/* webpackChunkName: "named-chunk" */ './split2');
       },
       LoadingComponent,
       ErrorComponent,
