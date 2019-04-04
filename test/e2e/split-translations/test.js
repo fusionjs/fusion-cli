@@ -119,6 +119,8 @@ test('`fusion dev` app with split translations integration', async () => {
     'renders second split translation'
   );
 
+  await page.goto(`${url}/`, {waitUntil: 'load'});
+
   const reloaded = page.evaluate(() => {
     return new Promise(resolve => {
       // eslint-disable-next-line
