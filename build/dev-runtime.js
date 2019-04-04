@@ -27,6 +27,7 @@ function Lifecycle() {
   return {
     start: () => {
       state.started = true;
+      state.error = undefined;
       emitter.emit('message');
     },
     stop: () => {
@@ -48,6 +49,7 @@ function Lifecycle() {
           listening = true;
           emitter.once('message', (error /*: Error */) => {
             if (error) {
+              listening = false;
               return reject(error);
             }
 
