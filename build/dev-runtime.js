@@ -35,6 +35,7 @@ function Lifecycle() {
     error: error => {
       // The error listener may emit before we call wait.
       // Make sure that we're listening before attempting to emit.
+      state.error = error;
       if (listening) {
         emitter.emit('message', error);
       }
@@ -47,7 +48,6 @@ function Lifecycle() {
           listening = true;
           emitter.once('message', (error /*: Error */) => {
             if (error) {
-              state.error = error;
               return reject(error);
             }
 
