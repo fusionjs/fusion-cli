@@ -76,4 +76,4 @@ test('`fusion dev` proxy gracefully recovers from cached SSR errors', async () =
 
   // Restore files and clean-up
   fs.writeFileSync(homeFilePath, homeFileContents);
-}, 100000);
+}, 3000);
