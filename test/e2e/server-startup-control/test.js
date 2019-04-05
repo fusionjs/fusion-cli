@@ -17,7 +17,7 @@ test('`fusion dev` proxy gracefully recovers from cached SSR errors', async () =
   async function waitForCompileToStart() {
     // Once the Fusion.js application renders SSR error pages in the app
     // we should leverage module.hot.addStatusHandler.
-    await new Promise(resolve => setTimeout(resolve, 10000));
+    await new Promise(resolve => setTimeout(resolve, 3000));
   }
 
   const url = app.url();
@@ -76,4 +76,4 @@ test('`fusion dev` proxy gracefully recovers from cached SSR errors', async () =
 
   // Restore files and clean-up
   fs.writeFileSync(homeFilePath, homeFileContents);
-}, 3000);
+}, 100000);
