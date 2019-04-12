@@ -236,7 +236,7 @@ function getWebpackConfig(opts /*: WebpackConfigOpts */) {
     devtool:
       (runtime === 'client' && !dev) || runtime === 'sw'
         ? 'hidden-source-map'
-        : 'cheap-module-source-map',
+        : 'cheap-eval-source-map',
     output: {
       path: path.join(dir, `.fusion/dist/${env}/${runtime}`),
       filename:
