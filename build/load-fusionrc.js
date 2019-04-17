@@ -16,11 +16,16 @@ const chalk = require('chalk');
 let loggedNotice = false;
 
 /*::
+import type {
+  WebpackOptions 
+} from "webpack";
+
 export type FusionRC = {
-  babel?: {plugins?: Array<any>, presets?: Array<any>},
+  babel?: {plugins?: Array<any>, presets?: Array<any>, exclude?: mixed},
   assumeNoImportSideEffects?: boolean,
   experimentalCompile?: boolean,
   nodeBuiltins?: {[string]: any},
+  overrideWebpackConfig:? (any) => any
 };
 */
 
@@ -32,17 +37,6 @@ module.exports = function validateConfig(dir /*: string */) /*: FusionRC */ {
     config = require(configPath);
     if (!isValid(config)) {
       throw new Error('.fusionrc.js is invalid');
-    }
-    if (!loggedNotice && config.babel) {
-      console.log(chalk.dim('Using custom Babel config from .fusionrc.js'));
-      console.warn(
-        chalk.yellow(
-          'Warning: custom Babel config is an',
-          chalk.bold.underline('unstable API'),
-          'and may be not be supported in future releases. Use at your own risk.'
-        )
-      );
-      loggedNotice = true;
     }
   } else {
     config = {};
@@ -62,6 +56,7 @@ function isValid(config) {
         'assumeNoImportSideEffects',
         'experimentalCompile',
         'nodeBuiltins',
+        'overrideWebpackConfig',
       ].includes(key)
     )
   ) {
@@ -70,10 +65,12 @@ function isValid(config) {
 
   if (
     config.babel &&
-    !Object.keys(config.babel).every(el => ['plugins', 'presets'].includes(el))
+    !Object.keys(config.babel).every(el =>
+      ['plugins', 'presets', 'exclude'].includes(el)
+    )
   ) {
     throw new Error(
-      `Only "plugins" and "presets" are supported in fusionrc.js babel config`
+      `Only "plugins", "presets", and "exclude" are supported in fusionrc.js babel config`
     );
   }
 
