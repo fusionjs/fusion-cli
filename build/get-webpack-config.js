@@ -601,12 +601,6 @@ if (process.env.NODE_ENV && process.env.NODE_ENV !== '${env}') {
 function getNodeConfig(runtime) {
   const emptyForWeb = runtime === 'client' ? 'empty' : false;
   return {
-    // Polyfilling process involves lots of cruft. Better to explicitly inline env value statically
-    process: false,
-    // We definitely don't want automatic Buffer polyfills. This should be explicit and in userland code
-    Buffer: false,
-    // We definitely don't want automatic setImmediate polyfills. This should be explicit and in userland code
-    setImmediate: false,
     // We want these to resolve to the original file source location, not the compiled location
     // in the future, we may want to consider using `import.meta`
     __filename: true,
