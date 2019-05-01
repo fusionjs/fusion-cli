@@ -10,6 +10,16 @@
     "lint": "eslint .",
     "test": "git clean -Xfd test/fixtures && jest --maxWorkers 1"
   },
+  "files": [
+    "get-compilation-metadata.js",
+    "bin/",
+    "build/",
+    "commands/",
+    "entries/",
+    "lib/",
+    "plugins/",
+    "!**/test/"
+  ],
   "dependencies": {
     "@babel/core": "^7.1.6",
     "@babel/plugin-syntax-dynamic-import": "7.2.0",
