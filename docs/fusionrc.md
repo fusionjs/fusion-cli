@@ -4,6 +4,31 @@ Fusion supports a `.fusionrc.js` in the root directory of your application. This
 
 This configuration object supports the following fields:
 
+## `jsExtPattern`
+
+By default this is `/\.jsx?$/`
+
+For example, this enables to handle typescript files with addition to Babel plugins/preset:
+
+```js
+module.exports = {
+  jsExtPattern: \[jt]sx?$\,
+  babel: {
+    presets: ["@babel/preset-typescript"],
+  }
+};
+```
+
+## `resolveExtensions`
+
+By default this is webpack default witch is: `['.wasm', '.mjs', '.js', '.json']`
+
+```js
+module.exports = {
+  resolveExtensions: ['.wasm', '.mjs', '.js', '.json', '.ts', '.tsx'],
+};
+```
+
 ## `babel`
 
 ### Adding plugins/presets

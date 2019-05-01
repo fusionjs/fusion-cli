@@ -18,6 +18,8 @@ let loggedNotice = false;
 /*::
 export type FusionRC = {
   babel?: {plugins?: Array<any>, presets?: Array<any>},
+  jsExtPattern?: RegExp,
+  resolveExtensions?: Array<string>,
   assumeNoImportSideEffects?: boolean,
   experimentalCompile?: boolean,
   nodeBuiltins?: {[string]: any},
@@ -59,6 +61,8 @@ function isValid(config) {
     !Object.keys(config).every(key =>
       [
         'babel',
+        'jsExtPattern',
+        'resolveExtensions',
         'assumeNoImportSideEffects',
         'experimentalCompile',
         'nodeBuiltins',
