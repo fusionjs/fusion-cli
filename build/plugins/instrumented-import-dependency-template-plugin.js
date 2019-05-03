@@ -35,8 +35,9 @@ const ImportDependencyTemplate = require('webpack/lib/dependencies/ImportDepende
 class InstrumentedImportDependencyTemplate extends ImportDependencyTemplate {
   /*:: clientChunkIndex: ?$PropertyType<ClientChunkMetadata, "fileManifest">; */
 
-  constructor(clientChunkMetadata /*: ?ClientChunkMetadata */) {
+  constructor(clientChunkMetadata /*: ?ClientChunkMetadata */, discoveryState) {
     super();
+    this.discoveryState = discoveryState;
     if (clientChunkMetadata) {
       this.clientChunkIndex = clientChunkMetadata.fileManifest;
     }
@@ -69,13 +70,33 @@ class InstrumentedImportDependencyTemplate extends ImportDependencyTemplate {
       chunkIds = getChunkGroupIds(depBlock.chunkGroup);
     }
 
+    let translationKeys = [];
+    if (this.discoveryState) {
+      const chunks = depBlock.chunkGroup.chunks;
+      const modules = chunks.reduce((acc, chunk) => {
+        const modules = Array.from(chunk._modules.keys());
+        return acc.concat(modules.map(m => m.resource));
+      }, []);
+
+      translationKeys = modules.reduce((acc, module) => {
+        if (this.discoveryState.has(module)) {
+          const keys = Array.from(this.discoveryState.get(module).keys());
+          return acc.concat(keys);
+        } else {
+          return acc;
+        }
+      }, []);
+    }
+
     // Add the following properties to the promise returned by import()
     // - `__CHUNK_IDS`: the webpack chunk ids for the dynamic import
     // - `__MODULE_ID`: the webpack module id of the dynamically imported module. Equivalent to require.resolveWeak(path)
+    // - `__I18N_KEYS`: the translation keys that are used in this bundle
     const customContent = chunkIds
       ? `Object.defineProperties(${content}, {
         "__CHUNK_IDS": {value:${JSON.stringify(chunkIds)}},
-        "__MODULE_ID": {value:${JSON.stringify(dep.module.id)}}
+        "__MODULE_ID": {value:${JSON.stringify(dep.module.id)}},
+        "__I18N_KEYS": {value:${JSON.stringify(translationKeys)}}
         })`
       : content;
 
@@ -91,9 +112,14 @@ class InstrumentedImportDependencyTemplate extends ImportDependencyTemplate {
 
 class InstrumentedImportDependencyTemplatePlugin {
   /*:: clientChunkIndexState: ?ClientChunkMetadataState; */
+  /*:: translationsDiscoveryState: ?Map<string, Set<string>>; */
 
-  constructor(clientChunkIndexState /*: ?ClientChunkMetadataState*/) {
+  constructor(
+    clientChunkIndexState /*: ?ClientChunkMetadataState*/,
+    translationsDiscoveryState /*: ?Map<string, Set<string>>*/
+  ) {
     this.clientChunkIndexState = clientChunkIndexState;
+    this.translationsDiscoveryState = translationsDiscoveryState;
   }
 
   apply(compiler /*: any */) {
@@ -113,13 +139,20 @@ class InstrumentedImportDependencyTemplatePlugin {
           );
           done();
         });
-      } else {
+      } else if (this.translationsDiscoveryState) {
         // client
         compilation.dependencyTemplates.set(
           ImportDependency,
-          new InstrumentedImportDependencyTemplate()
+          new InstrumentedImportDependencyTemplate(
+            void 0,
+            this.translationsDiscoveryState
+          )
         );
         done();
+      } else {
+        throw new Error(
+          'InstrumentationImportDependencyPlugin called without clientChunkIndexState or translationsDiscoveryState'
+        );
       }
     });
   }

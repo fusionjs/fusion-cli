@@ -17,11 +17,14 @@ import type {TranslationsManifestState, TranslationsManifest} from "../types.js"
 class I18nDiscoveryPlugin {
   /*::
   manifest: TranslationsManifestState;
-  discoveryState: TranslationsManifest;
+  discoveryState: Map<string, Set<string>>;
   */
-  constructor(manifest /*: TranslationsManifestState*/) {
-    this.manifest = manifest;
-    this.discoveryState = new Map();
+  constructor(
+    deferredManifest /*: TranslationsManifestState*/,
+    discoveryState /*: Map<string, Set<string>>*/
+  ) {
+    this.manifest = deferredManifest;
+    this.discoveryState = discoveryState;
   }
   apply(compiler /*: any */) {
     const name = this.constructor.name;
@@ -31,6 +34,9 @@ class I18nDiscoveryPlugin {
         context[translationsDiscoveryKey] = this.discoveryState;
       });
     });
+    // if resolve at 'make' - discoverState will be empty
+    // if resolve at 'afterCompile' or 'done' - instrumentation plugin is
+    //  waiting for this to resolve from the 'make' step - build breaks
     compiler.hooks.done.tap(name, () => {
       this.manifest.resolve(this.discoveryState);
     });
