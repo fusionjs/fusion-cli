@@ -9,7 +9,11 @@
 /* eslint-env node */
 
 /*::
-import type {ClientChunkMetadataState, ClientChunkMetadata} from "../types.js";
+import type {
+  ClientChunkMetadataState,
+  ClientChunkMetadata,
+  TranslationsManifest,
+} from "../types.js";
 */
 
 const ImportDependency = require('webpack/lib/dependencies/ImportDependency');
@@ -34,10 +38,11 @@ const ImportDependencyTemplate = require('webpack/lib/dependencies/ImportDepende
 
 class InstrumentedImportDependencyTemplate extends ImportDependencyTemplate {
   /*:: clientChunkIndex: ?$PropertyType<ClientChunkMetadata, "fileManifest">; */
+  /*:: manifest: ?TranslationsManifest; */
 
-  constructor(clientChunkMetadata /*: ?ClientChunkMetadata */, discoveryState) {
+  constructor(clientChunkMetadata /*: ?ClientChunkMetadata */, translationsManifest /*: ?TranslationsManifest*/) {
     super();
-    this.discoveryState = discoveryState;
+    this.translationsManifest = translationsManifest;
     if (clientChunkMetadata) {
       this.clientChunkIndex = clientChunkMetadata.fileManifest;
     }
@@ -71,7 +76,7 @@ class InstrumentedImportDependencyTemplate extends ImportDependencyTemplate {
     }
 
     let translationKeys = [];
-    if (this.discoveryState) {
+    if (this.translationsManifest) {
       const chunks = depBlock.chunkGroup.chunks;
       const modules = chunks.reduce((acc, chunk) => {
         const modules = Array.from(chunk._modules.keys());
@@ -79,8 +84,8 @@ class InstrumentedImportDependencyTemplate extends ImportDependencyTemplate {
       }, []);
 
       translationKeys = modules.reduce((acc, module) => {
-        if (this.discoveryState.has(module)) {
-          const keys = Array.from(this.discoveryState.get(module).keys());
+        if (this.translationsManifest.has(module)) {
+          const keys = Array.from(this.translationsManifest.get(module).keys());
           return acc.concat(keys);
         } else {
           return acc;
@@ -112,14 +117,14 @@ class InstrumentedImportDependencyTemplate extends ImportDependencyTemplate {
 
 class InstrumentedImportDependencyTemplatePlugin {
   /*:: clientChunkIndexState: ?ClientChunkMetadataState; */
-  /*:: translationsDiscoveryState: ?Map<string, Set<string>>; */
+  /*:: translationsManifest: ?TranslationsManifest; */
 
   constructor(
     clientChunkIndexState /*: ?ClientChunkMetadataState*/,
-    translationsDiscoveryState /*: ?Map<string, Set<string>>*/
+    translationsManifest /*: ?TranslationsManifest*/
   ) {
     this.clientChunkIndexState = clientChunkIndexState;
-    this.translationsDiscoveryState = translationsDiscoveryState;
+    this.translationsManifest = translationsManifest;
   }
 
   apply(compiler /*: any */) {
@@ -139,19 +144,19 @@ class InstrumentedImportDependencyTemplatePlugin {
           );
           done();
         });
-      } else if (this.translationsDiscoveryState) {
+      } else if (this.translationsManifest) {
         // client
         compilation.dependencyTemplates.set(
           ImportDependency,
           new InstrumentedImportDependencyTemplate(
             void 0,
-            this.translationsDiscoveryState
+            this.translationsManifest
           )
         );
         done();
       } else {
         throw new Error(
-          'InstrumentationImportDependencyPlugin called without clientChunkIndexState or translationsDiscoveryState'
+          'InstrumentationImportDependencyPlugin called without clientChunkIndexState or translationsManifest'
         );
       }
     });

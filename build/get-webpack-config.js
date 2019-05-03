@@ -65,6 +65,7 @@ const JS_EXT_PATTERN = /\.jsx?$/;
 /*::
 import type {
   ClientChunkMetadataState,
+  TranslationsManifest,
   TranslationsManifestState,
   LegacyBuildEnabledState,
 } from "./types.js";
@@ -86,7 +87,7 @@ export type WebpackConfigOpts = {|
     clientChunkMetadata: ClientChunkMetadataState,
     legacyClientChunkMetadata: ClientChunkMetadataState,
     mergedClientChunkMetadata: ClientChunkMetadataState,
-    i18nManifest: Map<string, Set<string>>,
+    i18nManifest: TranslationManifest,
     i18nDeferredManifest: TranslationsManifestState,
     legacyBuildEnabled: LegacyBuildEnabledState,
   },

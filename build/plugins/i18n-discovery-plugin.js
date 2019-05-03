@@ -16,33 +16,30 @@ import type {TranslationsManifestState, TranslationsManifest} from "../types.js"
 
 class I18nDiscoveryPlugin {
   /*::
-  manifest: TranslationsManifestState;
-  discoveryState: Map<string, Set<string>>;
+  manifestState: TranslationsManifestState;
+  manifest: TranslationsManifest;
   */
   constructor(
-    deferredManifest /*: TranslationsManifestState*/,
-    discoveryState /*: Map<string, Set<string>>*/
+    manifestState /*: TranslationsManifestState*/,
+    manifest /*: TranslationsManifest*/
   ) {
-    this.manifest = deferredManifest;
-    this.discoveryState = discoveryState;
+    this.manifestState = manifestState;
+    this.manifest = manifest;
   }
   apply(compiler /*: any */) {
     const name = this.constructor.name;
     // "thisCompilation" is not run in child compilations
     compiler.hooks.thisCompilation.tap(name, compilation => {
       compilation.hooks.normalModuleLoader.tap(name, (context, module) => {
-        context[translationsDiscoveryKey] = this.discoveryState;
+        context[translationsDiscoveryKey] = this.manifest;
       });
     });
-    // if resolve at 'make' - discoverState will be empty
-    // if resolve at 'afterCompile' or 'done' - instrumentation plugin is
-    //  waiting for this to resolve from the 'make' step - build breaks
     compiler.hooks.done.tap(name, () => {
-      this.manifest.resolve(this.discoveryState);
+      this.manifestState.resolve(this.manifest);
     });
     compiler.hooks.invalid.tap(name, filename => {
-      this.manifest.reset();
-      this.discoveryState.delete(filename);
+      this.manifestState.reset();
+      this.manifest.delete(filename);
     });
   }
 }
