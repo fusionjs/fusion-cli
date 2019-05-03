@@ -40,7 +40,10 @@ class InstrumentedImportDependencyTemplate extends ImportDependencyTemplate {
   /*:: clientChunkIndex: ?$PropertyType<ClientChunkMetadata, "fileManifest">; */
   /*:: manifest: ?TranslationsManifest; */
 
-  constructor(clientChunkMetadata /*: ?ClientChunkMetadata */, translationsManifest /*: ?TranslationsManifest*/) {
+  constructor(
+    clientChunkMetadata /*: ?ClientChunkMetadata */,
+    translationsManifest /*: ?TranslationsManifest*/
+  ) {
     super();
     this.translationsManifest = translationsManifest;
     if (clientChunkMetadata) {

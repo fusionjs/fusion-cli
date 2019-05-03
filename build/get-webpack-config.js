@@ -87,7 +87,7 @@ export type WebpackConfigOpts = {|
     clientChunkMetadata: ClientChunkMetadataState,
     legacyClientChunkMetadata: ClientChunkMetadataState,
     mergedClientChunkMetadata: ClientChunkMetadataState,
-    i18nManifest: TranslationManifest,
+    i18nManifest: TranslationsManifest,
     i18nDeferredManifest: TranslationsManifestState,
     legacyBuildEnabled: LegacyBuildEnabledState,
   },
