@@ -73,6 +73,10 @@ import type {
   FusionRC
 } from "./load-fusionrc.js";
 
+import type {
+  WebpackOptions 
+} from "webpack";
+
 export type WebpackConfigOpts = {|
   id: $Keys<typeof COMPILATIONS>,
   dir: string,
@@ -81,6 +85,8 @@ export type WebpackConfigOpts = {|
   watch: boolean,
   preserveNames: boolean,
   zopfli: boolean,
+  brotli: boolean,
+  svgo: boolean,
   minify: boolean,
   state: {
     clientChunkMetadata: ClientChunkMetadataState,
@@ -108,9 +114,12 @@ function getWebpackConfig(opts /*: WebpackConfigOpts */) {
     state,
     fusionConfig,
     zopfli,
+    brotli,
+    svgo,
     minify,
     legacyPkgConfig = {},
   } = opts;
+
   const main = 'src/main.js';
 
   if (!fs.existsSync(path.join(dir, main))) {
@@ -197,7 +206,8 @@ function getWebpackConfig(opts /*: WebpackConfigOpts */) {
         target: runtime === 'server' ? 'node-bundled' : 'browser-legacy',
         specOnly: false,
       });
-  return {
+
+  const webpackConfig = {
     name: runtime,
     target: {server: 'node', client: 'web', sw: 'webworker'}[runtime],
     entry: {
@@ -285,7 +295,9 @@ function getWebpackConfig(opts /*: WebpackConfigOpts */) {
         runtime === 'server' && {
           compiler: id => id === 'server',
           test: JS_EXT_PATTERN,
-          exclude: EXCLUDE_TRANSPILATION_PATTERNS,
+          exclude:
+            (fusionConfig.babel && fusionConfig.babel.exclude) ||
+            EXCLUDE_TRANSPILATION_PATTERNS,
           use: [
             {
               loader: babelLoader.path,
@@ -315,7 +327,9 @@ function getWebpackConfig(opts /*: WebpackConfigOpts */) {
         (runtime === 'client' || runtime === 'sw') && {
           compiler: id => id === 'client' || id === 'sw',
           test: JS_EXT_PATTERN,
-          exclude: EXCLUDE_TRANSPILATION_PATTERNS,
+          exclude:
+            (fusionConfig.babel && fusionConfig.babel.exclude) ||
+            EXCLUDE_TRANSPILATION_PATTERNS,
           use: [
             {
               loader: babelLoader.path,
@@ -345,7 +359,9 @@ function getWebpackConfig(opts /*: WebpackConfigOpts */) {
         runtime === 'client' && {
           compiler: id => id === 'client-legacy',
           test: JS_EXT_PATTERN,
-          exclude: EXCLUDE_TRANSPILATION_PATTERNS,
+          exclude:
+            (fusionConfig.babel && fusionConfig.babel.exclude) ||
+            EXCLUDE_TRANSPILATION_PATTERNS,
           use: [
             {
               loader: babelLoader.path,
@@ -457,8 +473,8 @@ function getWebpackConfig(opts /*: WebpackConfigOpts */) {
             state.i18nManifest
           ),
       !dev && zopfli && zopfliWebpackPlugin,
-      !dev && brotliWebpackPlugin,
-      !dev && svgoWebpackPlugin,
+      !dev && brotli && brotliWebpackPlugin,
+      !dev && svgo && svgoWebpackPlugin,
       // In development, skip the emitting phase on errors to ensure there are
       // no assets emitted that include errors. This fixes an issue with hot reloading
       // server side code and recovering from errors correctly. We only want to do this
@@ -580,6 +596,12 @@ function getWebpackConfig(opts /*: WebpackConfigOpts */) {
           : undefined,
     },
   };
+
+  if (fusionConfig.overrideWebpackConfig) {
+    return fusionConfig.overrideWebpackConfig(webpackConfig);
+  }
+
+  return webpackConfig;
 }
 
 // Allow overrides with a warning for `dev` command. In production builds, throw if NODE_ENV is not `production`.

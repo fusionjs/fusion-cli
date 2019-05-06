@@ -19,6 +19,8 @@ exports.run = async function(
     preserveNames,
     logLevel,
     zopfli,
+    brotli,
+    svgo,
     minify,
   } /*: {
     dir: string,
@@ -26,6 +28,8 @@ exports.run = async function(
     preserveNames: boolean,
     logLevel: string,
     zopfli: boolean,
+    brotli: boolean,
+    svgo: boolean,
     minify: boolean
   }*/
 ) {
@@ -45,6 +49,8 @@ exports.run = async function(
     logger,
     preserveNames,
     zopfli,
+    brotli,
+    svgo,
     minify,
   });
 

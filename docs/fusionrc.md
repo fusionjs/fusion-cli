@@ -6,7 +6,7 @@ This configuration object supports the following fields:
 
 ## `babel`
 
-### Adding plugins/presets
+### Adding plugins/presets and excluding files from babel compilation
 
 For example, to add your own Babel plugins/preset:
 
@@ -14,13 +14,11 @@ For example, to add your own Babel plugins/preset:
 module.exports = {
   babel: {
     presets: ["some-babel-preset"],
-    plugins: ["some-babel-plugin"]
+    plugins: ["some-babel-plugin"],
+    exclude: moduleName => /\/node_modules\//.test(moduleName)
   }
 };
 ```
-
-**Please note that custom Babel config is an unstable API and may not be supported in future releases.**
-
 
 ## `assumeNoImportSideEffects`
 
@@ -48,3 +46,41 @@ module.exports = {
   }
 };
 ```
+
+## `overrideWebpackConfig`
+
+Allows to customize [webpack configuration](https://webpack.js.org/concepts). 
+
+Pass a function that takes a [`webpackConfig`](https://webpack.js.org/configuration/) object created by fusion and return a config with any modifications supported by webpack.
+
+Example:
+
+```js
+const SimpleProgressPlugin = require('simple-progress-webpack-plugin');
+
+module.exports = {
+  overrideWebpackConfig: (webpackConfig) => {
+    // Debug things:
+    console.log(webpackConfig);
+
+    // Pass your own plugins:
+    webpackConfig.plugins = webpackConfig.plugins.map(plugin => {
+      // console.log(plugin.constructor.name);
+
+      if (plugin.constructor.name === 'ProgressPlugin') {
+        return new SimpleProgressPlugin({
+          format: 'expanded'
+        })
+      }
+
+      return plugin;
+    });
+    
+    // Don't forget to return it
+    return webpackConfig;
+  }
+};
+```
+
+
+
