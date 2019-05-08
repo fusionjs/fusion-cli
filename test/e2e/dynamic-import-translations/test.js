@@ -3,10 +3,7 @@
 
 const t = require('assert');
 const path = require('path');
-const fs = require('fs');
 const puppeteer = require('puppeteer');
-
-const dev = require('../setup.js');
 
 const {cmd, start} = require('../utils.js');
 
@@ -32,8 +29,8 @@ test('`fusion build` app with split translations integration', async () => {
   t.ok(
     content.includes(
       '<div data-testid="split-with-child">' +
-      '["__SPLIT_CHILD__","__SPLIT_WITH_CHILD__"]' +
-      '</div>'
+        '["__SPLIT_CHILD__","__SPLIT_WITH_CHILD__"]' +
+        '</div>'
     ),
     'translation keys contain keys from child imports'
   );
