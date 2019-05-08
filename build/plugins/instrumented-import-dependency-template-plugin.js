@@ -111,7 +111,7 @@ class InstrumentedImportDependencyTemplate extends ImportDependencyTemplate {
     // Add the following properties to the promise returned by import()
     // - `__CHUNK_IDS`: the webpack chunk ids for the dynamic import
     // - `__MODULE_ID`: the webpack module id of the dynamically imported module. Equivalent to require.resolveWeak(path)
-    // - `__I18N_KEYS`: the translation keys that are used in this bundle
+    // - `__I18N_KEYS`: the translation keys used in the client chunk group for this import() 
     const customContent = chunkIds
       ? `Object.defineProperties(${content}, {
         "__CHUNK_IDS": {value:${JSON.stringify(chunkIds)}},
