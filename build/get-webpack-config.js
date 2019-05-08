@@ -478,7 +478,7 @@ function getWebpackConfig(opts /*: WebpackConfigOpts */) {
         : /**
            * Client
            * Don't wait for the client manifest on the client.
-           * The underlying plugin handles client instrumentation on its own.
+           * The underlying plugin is able determine client chunk metadata on its own.
            */
           new InstrumentedImportDependencyTemplatePlugin(
             void 0,
