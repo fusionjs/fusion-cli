@@ -80,12 +80,24 @@ class InstrumentedImportDependencyTemplate extends ImportDependencyTemplate {
 
     let translationKeys = [];
     if (this.translationsManifest) {
-      const chunks = depBlock.chunkGroup.chunks;
-      const modules = chunks.reduce((acc, chunk) => {
-        const modules = Array.from(chunk._modules.keys());
-        return acc.concat(modules.map(m => m.resource));
-      }, []);
+      const modulesSet = new Set();
 
+      // Module dependencies
+      if (dep.module && dep.module.dependencies) {
+        dep.module.dependencies.map(d => {
+          if (d.originModule) {
+            modulesSet.add(d.originModule.userRequest);
+          }
+        });
+      }
+
+      // Chunks
+      depBlock.chunkGroup.chunks.forEach(chunk => {
+        const modules = Array.from(chunk._modules.keys());
+        modules.forEach(m => modulesSet.add(m.resource));
+      });
+
+      const modules = Array.from(modulesSet.keys());
       translationKeys = modules.reduce((acc, module) => {
         if (this.translationsManifest.has(module)) {
           const keys = Array.from(this.translationsManifest.get(module).keys());
