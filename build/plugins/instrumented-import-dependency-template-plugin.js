@@ -80,32 +80,14 @@ class InstrumentedImportDependencyTemplate extends ImportDependencyTemplate {
 
     let translationKeys = [];
     if (this.translationsManifest) {
-      const modulesSet = new Set();
+      const modules = getChunkGroupModules(dep);
 
-      // Module dependencies
-      if (dep.module && dep.module.dependencies) {
-        dep.module.dependencies.map(d => {
-          if (d.originModule) {
-            modulesSet.add(d.originModule.userRequest);
-          }
-        });
-      }
-
-      // Chunks
-      depBlock.chunkGroup.chunks.forEach(chunk => {
-        const modules = Array.from(chunk._modules.keys());
-        modules.forEach(m => modulesSet.add(m.resource));
-      });
-
-      const modules = Array.from(modulesSet.keys());
-      translationKeys = modules.reduce((acc, module) => {
+      for (const module of modules) {
         if (this.translationsManifest.has(module)) {
-          const keys = Array.from(this.translationsManifest.get(module).keys());
-          return acc.concat(keys);
-        } else {
-          return acc;
+          const keys = this.translationsManifest.get(module).keys();
+          translationKeys.push(...keys);
         }
-      }, []);
+      }
     }
 
     // Add the following properties to the promise returned by import()
@@ -191,4 +173,26 @@ function getChunkGroupIds(chunkGroup) {
     }
     return [chunkGroup.id];
   }
+}
+
+function getChunkGroupModules(dep) {
+  const modulesSet = new Set();
+
+  // Module dependencies
+  if (dep.module && dep.module.dependencies) {
+    dep.module.dependencies.forEach(dependency => {
+      if (dependency.originModule) {
+        modulesSet.add(dependency.originModule.userRequest);
+      }
+    });
+  }
+
+  // Chunks
+  dep.block.chunkGroup.chunks.forEach(chunk => {
+    for (const module of chunk._modules) {
+      modulesSet.add(module.resource);
+    }
+  });
+
+  return modulesSet;
 }
