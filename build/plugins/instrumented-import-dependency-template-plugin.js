@@ -97,7 +97,6 @@ class InstrumentedImportDependencyTemplate extends ImportDependencyTemplate {
     let translationKeys = [];
     if (this.translationsManifest) {
       const modules = getChunkGroupModules(dep);
-
       for (const module of modules) {
         if (this.translationsManifest.has(module)) {
           const keys = this.translationsManifest.get(module).keys();
@@ -189,8 +188,7 @@ function getChunkGroupIds(chunkGroup) {
 
 function getChunkGroupModules(dep) {
   const modulesSet = new Set();
-
-  // Module dependencies
+  // For ConcatenatedModules in production build
   if (dep.module && dep.module.dependencies) {
     dep.module.dependencies.forEach(dependency => {
       if (dependency.originModule) {
@@ -198,13 +196,11 @@ function getChunkGroupModules(dep) {
       }
     });
   }
-
-  // Chunks
+  // For NormalModules
   dep.block.chunkGroup.chunks.forEach(chunk => {
     for (const module of chunk._modules) {
       modulesSet.add(module.resource);
     }
   });
-
   return modulesSet;
 }
