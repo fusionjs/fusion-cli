@@ -472,18 +472,19 @@ function getWebpackConfig(opts /*: WebpackConfigOpts */) {
       watch && new webpack.NoEmitOnErrorsPlugin(),
       runtime === 'server'
         ? // Server
-          new InstrumentedImportDependencyTemplatePlugin(
-            state.mergedClientChunkMetadata
-          )
+          new InstrumentedImportDependencyTemplatePlugin({
+            compilation: 'server',
+            clientChunkMetadata: state.mergedClientChunkMetadata,
+          })
         : /**
            * Client
            * Don't wait for the client manifest on the client.
            * The underlying plugin is able determine client chunk metadata on its own.
            */
-          new InstrumentedImportDependencyTemplatePlugin(
-            void 0,
-            state.i18nManifest
-          ),
+          new InstrumentedImportDependencyTemplatePlugin({
+            compilation: 'client',
+            i18nManifest: state.i18nManifest,
+          }),
       dev && hmr && watch && new webpack.HotModuleReplacementPlugin(),
       !dev && runtime === 'client' && new webpack.HashedModuleIdsPlugin(),
       runtime === 'client' &&
@@ -535,10 +536,10 @@ function getWebpackConfig(opts /*: WebpackConfigOpts */) {
               options.optimization.splitChunks
             ),
             // need to re-apply template
-            new InstrumentedImportDependencyTemplatePlugin(
-              void 0,
-              state.i18nManifest
-            ),
+            new InstrumentedImportDependencyTemplatePlugin({
+              compilation: 'client',
+              i18nManifest: state.i18nManifest,
+            }),
             new ClientChunkMetadataStateHydratorPlugin(
               state.legacyClientChunkMetadata
             ),

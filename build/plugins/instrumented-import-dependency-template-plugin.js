@@ -14,6 +14,20 @@ import type {
   ClientChunkMetadata,
   TranslationsManifest,
 } from "../types.js";
+
+type InstrumentationPluginOpts =
+  | ClientPluginOpts
+  | ServerPluginOpts;
+
+type ServerPluginOpts = {
+  compilation: "server",
+  clientChunkMetadata: ClientChunkMetadataState
+};
+
+type ClientPluginOpts = {
+  compilation: "client",
+  i18nManifest: TranslationsManifest
+};
 */
 
 const ImportDependency = require('webpack/lib/dependencies/ImportDependency');
@@ -41,8 +55,10 @@ class InstrumentedImportDependencyTemplate extends ImportDependencyTemplate {
   /*:: manifest: ?TranslationsManifest; */
 
   constructor(
-    clientChunkMetadata /*: ?ClientChunkMetadata */,
-    translationsManifest /*: ?TranslationsManifest*/
+    {
+      clientChunkMetadata,
+      translationsManifest,
+    } /*: {clientChunkMetadata?: ClientChunkMetadata, translationsManifest?: TranslationsManifest}*/
   ) {
     super();
     this.translationsManifest = translationsManifest;
@@ -113,15 +129,10 @@ class InstrumentedImportDependencyTemplate extends ImportDependencyTemplate {
  */
 
 class InstrumentedImportDependencyTemplatePlugin {
-  /*:: clientChunkIndexState: ?ClientChunkMetadataState; */
-  /*:: translationsManifest: ?TranslationsManifest; */
+  /*:: opts: InstrumentationPluginOpts;*/
 
-  constructor(
-    clientChunkIndexState /*: ?ClientChunkMetadataState*/,
-    translationsManifest /*: ?TranslationsManifest*/
-  ) {
-    this.clientChunkIndexState = clientChunkIndexState;
-    this.translationsManifest = translationsManifest;
+  constructor(opts /*: InstrumentationPluginOpts*/) {
+    this.opts = opts;
   }
 
   apply(compiler /*: any */) {
@@ -132,23 +143,24 @@ class InstrumentedImportDependencyTemplatePlugin {
      * `make` is the subsequent lifeycle method, so we can override this value here.
      */
     compiler.hooks.make.tapAsync(name, (compilation, done) => {
-      if (this.clientChunkIndexState) {
+      if (this.opts.compilation === 'server') {
         // server
-        this.clientChunkIndexState.result.then(chunkIndex => {
+        this.opts.clientChunkMetadata.result.then(chunkIndex => {
           compilation.dependencyTemplates.set(
             ImportDependency,
-            new InstrumentedImportDependencyTemplate(chunkIndex)
+            new InstrumentedImportDependencyTemplate({
+              clientChunkMetadata: chunkIndex,
+            })
           );
           done();
         });
-      } else if (this.translationsManifest) {
+      } else if (this.opts.compilation === 'client') {
         // client
         compilation.dependencyTemplates.set(
           ImportDependency,
-          new InstrumentedImportDependencyTemplate(
-            void 0,
-            this.translationsManifest
-          )
+          new InstrumentedImportDependencyTemplate({
+            translationsManifest: this.opts.i18nManifest,
+          })
         );
         done();
       } else {
